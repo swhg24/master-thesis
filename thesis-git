@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+git --git-dir=.gitrepo --work-tree=. "$@"
