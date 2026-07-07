@@ -1,0 +1,16 @@
+.gitrepo/
+.agents/
+.codex/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+
+# Python/cache noise
+__pycache__/
+.pytest_cache/
+
+# Large generated exports can be added here later if needed

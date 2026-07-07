@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper 01 Learning Guide - Lithium-ion Battery Fundamentals</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --paper: #ffffff;
+      --ink: #18202a;
+      --muted: #5d6877;
+      --line: #d9dee7;
+      --blue: #1f5f99;
+      --green: #28745b;
+      --amber: #9a630b;
+      --red: #9a3333;
+      --violet: #6d4b9a;
+      --soft-blue: #eaf3fb;
+      --soft-green: #eaf7f1;
+      --soft-amber: #fff4df;
+      --soft-red: #fdecec;
+      --soft-violet: #f2edfa;
+      --shadow: 0 12px 30px rgba(24, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 34px 22px 70px;
+    }
+
+    .hero {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 34px;
+      border-radius: 10px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-weight: 700;
+      letter-spacing: 0;
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 36px 0 14px;
+      font-size: 23px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 22px 0 10px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      max-width: 860px;
+      margin-top: 12px;
+      font-size: 16px;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .meta div {
+      border: 1px solid var(--line);
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 78px;
+    }
+
+    .meta strong {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(24, 32, 42, 0.05);
+      padding: 28px;
+      margin: 18px 0;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fcfdff;
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .blue {
+      background: var(--soft-blue);
+      border-color: #c8dff1;
+    }
+
+    .green {
+      background: var(--soft-green);
+      border-color: #c8e7d9;
+    }
+
+    .amber {
+      background: var(--soft-amber);
+      border-color: #edd39c;
+    }
+
+    .red {
+      background: var(--soft-red);
+      border-color: #edc1c1;
+    }
+
+    .violet {
+      background: var(--soft-violet);
+      border-color: #d9c9ef;
+    }
+
+    .label {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    .label.green-label {
+      background: var(--green);
+    }
+
+    .label.amber-label {
+      background: var(--amber);
+    }
+
+    .label.red-label {
+      background: var(--red);
+    }
+
+    .label.violet-label {
+      background: var(--violet);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 18px 0 8px;
+      align-items: stretch;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcfe;
+      position: relative;
+      min-height: 116px;
+    }
+
+    .step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -11px;
+      top: 42%;
+      font-weight: 800;
+      color: var(--muted);
+      background: var(--bg);
+      width: 18px;
+      text-align: center;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--blue);
+    }
+
+    .concept {
+      display: grid;
+      grid-template-columns: 180px 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+
+    .concept > div {
+      padding: 14px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .concept > div:nth-child(3n) {
+      border-right: 0;
+    }
+
+    .concept .head {
+      background: #eef2f6;
+      font-weight: 800;
+    }
+
+    .note {
+      border-left: 5px solid var(--blue);
+      background: var(--soft-blue);
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 14px 0;
+    }
+
+    .warning {
+      border-left: 5px solid var(--amber);
+      background: var(--soft-amber);
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 14px 0;
+    }
+
+    .thesis {
+      border-left: 5px solid var(--green);
+      background: var(--soft-green);
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 14px 0;
+    }
+
+    .quote-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      padding: 16px;
+      margin: 12px 0;
+    }
+
+    .quote-box .en {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .quote-box .cn {
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .checklist li {
+      list-style: none;
+      margin-left: -22px;
+      padding-left: 28px;
+      position: relative;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .avoid li {
+      list-style: none;
+      margin-left: -22px;
+      padding-left: 28px;
+      position: relative;
+    }
+
+    .avoid li::before {
+      content: "!";
+      position: absolute;
+      left: 0;
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    code {
+      background: #eef2f6;
+      padding: 2px 5px;
+      border-radius: 5px;
+    }
+
+    @media (max-width: 860px) {
+      .meta,
+      .grid-2,
+      .grid-3,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .step:not(:last-child)::after {
+        display: none;
+      }
+
+      .concept {
+        grid-template-columns: 1fr;
+      }
+
+      .concept > div,
+      .concept > div:nth-child(3n) {
+        border-right: 0;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .section,
+      .hero {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Paper 01 精读学习讲义</p>
+      <h1>Lithium-ion Battery Fundamentals and Exploration of Cathode Materials: A Review</h1>
+      <p class="subtitle">
+        这不是给文献管理软件看的摘要，而是给你学习用的讲义。目标是让你读完后真正知道：
+        这篇文章讲了什么、你该学到什么、它和“机器人在电池制造中的应用”有什么关系。
+      </p>
+      <div class="meta">
+        <div><strong>Authors</strong>Koech et al.</div>
+        <div><strong>Year</strong>2024</div>
+        <div><strong>Journal</strong>South African Journal of Chemical Engineering</div>
+        <div><strong>DOI</strong>10.1016/j.sajce.2024.09.008</div>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>0. 先说清楚：这篇文章你到底要学什么？</h2>
+      <div class="note">
+        <strong>一句话定位：</strong>
+        这篇文章是锂离子电池基础和正极材料综述。它不是机器人文献，但它能解释：
+        为什么电池制造对材料、环境、安全、质量控制这么敏感。
+      </div>
+
+      <div class="grid-2">
+        <div class="card green">
+          <span class="label green-label">你要学到</span>
+          <ul class="checklist">
+            <li>锂离子电池为什么重要。</li>
+            <li>电芯由哪些组件构成。</li>
+            <li>正极、负极、电解液、隔膜、粘结剂分别有什么作用。</li>
+            <li>为什么安全、热失控、短路、SEI、干房这些词会反复出现。</li>
+            <li>这些电池基础如何转化为机器人制造要求。</li>
+          </ul>
+        </div>
+        <div class="card red">
+          <span class="label red-label">先不要陷进去</span>
+          <ul class="avoid">
+            <li>不要背每个电极材料的理论容量数值。</li>
+            <li>不要深挖每一种正极材料晶体结构。</li>
+            <li>不要把它当作机器人应用综述。</li>
+            <li>不要试图一次读懂所有化学细节。</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>我们真正要建立的思维链条</h3>
+      <div class="flow">
+        <div class="step"><strong>电池组件</strong>正极、负极、电解液、隔膜、粘结剂、集流体</div>
+        <div class="step"><strong>材料特性</strong>怕水、薄、软、易损、可燃、会膨胀</div>
+        <div class="step"><strong>制造要求</strong>干房、洁净、精度、低污染、质量检测</div>
+        <div class="step"><strong>机器人限制</strong>夹爪、节拍、视觉、ESD、安全、维护</div>
+        <div class="step"><strong>论文价值</strong>筛选真正值得落地的机器人应用</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>1. Abstract：摘要在告诉我们什么？</h2>
+      <p>
+        摘要的任务不是讲细节，而是告诉读者：这篇综述的范围是什么，以及为什么正极材料值得讨论。
+        你读摘要时要抓五个信息。
+      </p>
+
+      <div class="grid-3">
+        <div class="card blue">
+          <span class="label">信息 1</span>
+          <h3>正极材料推动电池进步</h3>
+          <p>文章认为，正极材料的发展持续推动更安全、更高效、更可持续的锂离子电池。</p>
+        </div>
+        <div class="card amber">
+          <span class="label amber-label">信息 2</span>
+          <h3>关键元素各有作用</h3>
+          <p>锂、镍、锰、钴、铝会影响能量密度、安全、稳定性、成本等性能。</p>
+        </div>
+        <div class="card violet">
+          <span class="label violet-label">信息 3</span>
+          <h3>电芯是多组件系统</h3>
+          <p>电芯包括正极、负极、集流体、粘结剂、添加剂、电解液、隔膜和壳体。</p>
+        </div>
+        <div class="card green">
+          <span class="label green-label">信息 4</span>
+          <h3>不同正极有不同 trade-off</h3>
+          <p>LFP 更安全稳定但能量密度较低；高镍材料能量高但稳定性和钴依赖是问题。</p>
+        </div>
+        <div class="card red">
+          <span class="label red-label">信息 5</span>
+          <h3>安全是核心主题</h3>
+          <p>热管理、热失控、短路、严格测试协议是电池设计和制造必须考虑的问题。</p>
+        </div>
+        <div class="card">
+          <span class="label">你的收获</span>
+          <h3>机器人不是孤立问题</h3>
+          <p>机器人自动化必须服从材料、组件、环境和安全约束。</p>
+        </div>
+      </div>
+
+      <div class="thesis">
+        <strong>和你的论文的连接：</strong>
+        这篇摘要支持一个高级判断：机器人在电池制造中的价值，不只是“替代人工”，而是要在材料敏感性、安全风险和质量控制约束下，提升制造稳定性和可追溯性。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2. Introduction：引言的故事线</h2>
+      <p>引言其实讲了一个很标准的研究背景故事。你可以把它当作未来论文 introduction 的逻辑模板。</p>
+
+      <div class="flow">
+        <div class="step"><strong>1990s</strong>锂离子电池商业化，替代早期可充电电池</div>
+        <div class="step"><strong>优势</strong>高能量密度、高功率密度、寿命长、自放电低</div>
+        <div class="step"><strong>需求</strong>便携电子和电动车推动锂电池需求增长</div>
+        <div class="step"><strong>挑战</strong>快充、寿命、安全、成本、能量密度仍需提升</div>
+        <div class="step"><strong>原因</strong>这些性能由材料和电芯组件共同决定</div>
+      </div>
+
+      <h3>你读引言后应该能复述的话</h3>
+      <div class="quote-box">
+        <div class="en">
+          Li-ion batteries are important because they combine high energy density, long life, and low self-discharge, which makes them central to EV development.
+        </div>
+        <div class="cn">
+          锂离子电池重要，是因为它们兼具高能量密度、较长寿命和低自放电，因此成为电动车发展的核心技术。
+        </div>
+      </div>
+      <div class="quote-box">
+        <div class="en">
+          However, EV battery adoption still depends on improvements in energy density, fast charging, lifespan, safety, and cost.
+        </div>
+        <div class="cn">
+          但是，电动车电池的大规模应用仍取决于能量密度、快充能力、寿命、安全性和成本的进一步改善。
+        </div>
+      </div>
+      <div class="quote-box">
+        <div class="en">
+          These performance requirements are strongly linked to cell materials and component interactions.
+        </div>
+        <div class="cn">
+          这些性能要求强烈依赖电芯材料及组件之间的相互作用。
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. 这篇文章给你的“电池基础地图”</h2>
+      <p>
+        你现在先不要把电池看成一个黑盒。它是多个功能组件组成的系统。
+        每个组件都有自己的制造要求，也会影响机器人应用。
+      </p>
+
+      <div class="concept">
+        <div class="head">组件</div>
+        <div class="head">它在电池里干什么</div>
+        <div class="head">它对机器人制造意味着什么</div>
+
+        <div><strong>Cathode 正极</strong></div>
+        <div>提供锂源，影响能量密度、安全、成本和稳定性。</div>
+        <div>正极材料体系会影响制造质量要求；电极缺陷检测和过程控制很重要。</div>
+
+        <div><strong>Anode 负极</strong></div>
+        <div>充电时储存锂，商业电池常用石墨，也有硅基等方向。</div>
+        <div>硅负极膨胀和 SEI 问题提示制造过程要关注结构完整性和化成质量。</div>
+
+        <div><strong>Electrolyte 电解液</strong></div>
+        <div>让锂离子在正负极之间移动，通常使用非水体系。</div>
+        <div>怕水、涉及化学安全，因此注液和装配需要干房，机器人也要干房兼容。</div>
+
+        <div><strong>Separator 隔膜</strong></div>
+        <div>隔开正负极，允许锂离子通过，防止内部短路。</div>
+        <div>薄、软、敏感，叠片/卷绕中的机器人搬运和对齐很难。</div>
+
+        <div><strong>Binder 粘结剂</strong></div>
+        <div>把活性材料、导电剂和集流体粘在一起，保持电极机械完整性。</div>
+        <div>搬运、辊压、分切不能导致脱层、裂纹、掉粉和颗粒污染。</div>
+
+        <div><strong>Current collector 集流体</strong></div>
+        <div>传导电子；负极常用铜箔，正极常用铝箔。</div>
+        <div>卷材搬运、涂布、分切和对齐会影响后续质量。</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>4. 从电池概念翻译成机器人问题</h2>
+      <p>这是你学习这篇文章最重要的收获。我们不只是学电池名词，而是把名词转成制造和机器人问题。</p>
+
+      <div class="grid-2">
+        <div class="card blue">
+          <span class="label">电解液怕水</span>
+          <h3>制造含义</h3>
+          <p>注液和部分装配需要低湿度干房，避免水分影响电池性能和安全。</p>
+          <h3>机器人含义</h3>
+          <p>机器人、AMR、夹爪、润滑材料、传感器都要考虑干房兼容；减少人工进入干房本身就是价值。</p>
+        </div>
+        <div class="card green">
+          <span class="label green-label">隔膜薄且防短路</span>
+          <h3>制造含义</h3>
+          <p>叠片/卷绕时隔膜不能破损、褶皱、错位，也不能被颗粒污染。</p>
+          <h3>机器人含义</h3>
+          <p>需要低接触、低应力搬运；视觉定位和专用末端执行器非常关键。</p>
+        </div>
+        <div class="card amber">
+          <span class="label amber-label">粘结剂维持电极结构</span>
+          <h3>制造含义</h3>
+          <p>电极片要保持附着、导电网络和机械完整性，不能开裂或脱层。</p>
+          <h3>机器人含义</h3>
+          <p>卷材/极片搬运不能引入过大应力；分切后需要检测毛刺、掉粉和颗粒。</p>
+        </div>
+        <div class="card red">
+          <span class="label red-label">热失控和短路风险</span>
+          <h3>制造含义</h3>
+          <p>缺陷电芯必须尽早检测、分选、隔离，质量数据必须可追溯。</p>
+          <h3>机器人含义</h3>
+          <p>视觉检测、机器人分选、安全 reject flow、MES 数据连接会成为高价值应用。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>5. Abstract + Introduction 之后，你应该有什么收获？</h2>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>你现在应该能解释</h3>
+          <ul class="checklist">
+            <li>为什么锂离子电池是 EV 的核心技术。</li>
+            <li>为什么电池性能不是单一材料决定的。</li>
+            <li>为什么安全、寿命、成本和快充都是制造关注点。</li>
+            <li>为什么电池制造机器人不能只从效率角度评价。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>你还不需要掌握</h3>
+          <ul class="avoid">
+            <li>所有正极材料的晶体结构。</li>
+            <li>每个元素的精确理论容量。</li>
+            <li>所有化学反应方程。</li>
+            <li>每个引用文献的市场预测细节。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="thesis">
+        <strong>本节给论文的核心贡献：</strong>
+        它帮你把 thesis motivation 写得更扎实：
+        电池产能扩张带来自动化需求，但电池制造自动化必须服从材料敏感性、工艺稳定性、安全和质量追溯要求。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>6. 可以直接放进论文的表达</h2>
+
+      <div class="quote-box">
+        <div class="en">
+          Lithium-ion batteries dominate current electric vehicle applications due to their high energy and power density, long cycle life, and low self-discharge. However, further improvements in energy density, fast-charging capability, lifetime, safety, and cost remain essential for large-scale electric mobility.
+        </div>
+        <div class="cn">
+          锂离子电池因其高能量/功率密度、较长循环寿命和较低自放电，成为当前电动车应用中的主流技术。然而，要支撑大规模电动交通，仍需进一步提升能量密度、快充能力、寿命、安全性和成本竞争力。
+        </div>
+      </div>
+
+      <div class="quote-box">
+        <div class="en">
+          These performance requirements are closely linked to the properties and interactions of cell components, including cathode and anode materials, electrolyte, separator, current collectors, and binders.
+        </div>
+        <div class="cn">
+          这些性能要求与正负极材料、电解液、隔膜、集流体和粘结剂等电芯组件的性质及相互作用密切相关。
+        </div>
+      </div>
+
+      <div class="quote-box">
+        <div class="en">
+          Consequently, robotic automation in battery cell manufacturing must be evaluated not only with respect to productivity, but also in terms of material sensitivity, process stability, contamination control, safety, and quality traceability.
+        </div>
+        <div class="cn">
+          因此，电芯制造中的机器人自动化不能只从产能角度评价，还必须考虑材料敏感性、工艺稳定性、污染控制、安全性和质量追溯。
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>7. 自测：你真的读懂了吗？</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>问题</h3>
+          <ol>
+            <li>为什么 EV 的发展会推动电池制造自动化？</li>
+            <li>为什么电池制造机器人不能只看速度？</li>
+            <li>电解液为什么会让 dry room 变重要？</li>
+            <li>隔膜为什么让叠片机器人很难？</li>
+            <li>热失控和短路风险对应哪些机器人应用？</li>
+          </ol>
+        </div>
+        <div class="card green">
+          <h3>参考回答方向</h3>
+          <ul class="checklist">
+            <li>EV 扩张要求更大规模、更稳定、更低成本的电池制造。</li>
+            <li>电池材料敏感，自动化必须兼顾安全、污染、精度和质量。</li>
+            <li>电解液怕水，注液和装配需要低湿度环境。</li>
+            <li>隔膜薄、软、易损，错位或破损可能导致安全问题。</li>
+            <li>视觉检测、自动分选、安全隔离和质量追溯都是高价值方向。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>8. 下一步怎么继续精读？</h2>
+      <p>下一步不要继续泛读后面的正极材料细节。我们应该先精读第 3 节，因为它直接解释电芯组件。</p>
+
+      <div class="flow">
+        <div class="step"><strong>3.1</strong>Anode and cathode dynamics<br>正负极动态</div>
+        <div class="step"><strong>3.2</strong>Binder technologies<br>粘结剂</div>
+        <div class="step"><strong>3.3</strong>Electrolyte composition<br>电解液</div>
+        <div class="step"><strong>3.4</strong>Separator technologies<br>隔膜</div>
+        <div class="step"><strong>Table 2</strong>Components, challenges, future development<br>组件-挑战-发展</div>
+      </div>
+
+      <div class="warning">
+        <strong>阅读原则：</strong>
+        每读一个组件，都必须回答三个问题：
+        它在电池里做什么？它带来什么制造要求？它对机器人应用意味着什么？
+      </div>
+    </section>
+
+    <p class="small">
+      Generated as a learning aid for the master thesis topic:
+      Robotic Systems in Battery Manufacturing. This guide is based on first-pass reading of Koech et al. (2024).
+    </p>
+  </main>
+</body>
+</html>
