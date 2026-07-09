@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper 01 - Cathode Materials Deep Reading Guide</title>
+  <style>
+    :root{--bg:#f5f7fa;--paper:#fff;--ink:#17202a;--muted:#5d6877;--line:#d8dee8;--blue:#1f5f99;--green:#26745b;--amber:#94600b;--red:#963535;--violet:#674b98;--sb:#eaf3fb;--sg:#e9f7f1;--sa:#fff4df;--sr:#fdecec;--sv:#f2edfa}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.68}
+    .page{max-width:1160px;margin:auto;padding:32px 22px 72px}.hero,.section{background:var(--paper);border:1px solid var(--line);border-radius:11px}.hero{padding:36px;box-shadow:0 12px 30px rgba(23,32,42,.08)}.section{padding:28px;margin:18px 0;box-shadow:0 4px 16px rgba(23,32,42,.05)}
+    .eyebrow{margin:0 0 8px;color:var(--blue);font-weight:850;font-size:14px}h1{margin:0;font-size:33px;line-height:1.18}h2{font-size:23px;line-height:1.3;margin:32px 0 14px}h2:first-child{margin-top:0}h3{font-size:18px;margin:20px 0 9px}p{margin:9px 0}.subtitle,.small{color:var(--muted)}.subtitle{max-width:920px;margin-top:13px}
+    .meta,.g2,.g3,.g4,.g5{display:grid;gap:14px}.meta{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:21px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+    .meta>div,.card{border:1px solid var(--line);background:#fbfcfe;border-radius:8px;padding:15px}.meta strong{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}.card h3{margin-top:0}.blue{background:var(--sb);border-color:#c8dff1}.green{background:var(--sg);border-color:#c8e7d9}.amber{background:var(--sa);border-color:#edd39c}.red{background:var(--sr);border-color:#edc1c1}.violet{background:var(--sv);border-color:#d9c9ef}
+    .label{display:inline-block;padding:4px 9px;border-radius:999px;background:var(--blue);color:#fff;font-size:13px;font-weight:800;margin-bottom:8px}.lg{background:var(--green)}.la{background:var(--amber)}.lr{background:var(--red)}.lv{background:var(--violet)}
+    .note,.thesis,.warning,.danger{padding:14px 16px;border-radius:8px;margin:14px 0;border-left:5px solid}.note{background:var(--sb);border-color:var(--blue)}.thesis{background:var(--sg);border-color:var(--green)}.warning{background:var(--sa);border-color:var(--amber)}.danger{background:var(--sr);border-color:var(--red)}
+    .chain{display:grid;grid-template-columns:repeat(6,minmax(110px,1fr));gap:9px;margin:16px 0}.step{position:relative;border:1px solid var(--line);border-radius:8px;padding:13px;background:#fbfcfe;min-height:102px}.step strong{display:block;color:var(--blue)}.step:not(:last-child)::after{content:"›";position:absolute;right:-9px;top:35%;z-index:2;font-size:25px;color:var(--muted);font-weight:900}
+    .table-wrap{overflow-x:auto;margin:14px 0}table{width:100%;min-width:850px;border-collapse:collapse}th,td{border:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}th{background:#eef2f6}.matrix td:first-child,.matrix th:first-child{font-weight:800}.good{color:var(--green);font-weight:750}.bad{color:var(--red);font-weight:750}
+    .equation{padding:18px;text-align:center;background:#182330;color:#fff;border-radius:8px;font-size:20px;font-weight:750;margin:14px 0}.term{font-weight:800;color:var(--blue)}ul{padding-left:20px}li{margin:6px 0}.checks li,.avoids li{list-style:none;margin-left:-22px;padding-left:28px;position:relative}.checks li::before,.avoids li::before{position:absolute;left:0;font-weight:900}.checks li::before{content:"✓";color:var(--green)}.avoids li::before{content:"!";color:var(--red)}
+    .quote{border:1px solid var(--line);background:#fbfcfe;border-radius:8px;padding:16px;margin:11px 0}.quote .en{font-weight:750}.quote .cn{color:var(--muted);margin-top:6px}details{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:9px 0;background:#fbfcfe}summary{cursor:pointer;font-weight:800;color:var(--blue)}code{background:#eef2f6;padding:2px 5px;border-radius:5px}.pill{display:inline-block;border:1px solid var(--line);background:#fff;border-radius:999px;padding:2px 7px;margin:2px;font-size:13px}
+    @media(max-width:900px){.meta,.g2,.g3,.g4,.g5,.chain{grid-template-columns:1fr}.step:not(:last-child)::after{display:none}.hero,.section{padding:20px}h1{font-size:25px}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">Paper 01 深度精读讲义 · Cathode materials + 4.1–4.3 + Table 3</p>
+    <h1>正极材料不是化学式清单<br>而是结构、性能与失效机制的地图</h1>
+    <p class="subtitle">
+      本讲义覆盖论文后半部分的正极材料总览、锰基尖晶石、层状金属氧化物和橄榄石材料。
+      读完后，你不需要记住每一个掺杂实验，但应该能解释：为什么 LMO 功率高却会衰减，为什么 NMC 越高镍越像走钢丝，
+      为什么 LFP 安全耐用却能量偏低，以及 coating、doping、particle engineering 分别在修什么问题。
+    </p>
+    <div class="meta">
+      <div><strong>原文范围</strong>PDF pp. 8–12 / 期刊 pp. 328–333</div>
+      <div><strong>阅读策略</strong>主题整合，不跟随重复编号</div>
+      <div><strong>建议用时</strong>90–120 分钟，分两次读</div>
+      <div><strong>课题关联</strong>材料 → 工艺窗口 → 自动化要求</div>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>0. 先确定我们要学到什么深度</h2>
+    <div class="g3">
+      <div class="card green">
+        <span class="label lg">必须掌握</span>
+        <ul class="checks">
+          <li>正极为何通常是 Li-ion cell 的锂源。</li>
+          <li>spinel、layered oxide、olivine 的结构直觉。</li>
+          <li>LMO、NMC/NCA/LCO、LFP 的核心权衡。</li>
+          <li>主要失效机制与三类改性策略。</li>
+        </ul>
+      </div>
+      <div class="card blue">
+        <span class="label">理解即可</span>
+        <ul>
+          <li>Jahn–Teller distortion、cation mixing、microcrack 的因果链。</li>
+          <li>NMC 111、622、811 的命名。</li>
+          <li>1D/2D/3D Li-ion pathway 的含义。</li>
+          <li>电导、扩散距离与倍率性能的关系。</li>
+        </ul>
+      </div>
+      <div class="card amber">
+        <span class="label la">现在不背</span>
+        <ul class="avoids">
+          <li>每篇掺杂论文的精确容量与循环数。</li>
+          <li>所有复杂实验化学式。</li>
+          <li>不同测试电压下互不可比的单点结果。</li>
+          <li>未经核查的 Table 3 数值排名。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="thesis"><strong>Literature review 的目标：</strong>建立可用于归纳多篇文献的分析框架，而不是复述这一篇综述里出现过的每个数字。</div>
+  </section>
+
+  <section class="section">
+    <h2>1. 以后读任何正极材料，都用这条六步链</h2>
+    <div class="chain">
+      <div class="step"><strong>Structure</strong>晶体怎样排列？Li⁺ 有几维通道？</div>
+      <div class="step"><strong>Transport</strong>离子和电子怎样移动？阻力在哪里？</div>
+      <div class="step"><strong>Performance</strong>电压、容量、倍率、安全、寿命如何？</div>
+      <div class="step"><strong>Failure</strong>相变、溶解、裂纹还是界面副反应？</div>
+      <div class="step"><strong>Mitigation</strong>掺杂、包覆、粒径或配方如何修补？</div>
+      <div class="step"><strong>Manufacturing</strong>这对合成、涂布、环境与检测意味着什么？</div>
+    </div>
+    <p>这条链能把材料科学语言翻译成你的制造与机器人语言。只记“LFP 安全、NMC 能量高”还不够；你要能解释为什么，以及代价在哪里。</p>
+  </section>
+
+  <section class="section">
+    <h2>2. 正极到底做什么？</h2>
+    <div class="g2">
+      <div class="card blue">
+        <h3>它是可逆储锂的“晶体旅馆”</h3>
+        <p>在典型 Li-ion cell 中，石墨负极装配时不自带锂，因此正极活性材料通常承担初始锂源。充电时 Li⁺ 从正极脱出进入负极；放电时返回正极。</p>
+        <div class="equation">Cathode ⇄ Li⁺ + e⁻ + Delithiated cathode</div>
+        <p class="small">这是帮助理解的概念表达，并非针对所有材料的严格配平反应式。</p>
+      </div>
+      <div class="card green">
+        <h3>它同时决定多个系统边界</h3>
+        <ul>
+          <li><strong>容量：</strong>可逆移入/移出多少 Li⁺。</li>
+          <li><strong>电压：</strong>材料的氧化还原电位。</li>
+          <li><strong>能量：</strong>近似由容量 × 平均电压决定。</li>
+          <li><strong>功率：</strong>Li⁺ 与电子输运能否快速进行。</li>
+          <li><strong>安全和寿命：</strong>脱锂后结构与界面是否稳定。</li>
+          <li><strong>成本与伦理：</strong>Ni、Co、Mn、Fe 等元素来源。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warning">
+      <strong>术语提醒：</strong>“cathode = 正极”在电池工程语境中很常见，但严格电化学定义按反应方向区分 cathode/anode；
+      充电时角色会反转。写论文时用 positive electrode material 最不容易产生歧义。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>3. 三大家族总地图</h2>
+    <div class="table-wrap">
+      <table class="matrix">
+        <thead><tr><th>家族</th><th>代表材料</th><th>Li⁺ 通道直觉</th><th>主要优势</th><th>主要短板</th><th>一句话记忆</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Spinel<br>尖晶石</td><td>LMO<br>LiMn₂O₄</td><td><strong>3D</strong> 连通路径</td><td>高倍率、热容忍、约 4 V 平台、成本较低</td><td>Mn 溶解、Jahn–Teller 畸变、容量衰减</td><td>“跑得快，但骨架会变形和掉锰。”</td>
+          </tr>
+          <tr>
+            <td>Layered oxides<br>层状氧化物</td><td>LCO、NMC、NCA</td><td><strong>2D</strong> 层间路径</td><td>高电压、高容量/能量，配比可调</td><td>高镍热/结构不稳、阳离子混排、裂纹、Co 成本</td><td>“能量明星，但稳定与供应链要付账。”</td>
+          </tr>
+          <tr>
+            <td>Olivine / polyanion<br>橄榄石/聚阴离子</td><td>LFP<br>LiFePO₄</td><td><strong>1D</strong> 平行通道</td><td>安全、热稳定、长寿命、Fe 廉价丰富</td><td>电导与 Li⁺ 扩散较弱，电压和能量密度较低</td><td>“骨架稳，但离子和电子通行不够利索。”</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <strong>结构维度不是简单排名：</strong>3D 通道通常更抗局部堵塞，1D 通道更容易受缺陷影响；但真实性能还取决于粒径、缺陷、碳包覆、电极孔隙和界面，不可只凭 1D/2D/3D 判胜负。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>4. Spinel LMO：为什么“3D 快车道”仍会衰减？</h2>
+    <div class="g3">
+      <div class="card green">
+        <span class="label lg">结构与优势</span>
+        <h3>3D Li⁺ 通道</h3>
+        <p>尖晶石骨架提供三维离子迁移路径，使 LMO 具有良好倍率、较低内阻、高热容忍和约 4 V 的平坦电压平台。</p>
+        <p><span class="pill">成本较低</span><span class="pill">Mn 较丰富</span><span class="pill">高功率</span><span class="pill">相对安全</span></p>
+      </div>
+      <div class="card red">
+        <span class="label lr">失效 1</span>
+        <h3>Mn dissolution</h3>
+        <p>活性 Mn³⁺ 不稳定，高温下锰溶解与结构变化加剧。论文特别提到超过约 55 °C 时问题突出，导致活性材料流失并影响界面。</p>
+      </div>
+      <div class="card amber">
+        <span class="label la">失效 2</span>
+        <h3>Jahn–Teller distortion</h3>
+        <p>深度放电时，立方结构可向四方结构转变，引起各向异性的体积变化。论文给出约 16% 的变化，反复循环会损伤晶体骨架并造成容量损失。</p>
+      </div>
+    </div>
+    <div class="chain">
+      <div class="step"><strong>Mn³⁺ 状态</strong>电子结构不稳定</div>
+      <div class="step"><strong>局部畸变</strong>Mn–O 键方向性变化</div>
+      <div class="step"><strong>相变</strong>cubic → tetragonal</div>
+      <div class="step"><strong>体积应变</strong>颗粒承受不均匀形变</div>
+      <div class="step"><strong>结构损伤</strong>离子通道和接触恶化</div>
+      <div class="step"><strong>容量衰减</strong>循环性能下降</div>
+    </div>
+    <h3>作者列出的修补思路</h3>
+    <div class="g3">
+      <div class="card blue"><strong>Doping 掺杂</strong><p>用 Al、Co、Cr、Fe、Mg、Ni 等取代部分位置，减少不稳定状态并支撑内部骨架。</p></div>
+      <div class="card green"><strong>Surface coating 表面包覆</strong><p>以耐酸层隔离颗粒和电解液，降低 Mn 溶解与界面副反应。</p></div>
+      <div class="card violet"><strong>Heterostructure 异质结构</strong><p>组合不同结构域，打断长程 Jahn–Teller 有序化，缓和整体形变。</p></div>
+    </div>
+    <div class="thesis"><strong>读懂这一段就够了：</strong>LMO 的矛盾不是“离子走不动”，而是“离子走得快，但反复进出会让含 Mn³⁺ 的骨架不稳定”。</div>
+  </section>
+
+  <section class="section">
+    <h2>5. Layered oxides：先把 Ni、Mn、Co、Al 的分工记清</h2>
+    <div class="g4">
+      <div class="card blue"><span class="label">Ni</span><h3>容量与能量</h3><p>提高 Ni 通常有利于可逆容量和比能量，但也更容易带来热稳定、表面反应与结构问题。</p></div>
+      <div class="card green"><span class="label lg">Mn</span><h3>稳定与成本</h3><p>有助于结构稳定、降低成本与毒性；在 NMC 中主要承担“稳”的角色。</p></div>
+      <div class="card red"><span class="label lr">Co</span><h3>结构与动力学</h3><p>帮助层状结构有序与倍率表现，但价格高、供应集中，并涉及采矿伦理问题。</p></div>
+      <div class="card violet"><span class="label lv">Al</span><h3>支撑稳定</h3><p>在 NCA 中主要作为电化学相对不活跃的稳定元素，改善结构和热稳定性。</p></div>
+    </div>
+    <div class="equation">高 Ni → 容量 ↑　但稳定性、安全与制造敏感性压力也可能 ↑</div>
+  </section>
+
+  <section class="section">
+    <h2>6. LCO、NCA、NMC：同为层状材料，路线不同</h2>
+    <div class="g3">
+      <div class="card amber">
+        <span class="label la">LCO · LiCoO₂</span>
+        <h3>成熟的消费电子型</h3>
+        <p><span class="good">优势：</span>压实密度高、电子电导好、能量较高、技术成熟。</p>
+        <p><span class="bad">限制：</span>Co 成本与伦理、过充/高温下热稳定性、循环寿命。</p>
+        <p><strong>应用直觉：</strong>适合体积敏感的便携电子；大规模 EV 使用受安全和成本限制。</p>
+      </div>
+      <div class="card violet">
+        <span class="label lv">NCA · Ni–Co–Al</span>
+        <h3>高能量 + 稳定元素</h3>
+        <p><span class="good">优势：</span>高比能量、良好功率与较长寿命潜力。</p>
+        <p><span class="bad">限制：</span>热敏感、仍依赖 Co，安全和成本要求高。</p>
+        <p><strong>改性：</strong>高镍低钴、Mg/Ti/Zr 掺杂、Al₂O₃ 或复合包覆。</p>
+      </div>
+      <div class="card blue">
+        <span class="label">NMC · Ni–Mn–Co</span>
+        <h3>可调配的均衡型</h3>
+        <p><span class="good">优势：</span>通过三种金属配比，在容量、稳定、倍率与成本间调节。</p>
+        <p><span class="bad">限制：</span>阳离子混排、金属溶解、界面副反应与高镍裂纹。</p>
+        <p><strong>研究方向：</strong>从 111 走向 622、811、Ni&gt;90%，同时降低 Co。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>7. NMC 数字怎么读：111、622、811 不是型号密码</h2>
+    <p>NMC 后三位表示 Ni:Mn:Co 的近似摩尔比例：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>名称</th><th>近似组成</th><th>Ni</th><th>Mn</th><th>Co</th><th>趋势直觉</th></tr></thead>
+        <tbody>
+          <tr><th>NMC 111</th><td>LiNi<sub>1/3</sub>Mn<sub>1/3</sub>Co<sub>1/3</sub>O₂</td><td>33%</td><td>33%</td><td>33%</td><td>较均衡，Co 含量较高。</td></tr>
+          <tr><th>NMC 622</th><td>LiNi<sub>0.6</sub>Mn<sub>0.2</sub>Co<sub>0.2</sub>O₂</td><td>60%</td><td>20%</td><td>20%</td><td>容量提升，稳定控制更重要。</td></tr>
+          <tr><th>NMC 811</th><td>LiNi<sub>0.8</sub>Mn<sub>0.1</sub>Co<sub>0.1</sub>O₂</td><td>80%</td><td>10%</td><td>10%</td><td>高容量、低钴，但热和结构挑战增加。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      论文给出 NMC 811 在特定半电池与电压窗口下约 190–200 mAh/g，而 NMC 442 约 160 mAh/g。
+      这些数字可用来说明趋势，不能脱离测试条件当作商业电芯的固定指标。
+    </div>
+    <h3>为什么高 Ni 会“走钢丝”？</h3>
+    <div class="chain">
+      <div class="step"><strong>Ni 增加</strong>可参与反应的容量提高</div>
+      <div class="step"><strong>Ni²⁺/Li⁺ 混排</strong>离子半径相近，Ni 占据 Li 层</div>
+      <div class="step"><strong>通道受阻</strong>Li⁺ 扩散和可逆性下降</div>
+      <div class="step"><strong>界面反应</strong>与电解液、空气更敏感</div>
+      <div class="step"><strong>体积变化</strong>循环中颗粒产生微裂纹</div>
+      <div class="step"><strong>新表面暴露</strong>副反应继续加速，容量衰减</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>8. 三种改性策略到底有什么区别？</h2>
+    <div class="g3">
+      <div class="card blue">
+        <span class="label">Doping</span>
+        <h3>修内部骨架</h3>
+        <p>少量外来元素进入晶格，改变键合、价态或局部结构，用于抑制相变、阳离子混排和结构坍塌。</p>
+        <p><strong>类比：</strong>给建筑的梁柱换材料。</p>
+      </div>
+      <div class="card green">
+        <span class="label lg">Coating</span>
+        <h3>保护外部界面</h3>
+        <p>在颗粒表面形成保护层，减少电解液侵蚀、金属溶解和副反应，有时还能改善 Li⁺ 输运。</p>
+        <p><strong>类比：</strong>给建筑加耐候外墙。</p>
+      </div>
+      <div class="card violet">
+        <span class="label lv">Particle engineering</span>
+        <h3>改尺寸与形貌</h3>
+        <p>调节粒径、一次/二次颗粒、孔隙与晶界，缩短扩散距离、释放应力，并平衡压实密度与表面积。</p>
+        <p><strong>类比：</strong>重新设计房间和走廊布局。</p>
+      </div>
+    </div>
+    <div class="warning">
+      <strong>没有免费改性：</strong>更小颗粒可缩短扩散距离，却增加表面积和副反应；厚包覆可保护表面，却可能增加界面阻抗；
+      掺杂可稳定结构，却可能牺牲部分活性容量。改性本身也是 trade-off。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>9. LFP：为什么“低电导”没有挡住商业成功？</h2>
+    <div class="g2">
+      <div class="card green">
+        <span class="label lg">结构带来的稳定</span>
+        <h3>强健的 polyanion framework</h3>
+        <p>PO₄ 四面体形成稳定骨架，充放电体积变化小、放热较低。Fe 丰富、便宜且环境负担相对小，因此 LFP 具有安全、寿命和成本优势。</p>
+        <p>论文给出的典型容量为约 150–160 mAh/g，并具有平坦放电平台。</p>
+      </div>
+      <div class="card red">
+        <span class="label lr">结构带来的限制</span>
+        <h3>1D 通道 + 低电子电导</h3>
+        <p>Li⁺ 主要沿连续平行通道移动；若通道被缺陷堵塞，绕行选择有限。同时材料本征电子电导和 Li⁺ 输运较弱，限制倍率表现。</p>
+      </div>
+    </div>
+    <div class="chain">
+      <div class="step"><strong>小颗粒</strong>缩短 Li⁺ 固相扩散距离</div>
+      <div class="step"><strong>碳包覆/复合</strong>建立电子导电网络</div>
+      <div class="step"><strong>孔隙优化</strong>改善电解液浸润与传质</div>
+      <div class="step"><strong>结果</strong>本征短板被电极工程补偿</div>
+      <div class="step"><strong>代价</strong>表面积、副反应和压实密度需平衡</div>
+      <div class="step"><strong>商业化</strong>安全寿命优势得以释放</div>
+    </div>
+    <div class="thesis"><strong>关键洞察：</strong>商业电池性能不是活性材料本征性质的简单复制。LFP 的成功正是“材料 + 纳米/碳工程 + 电极设计 + 制造控制”共同作用的结果。</div>
+  </section>
+
+  <section class="section">
+    <h2>10. 三大家族放在同一张决策表里</h2>
+    <div class="table-wrap">
+      <table class="matrix">
+        <thead><tr><th>维度</th><th>LMO spinel</th><th>NMC/NCA layered</th><th>LFP olivine</th></tr></thead>
+        <tbody>
+          <tr><td>主要追求</td><td>功率、成本、热容忍</td><td>高能量与综合性能</td><td>安全、寿命、成本</td></tr>
+          <tr><td>Li⁺ 路径</td><td>3D</td><td>2D</td><td>1D</td></tr>
+          <tr><td>核心失效</td><td>Mn 溶解、Jahn–Teller 畸变</td><td>混排、界面反应、相变、微裂纹</td><td>主要是传输受限而非骨架热不稳</td></tr>
+          <tr><td>典型修补</td><td>掺杂、耐酸包覆、异质结构</td><td>掺杂、包覆、浓度梯度/颗粒设计</td><td>纳米化、碳包覆、导电网络</td></tr>
+          <tr><td>供应链直觉</td><td>Mn 较丰富、成本较低</td><td>Ni/Co 成本、集中度和伦理压力</td><td>Fe/P 较丰富、成本友好</td></tr>
+          <tr><td>制造敏感点</td><td>相纯度、Mn³⁺ 控制、表面保护</td><td>前驱体均匀性、气氛/水分、裂纹与界面控制</td><td>碳包覆均匀性、粒径、压实与导电网络</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>11. 从正极材料到制造与机器人：严谨地走完中间层</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>材料事实</th><th>工艺要求</th><th>可检测变量</th><th>自动化/机器人角色</th></tr></thead>
+        <tbody>
+          <tr><td>高镍颗粒对空气/界面更敏感</td><td>受控湿度、暴露时间和污染；稳定批次配方</td><td>露点、停留时间、表面残余物、批次 ID</td><td>干房物流、密闭转运、自动扫码与时间追踪</td></tr>
+          <tr><td>颗粒微裂纹暴露新界面</td><td>降低不当机械应力，优化辊压和搬运</td><td>厚度、压力、表面/截面缺陷、掉粉</td><td>力控搬运、在线视觉、自动取样与缺陷隔离</td></tr>
+          <tr><td>涂层/掺杂必须均匀</td><td>精确配料、混合、热处理与批间一致性</td><td>质量、温度曲线、成分、粒径和涂层覆盖</td><td>自动供料、样品处理、仪器上下料、数据关联</td></tr>
+          <tr><td>LFP 依赖导电碳网络</td><td>混合分散与涂布均匀；控制压实和孔隙</td><td>浆料黏度、面密度、电阻、厚度、孔隙率</td><td>自动测量、闭环调参、卷材与样片处理</td></tr>
+          <tr><td>不同 chemistry 工艺窗口不同</td><td>防止 recipe 混用与交叉污染</td><td>物料 ID、设备状态、配方版本、清洁记录</td><td>防错联锁、柔性换型、MES 追溯与工具管理</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <strong>你的研究切口逐渐清楚了：</strong>
+      机器人价值不仅是 labor substitution，而是以可重复运动、传感与数据绑定来维持狭窄工艺窗口，并把材料敏感性转化为可监测、可追溯的质量控制。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>12. 作为 literature reviewer，你必须识别这篇综述的边界</h2>
+    <div class="g2">
+      <div class="card red">
+        <h3>分类有混用</h3>
+        <p>正文把 LCO、LMO、LFP、NCA、NMC 一起称作 “lithium layered cathode materials”，但严格来说 LMO 是 spinel、LFP 是 olivine/polyanion，并非 layered oxide。</p>
+      </div>
+      <div class="card red">
+        <h3>理论值、材料值与电芯值混放</h3>
+        <p>Table 3 同时出现材料比容量、理论能量密度和电芯级范围。比如 NMC 的约 900 Wh/kg 不宜当作商业 cell-level 普遍值引用。</p>
+      </div>
+      <div class="card amber">
+        <h3>单位疑似存在错误</h3>
+        <p>NMC 段落出现 “154 Ah/kg” 与 “&gt;185 Ah/kg”；按上下文更可能意指 mAh/g，二者数值上等价，但原文单位表达容易误导，引用时应回查原始来源。</p>
+      </div>
+      <div class="card amber">
+        <h3>跨体系证据被带入</h3>
+        <p>LMO 小节引用 Fe-doped sodium manganese oxide 用于 zinc-ion battery 的研究解释 Jahn–Teller 缓解。机理有启发性，但不能直接视为 LiMn₂O₄ 商业效果证据。</p>
+      </div>
+      <div class="card amber">
+        <h3>单篇最好结果不等于一般表现</h3>
+        <p>掺杂与包覆研究的容量、保持率来自不同电压、倍率、温度和样品尺度，不能横向直接排名。</p>
+      </div>
+      <div class="card blue">
+        <h3>这篇论文适合怎样使用？</h3>
+        <p>适合做术语地图、发现材料家族和追踪参考文献；不适合作为精确材料数据的唯一来源。关键数字应回到原始论文或更权威的专门综述。</p>
+      </div>
+    </div>
+    <div class="danger"><strong>Literature review 的底线：</strong>review paper 可以帮你找路，但不能替你核查每一块路牌。</div>
+  </section>
+
+  <section class="section">
+    <h2>13. 如何把这一段记进你的 literature matrix</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Extraction field</th><th>Paper 01 可填内容</th><th>后续需要什么文献补强</th></tr></thead>
+        <tbody>
+          <tr><td>Material family</td><td>Spinel LMO; layered LCO/NMC/NCA; olivine LFP</td><td>专门的 cathode review</td></tr>
+          <tr><td>Performance trade-off</td><td>LMO: power; layered: energy; LFP: safety/life</td><td>统一测试边界的比较数据</td></tr>
+          <tr><td>Failure mechanism</td><td>Mn dissolution/JT; cation mixing/cracks; low transport</td><td>失效机理原始研究或权威综述</td></tr>
+          <tr><td>Mitigation</td><td>Doping, coating, particle/carbon engineering</td><td>规模化与 manufacturability 文献</td></tr>
+          <tr><td>Manufacturing implication</td><td>环境控制、配方追溯、精确供料、低损伤搬运、在线 QC</td><td>电池制造与机器人实证文献</td></tr>
+          <tr><td>Evidence strength</td><td>背景综述；机器人映射为二次推论</td><td>行业案例、工艺研究、自动化论文</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>14. 可以写进论文的三层表达</h2>
+    <div class="quote">
+      <div class="en">Cathode crystal structure governs lithium-ion transport pathways and contributes to the characteristic balance among energy density, rate capability, safety, and cycle stability.</div>
+      <div class="cn">正极晶体结构决定锂离子输运路径，并参与塑造能量密度、倍率性能、安全性和循环稳定性之间的特征性平衡。</div>
+    </div>
+    <div class="quote">
+      <div class="en">Nickel enrichment increases the capacity potential of layered NMC cathodes, but can also intensify cation mixing, interfacial side reactions, structural instability, and microcracking.</div>
+      <div class="cn">提高层状 NMC 正极中的镍含量可提升容量潜力，但也可能加剧阳离子混排、界面副反应、结构不稳定和微裂纹。</div>
+    </div>
+    <div class="quote">
+      <div class="en">From a manufacturing perspective, material-level degradation mechanisms translate into requirements for atmosphere control, recipe traceability, mechanical-load control, and in-line defect detection.</div>
+      <div class="cn">从制造角度看，材料层面的退化机制会转化为气氛控制、配方追溯、机械载荷控制和在线缺陷检测要求。</div>
+    </div>
+    <div class="warning">前两句可由本节及其来源支持；第三句是你的跨层推论，后续应由 battery manufacturing / robotics 文献佐证。</div>
+  </section>
+
+  <section class="section">
+    <h2>15. 自测：能讲出因果链，才算真正读懂</h2>
+    <details><summary>Q1. 为什么正极通常是传统 Li-ion cell 的初始锂源？</summary><p>装配时常用石墨负极本身不含可供往返的锂，因此含锂正极材料在首次充电时释放 Li⁺，使其进入负极；后续 Li⁺ 在两极间可逆穿梭。</p></details>
+    <details><summary>Q2. LMO 有 3D Li⁺ 通道，为什么寿命仍可能不好？</summary><p>快速离子通道解决的是输运问题，却不保证结构稳定。Mn³⁺ 可导致 Jahn–Teller 畸变，深度放电伴随立方到四方相变和体积应变；同时高温下 Mn 溶解，二者造成容量衰减。</p></details>
+    <details><summary>Q3. NMC 811 的“811”是什么意思？为什么不直接做成 100% Ni？</summary><p>表示 Ni:Mn:Co 约为 8:1:1。更多 Ni 通常提高容量并减少 Co，但过高 Ni 会增加阳离子混排、空气和电解液副反应、热/结构不稳定与微裂纹，因此存在最优配比而非越高越好。</p></details>
+    <details><summary>Q4. coating 与 doping 的本质区别是什么？</summary><p>Coating 主要保护颗粒外部界面，降低电解液侵蚀和副反应；doping 让元素进入晶格，改变内部键合、价态和结构稳定。前者像外墙，后者像梁柱。</p></details>
+    <details><summary>Q5. LFP 的本征电导较差，为什么仍能有高功率商业产品？</summary><p>通过减小颗粒缩短 Li⁺ 扩散距离，并用碳包覆/导电网络改善电子输运，电极工程能够补偿本征短板；再叠加其安全、寿命和成本优势，形成商业竞争力。</p></details>
+    <details><summary>Q6. 这部分与机器人课题最严谨的连接是什么？</summary><p>材料结构和失效机制先形成环境、配方、机械载荷和检测要求；机器人再通过受控搬运、力控、在线感知、自动取样、异常隔离和数据追溯帮助维持这些工艺窗口。</p></details>
+    <details><summary>Q7. 为什么不能直接引用 Table 3 说 NMC 电芯有 900 Wh/kg？</summary><p>表中不同条目混合了理论、材料和电芯层级，测试边界也不统一；约 900 Wh/kg 更像材料/潜力层面的表述，不代表当前商业 NMC cell 的一般水平。关键数字必须回查原始来源和 measurement level。</p></details>
+  </section>
+
+  <section class="section">
+    <h2>16. 合上笔记前，只带走这张脑内地图</h2>
+    <div class="g3">
+      <div class="card blue"><h3>LMO · Spinel</h3><p><strong>3D 快通道 → 高功率</strong><br>但 Mn 溶解 + Jahn–Teller 畸变 → 衰减<br><em>用掺杂和表面保护修补</em></p></div>
+      <div class="card violet"><h3>NMC/NCA · Layered</h3><p><strong>高电压/容量 → 高能量</strong><br>但高 Ni → 混排 + 副反应 + 裂纹<br><em>用配比、掺杂、包覆和颗粒设计平衡</em></p></div>
+      <div class="card green"><h3>LFP · Olivine</h3><p><strong>稳骨架 → 安全长寿命</strong><br>但 1D 通道 + 低电导 → 输运受限<br><em>用小颗粒和碳网络补偿</em></p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>17. 下一步：不再继续钻材料兔子洞</h2>
+    <p>
+      这篇 paper 对正极材料的教学任务到这里已经完成。下一轮应读它的 <strong>Insights and future perspectives + Conclusions</strong>，
+      用一份收官笔记提取作者最终论点、检查全文是否真正回答研究目标，并评价这篇综述对你 thesis 能提供什么、不能提供什么。
+    </p>
+    <div class="thesis"><strong>之后的 literature review 转向：</strong>从“battery fundamentals”进入“battery manufacturing process + robotics applications”，开始寻找能支撑我们制造推论的直接证据。</div>
+  </section>
+
+  <p class="small">Deep-reading guide based on Koech et al. (2024), <em>South African Journal of Chemical Engineering</em>, 50, 321–339. 材料事实按原文组织；批判性审查与机器人映射为面向硕士 literature review 的分析。</p>
+</main>
+</body>
+</html>

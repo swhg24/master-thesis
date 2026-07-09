@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper 01 Section 4 - EV Battery Chemistry Learning Guide</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --paper: #ffffff;
+      --ink: #17202a;
+      --muted: #5d6877;
+      --line: #d8dee8;
+      --blue: #1f5f99;
+      --green: #26745b;
+      --amber: #9a630b;
+      --red: #9a3333;
+      --violet: #674b98;
+      --soft-blue: #eaf3fb;
+      --soft-green: #e9f7f1;
+      --soft-amber: #fff4df;
+      --soft-red: #fdecec;
+      --soft-violet: #f2edfa;
+      --shadow: 0 12px 30px rgba(23, 32, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 34px 22px 70px;
+    }
+    .hero, .section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+    .hero { padding: 34px; margin-bottom: 22px; }
+    .section {
+      padding: 28px;
+      margin: 18px 0;
+      box-shadow: 0 4px 16px rgba(23, 32, 42, 0.05);
+    }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 14px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.18;
+    }
+    h2 { margin: 34px 0 14px; font-size: 23px; line-height: 1.25; }
+    h2:first-child { margin-top: 0; }
+    h3 { margin: 20px 0 10px; font-size: 18px; }
+    p { margin: 10px 0; }
+    a { color: var(--blue); }
+    .subtitle { color: var(--muted); max-width: 880px; margin-top: 12px; }
+    .meta, .grid-2, .grid-3, .grid-6 {
+      display: grid;
+      gap: 14px;
+    }
+    .meta { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 20px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .meta div, .card {
+      border: 1px solid var(--line);
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .meta div { min-height: 76px; }
+    .meta strong {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+    .card h3 { margin-top: 0; }
+    .blue { background: var(--soft-blue); border-color: #c8dff1; }
+    .green { background: var(--soft-green); border-color: #c8e7d9; }
+    .amber { background: var(--soft-amber); border-color: #edd39c; }
+    .red { background: var(--soft-red); border-color: #edc1c1; }
+    .violet { background: var(--soft-violet); border-color: #d9c9ef; }
+    .label {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .green-label { background: var(--green); }
+    .amber-label { background: var(--amber); }
+    .red-label { background: var(--red); }
+    .violet-label { background: var(--violet); }
+    .note, .thesis, .warning, .danger {
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 14px 0;
+      border-left: 5px solid;
+    }
+    .note { background: var(--soft-blue); border-color: var(--blue); }
+    .thesis { background: var(--soft-green); border-color: var(--green); }
+    .warning { background: var(--soft-amber); border-color: var(--amber); }
+    .danger { background: var(--soft-red); border-color: var(--red); }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 18px 0 8px;
+    }
+    .step {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcfe;
+      min-height: 116px;
+    }
+    .step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -11px;
+      top: 42%;
+      width: 18px;
+      text-align: center;
+      background: var(--bg);
+      color: var(--muted);
+      font-weight: 900;
+    }
+    .step strong { display: block; color: var(--blue); margin-bottom: 5px; }
+    .table-wrap { overflow-x: auto; margin: 14px 0; }
+    table { width: 100%; border-collapse: collapse; min-width: 780px; }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #eef2f6; }
+    .score { white-space: nowrap; letter-spacing: 1px; color: var(--blue); }
+    .quote-box {
+      border: 1px solid var(--line);
+      background: #fbfcfe;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+    .quote-box .en { font-weight: 750; }
+    .quote-box .cn { color: var(--muted); margin-top: 6px; }
+    .term {
+      text-align: center;
+      padding: 12px 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+    }
+    .term strong { display: block; color: var(--blue); }
+    ul { padding-left: 20px; }
+    li { margin: 6px 0; }
+    .checklist li, .avoid li {
+      list-style: none;
+      margin-left: -22px;
+      padding-left: 28px;
+      position: relative;
+    }
+    .checklist li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 900;
+    }
+    .avoid li::before {
+      content: "!";
+      position: absolute;
+      left: 0;
+      color: var(--red);
+      font-weight: 900;
+    }
+    details {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      background: #fbfcfe;
+    }
+    summary { cursor: pointer; font-weight: 800; color: var(--blue); }
+    .small { color: var(--muted); font-size: 14px; }
+    .tag {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 13px;
+      background: white;
+    }
+    @media (max-width: 900px) {
+      .meta, .grid-2, .grid-3, .grid-6, .flow { grid-template-columns: 1fr; }
+      .step:not(:last-child)::after { display: none; }
+      h1 { font-size: 25px; }
+      .hero, .section { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Paper 01 精读学习讲义 · Section 4</p>
+      <h1>Comparative Analysis of Li-ion Battery Chemistries for EVs<br>电动汽车锂离子电池化学体系比较</h1>
+      <p class="subtitle">
+        这一节只有一页左右，真正要学的不是背出“谁最好”，而是建立 <strong>trade-off（权衡）</strong> 思维：
+        同一种电池不可能同时把能量、功率、安全、寿命和成本全部推到最高。材料体系的选择，会一路传导到电芯设计、制造控制与机器人任务要求。
+      </p>
+      <div class="meta">
+        <div><strong>原文位置</strong>PDF p. 7 / 期刊 p. 327</div>
+        <div><strong>核心图</strong>Fig. 3 六维雷达图</div>
+        <div><strong>建议用时</strong>35–50 分钟</div>
+        <div><strong>掌握层级</strong>理解权衡，不背晶体化学</div>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>0. 今天读完，你应该能回答什么？</h2>
+      <div class="grid-2">
+        <div class="card blue">
+          <span class="label">论文层面</span>
+          <ul class="checklist">
+            <li>Fig. 3 的六个评价维度分别是什么意思？</li>
+            <li>为什么 NMC 被称为“均衡型”方案？</li>
+            <li>为什么 LFP 能量密度较低，却仍然很有竞争力？</li>
+            <li>为什么 NCA 的高能量伴随更强的安全管理需求？</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <span class="label green-label">课题层面</span>
+          <ul class="checklist">
+            <li>把 chemistry choice 转换成制造要求。</li>
+            <li>区分“材料性能结论”和“机器人应用推论”。</li>
+            <li>解释为何机器人方案不能脱离电芯体系和工序场景评价。</li>
+            <li>形成一段可用于论文背景的严谨表述。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note">
+        <strong>一句话主线：</strong>
+        电池化学体系决定性能边界与风险画像；制造系统负责稳定地实现它，而机器人是制造系统中的执行、感知和追溯载体。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>1. 先把六个评价维度读懂</h2>
+      <p>Fig. 3 中，彩色区域越靠近外六边形，表示该维度越理想。六个方向不能混为一谈：</p>
+      <div class="grid-6">
+        <div class="term"><strong>Specific energy</strong>比能量<br><span class="small">同样质量能存多少能量，关系到续航与重量</span></div>
+        <div class="term"><strong>Specific power</strong>比功率<br><span class="small">单位质量能多快输出能量，关系到加速与快充放</span></div>
+        <div class="term"><strong>Safety</strong>安全性<br><span class="small">热稳定、过充与滥用条件下的风险水平</span></div>
+        <div class="term"><strong>Performance</strong>综合性能<br><span class="small">工作温度、倍率、效率等综合表现</span></div>
+        <div class="term"><strong>Life span</strong>寿命<br><span class="small">循环与日历老化后还能保持多少能力</span></div>
+        <div class="term"><strong>Cost</strong>成本<br><span class="small">图中越外侧越有利，即成本竞争力越好</span></div>
+      </div>
+      <div class="warning">
+        <strong>最容易混淆：</strong>能量（energy）是“能跑多远”，功率（power）是“能多快给出能量”。
+        高比能量不自动等于高比功率，也不自动等于更安全或寿命更长。
+      </div>
+      <div class="flow">
+        <div class="step"><strong>材料体系</strong>选择 LFP、NMC、NCA 等 chemistry</div>
+        <div class="step"><strong>性能边界</strong>能量、功率、寿命、安全的组合不同</div>
+        <div class="step"><strong>设计与工艺</strong>热管理、结构、过程窗口随之改变</div>
+        <div class="step"><strong>制造控制</strong>检测、洁净度、追溯、安全隔离要求改变</div>
+        <div class="step"><strong>机器人需求</strong>精度、节拍、传感、环境兼容与异常处理不同</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2. 六种 chemistry：不要背排名，要记“性格”</h2>
+      <div class="grid-3">
+        <div class="card amber">
+          <span class="label amber-label">LCO · LiCoO₂</span>
+          <h3>高能量，但成本与安全受限</h3>
+          <p>优势集中在比能量与成熟性能；钴成本高，热稳定和寿命并非强项，因此更常与消费电子联系，而不是作为大型 EV 的首选。</p>
+          <p><span class="tag">高比能量</span><span class="tag">钴依赖</span><span class="tag">热管理</span></p>
+        </div>
+        <div class="card green">
+          <span class="label green-label">LFP · LiFePO₄</span>
+          <h3>安全、耐用、成本友好</h3>
+          <p>比能量低于高镍体系，但安全性、热稳定性和循环寿命突出。它提醒我们：EV 方案的目标不是单纯追求最大续航。</p>
+          <p><span class="tag">安全</span><span class="tag">长寿命</span><span class="tag">低能量密度</span></p>
+        </div>
+        <div class="card blue">
+          <span class="label">LMO · LiMn₂O₄</span>
+          <h3>功率与安全较好，寿命偏弱</h3>
+          <p>锰资源和成本具有吸引力，功率表现较好；但容量衰减与循环寿命限制其单独使用，常体现为成本、功率和寿命之间的折中。</p>
+          <p><span class="tag">高功率</span><span class="tag">较安全</span><span class="tag">容量衰减</span></p>
+        </div>
+        <div class="card red">
+          <span class="label red-label">LTO · Li₄Ti₅O₁₂</span>
+          <h3>极安全、长寿命，但比能量低</h3>
+          <p>快速充放与循环寿命突出，代价是较低的电芯电压和比能量。适合把安全、倍率和寿命置于续航之前的场景。</p>
+          <p><span class="tag">快充</span><span class="tag">长寿命</span><span class="tag">低比能量</span></p>
+        </div>
+        <div class="card violet">
+          <span class="label violet-label">NMC · LiNiMnCoO₂</span>
+          <h3>多维度最均衡</h3>
+          <p>镍提供较高能量，锰帮助稳定，钴改善结构与动力学。论文把 NMC 描述为能量、功率和寿命表现较均衡，因此在 EV 中广受欢迎。</p>
+          <p><span class="tag">均衡</span><span class="tag">EV 主流</span><span class="tag">配比可调</span></p>
+        </div>
+        <div class="card amber">
+          <span class="label amber-label">NCA · LiNiCoAlO₂</span>
+          <h3>能量和功率强，管理要求高</h3>
+          <p>高比能量与比功率是突出优势；论文同时强调成本、寿命和安全挑战，需要更强的热管理与安全控制。</p>
+          <p><span class="tag">高能量</span><span class="tag">高功率</span><span class="tag">强热管理</span></p>
+        </div>
+      </div>
+      <div class="note">
+        <strong>记忆法：</strong>
+        LFP 像“稳健耐用型”，NMC 像“六边形均衡型”，NCA 像“高性能但需要严密照看型”，
+        LTO 像“耐久快充但背着重包型”。这只是帮助建立直觉，正式写作仍应使用具体指标和来源。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. Fig. 3 应该怎样读？</h2>
+      <p>下面是依据论文正文与 Fig. 3 的<strong>定性学习表</strong>，星号用于帮助比较，不应作为精确实验数据引用。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>体系</th>
+              <th>比能量</th>
+              <th>比功率</th>
+              <th>安全</th>
+              <th>寿命</th>
+              <th>成本竞争力</th>
+              <th>一句话判断</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th>LCO</th><td class="score">★★★★☆</td><td class="score">★★★☆☆</td><td class="score">★★☆☆☆</td><td class="score">★★☆☆☆</td><td class="score">★☆☆☆☆</td><td>高能量，但不适合只看能量就用于大型 EV。</td></tr>
+            <tr><th>LFP</th><td class="score">★★☆☆☆</td><td class="score">★★★★☆</td><td class="score">★★★★★</td><td class="score">★★★★☆</td><td class="score">★★★★☆</td><td>牺牲部分续航，换安全、寿命和成本。</td></tr>
+            <tr><th>LMO</th><td class="score">★★★☆☆</td><td class="score">★★★★☆</td><td class="score">★★★★☆</td><td class="score">★★☆☆☆</td><td class="score">★★★★☆</td><td>功率与成本不错，寿命是明显短板。</td></tr>
+            <tr><th>LTO</th><td class="score">★☆☆☆☆</td><td class="score">★★★★☆</td><td class="score">★★★★★</td><td class="score">★★★★★</td><td class="score">★☆☆☆☆</td><td>用低能量和较高成本换取快充、安全和耐久。</td></tr>
+            <tr><th>NMC</th><td class="score">★★★★☆</td><td class="score">★★★★☆</td><td class="score">★★★☆☆</td><td class="score">★★★★☆</td><td class="score">★★★☆☆</td><td>没有单项绝对统治，但整体最均衡。</td></tr>
+            <tr><th>NCA</th><td class="score">★★★★★</td><td class="score">★★★★☆</td><td class="score">★★☆☆☆</td><td class="score">★★★☆☆</td><td class="score">★★☆☆☆</td><td>追求高能量时，必须付出热与安全管理成本。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="danger">
+        <strong>不要把雷达图当成永恒排名。</strong>
+        实际性能还取决于具体材料配比（例如 NMC 111/622/811）、颗粒与电极设计、电芯形式、制造质量、BMS、温度和测试条件。
+        Fig. 3 是综述性比较图，适合建立概念，不适合替代统一条件下的量化实验数据。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>4. 论文真正提出的三个判断</h2>
+      <div class="grid-3">
+        <div class="card blue">
+          <span class="label">判断 1</span>
+          <h3>不存在脱离应用的“最佳电池”</h3>
+          <p>化学体系必须按应用需求选择；续航、安全、功率、寿命和成本的权重不同，答案就会不同。</p>
+        </div>
+        <div class="card green">
+          <span class="label green-label">判断 2</span>
+          <h3>NMC 是均衡型，LFP 是安全耐久型</h3>
+          <p>论文认为 NMC 在多个指标上表现均衡；LFP 虽比能量较低，但安全、热稳定和循环寿命具有优势。</p>
+        </div>
+        <div class="card amber">
+          <span class="label amber-label">判断 3</span>
+          <h3>高能量不是免费的</h3>
+          <p>NCA 的高能量和功率伴随成本、寿命及安全挑战，因此需要更可靠的热管理和监控。</p>
+        </div>
+      </div>
+      <div class="thesis">
+        <strong>作者最后的筛选：</strong>
+        在六种主要体系中，论文特别把 NMC、LFP 和 LMO 视为较优候选，因为三者以不同方式平衡了能量密度、功率、安全与综合性能。
+        这不是说三者在每个应用中都优于其他体系，而是说它们具有较有竞争力的综合画像。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>5. 从 chemistry 到机器人：中间不能跳步</h2>
+      <p>材料体系不会直接“决定用哪款机器人”。严谨的推理必须经过工艺与风险两层：</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>材料/系统特征</th>
+              <th>制造含义</th>
+              <th>机器人与自动化含义</th>
+              <th>推论性质</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>高能量体系的热稳定与缺陷后果更受关注</td>
+              <td>严格缺陷控制、热监测、异常品隔离和全流程追溯</td>
+              <td>视觉/传感检测、自动分选、安全 reject flow、单件数据绑定</td>
+              <td>由材料风险得到的制造推论</td>
+            </tr>
+            <tr>
+              <td>LFP 强调安全、寿命和成本</td>
+              <td>量产仍需高一致性，同时成本压力可能强化节拍与 OEE 目标</td>
+              <td>高速稳定搬运、低停机率、易维护末端执行器、在线质量检测</td>
+              <td>产业逻辑推论，非 Section 4 直接结论</td>
+            </tr>
+            <tr>
+              <td>NMC 配比多样，整体性能均衡</td>
+              <td>产品变体与配方差异需要可靠的 recipe control 和追溯</td>
+              <td>柔性换型、配方防错、ID 读取、MES/质量数据关联</td>
+              <td>系统工程推论</td>
+            </tr>
+            <tr>
+              <td>NCA 需要强热管理</td>
+              <td>测试、化成、老化与模组环节的温度和异常监测更关键</td>
+              <td>热成像/温度数据接入、危险品自动转运、减少人员暴露</td>
+              <td>基于正文安全描述的应用推论</td>
+            </tr>
+            <tr>
+              <td>所有体系都存在性能—成本权衡</td>
+              <td>自动化方案也必须在精度、节拍、柔性、投资与安全之间权衡</td>
+              <td>机器人 KPI 应按工序风险和产品目标加权，而非用单一指标排名</td>
+              <td>对论文主线的课题映射</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <strong>你论文里可以形成的评价链：</strong>
+        chemistry / cell requirements → process sensitivity → failure consequence → automation function → robot requirements → KPI。
+        这条链比“某材料适合某机器人”的直接跳跃可靠得多。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>6. 精读时要有的批判性：这篇文章哪里需要小心？</h2>
+      <div class="grid-2">
+        <div class="card amber">
+          <h3>术语分类并不完全同层级</h3>
+          <p>
+            LCO、LFP、LMO、NMC、NCA 通常指正极材料，而 LTO 通常指钛酸锂负极。
+            Fig. 3 实际比较的是以这些材料命名的电池体系，而不是六种完全同类的正极材料。
+          </p>
+        </div>
+        <div class="card amber">
+          <h3>图是定性概览，不是统一测试</h3>
+          <p>
+            雷达图没有在本节给出统一的数值、测试条件和归一化方法。因此可以用它解释 trade-off，
+            但若论文需要精确比较，应另找原始实验或权威数据库。
+          </p>
+        </div>
+        <div class="card amber">
+          <h3>“NMC 最均衡”会随配比变化</h3>
+          <p>
+            NMC 不是单一固定材料。镍含量升高通常有利于容量，却也可能增加结构与热稳定挑战。
+            后面的 cathode materials 小节会进一步展开这一点。
+          </p>
+        </div>
+        <div class="card amber">
+          <h3>机器人结论是我们的二次推导</h3>
+          <p>
+            Section 4 本身没有研究机器人。它提供的是材料和系统层面的边界条件；制造和机器人含义必须明确写成
+            “this implies” 或 “from a manufacturing perspective”。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>7. 可以写进论文的表达</h2>
+      <div class="quote-box">
+        <div class="en">
+          Lithium-ion battery chemistries exhibit distinct trade-offs among specific energy, specific power, safety, service life, and cost; consequently, chemistry selection must be aligned with application-specific priorities rather than optimized against a single metric.
+        </div>
+        <div class="cn">
+          不同锂离子电池化学体系在比能量、比功率、安全、寿命和成本之间存在不同权衡，因此体系选择应与具体应用优先级相匹配，而不能只优化单一指标。
+        </div>
+      </div>
+      <div class="quote-box">
+        <div class="en">
+          NMC chemistries offer a comparatively balanced performance profile for EV applications, whereas LFP trades lower energy density for improved thermal stability, safety, and cycle life.
+        </div>
+        <div class="cn">
+          NMC 在 EV 应用中呈现相对均衡的性能画像；相比之下，LFP 以较低能量密度换取更好的热稳定性、安全性和循环寿命。
+        </div>
+      </div>
+      <div class="quote-box">
+        <div class="en">
+          From a manufacturing perspective, chemistry-dependent risk and performance profiles can translate into different requirements for process monitoring, defect detection, thermal management, traceability, and abnormal-product handling.
+        </div>
+        <div class="cn">
+          从制造角度看，不同化学体系的风险与性能画像可进一步转化为对过程监测、缺陷检测、热管理、追溯和异常品处理的不同要求。
+        </div>
+      </div>
+      <div class="warning">
+        前两段可引用 Koech et al. (2024) 的 Section 4；第三段是你的制造视角综合推论，最好同时用电池制造或机器人文献支撑，不要假装是该文作者的直接结论。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>8. 自测：先回答，再展开参考答案</h2>
+      <details>
+        <summary>Q1. 为什么不能说 NMC 是“绝对最好的”电池体系？</summary>
+        <p>因为评价取决于应用权重。NMC 的优势是多维度均衡，但如果应用把热安全、寿命或快充置于最高优先级，LFP 或 LTO 可能更合适；如果极端追求比能量，其他高镍体系可能更有吸引力。</p>
+      </details>
+      <details>
+        <summary>Q2. LFP 比能量较低，为什么仍能成为重要 EV 方案？</summary>
+        <p>续航不是唯一目标。LFP 的热稳定性、安全性、循环寿命和成本竞争力可以降低系统风险与全生命周期成本，因此在适当车型和使用场景下很有优势。</p>
+      </details>
+      <details>
+        <summary>Q3. Specific energy 和 specific power 的区别是什么？</summary>
+        <p>比能量回答单位质量能储存多少能量，主要关联续航与重量；比功率回答单位质量能以多快的速率输出能量，主要关联加速、倍率和快速充放能力。</p>
+      </details>
+      <details>
+        <summary>Q4. NCA 的高比能量为何会影响制造与自动化设计？</summary>
+        <p>论文指出其安全与热管理挑战更强。制造系统因此更重视缺陷预防、温度/异常监测、隔离和追溯；机器人可承担自动检测、异常品转运和减少人员暴露等任务。但这是一条制造推论，不是材料名称直接决定机器人型号。</p>
+      </details>
+      <details>
+        <summary>Q5. Fig. 3 为什么不能作为精确选型数据表？</summary>
+        <p>它是定性雷达图，本节未提供统一测试条件、数值和归一化方法；而实际表现还受材料配比、电芯设计、工艺质量、温度和 BMS 影响。</p>
+      </details>
+      <details>
+        <summary>Q6. 请用一句话把 Section 4 接到你的机器人课题。</summary>
+        <p>不同电池化学体系形成不同的性能边界和风险画像，这些差异通过工艺敏感性与失效后果，转化为机器人系统在精度、检测、安全、环境兼容和追溯方面的要求。</p>
+      </details>
+    </section>
+
+    <section class="section">
+      <h2>9. 这一节最后只记住四句话</h2>
+      <ol>
+        <li><strong>没有万能 chemistry，只有与应用目标匹配的 chemistry。</strong></li>
+        <li><strong>NMC 的关键词是均衡；LFP 的关键词是安全、寿命和成本；NCA 的关键词是高能量与高管理要求。</strong></li>
+        <li><strong>高能量、高功率、安全、寿命和低成本之间存在结构性权衡。</strong></li>
+        <li><strong>对机器人课题，材料差异必须先翻译为工艺和风险要求，再翻译为自动化功能。</strong></li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h2>10. 下一步怎么读</h2>
+      <p>
+        下一节是 Section 5 <strong>Energy density and enhancements</strong>。建议中低强度阅读：
+        重点理解为什么 EV 持续追求能量密度、现有 Li-ion 的边界，以及 solid-state、Li–S、Li–air、Mg-ion 被期待解决什么问题；
+        不需要背完所有理论能量密度数字。
+      </p>
+      <div class="warning">
+        <strong>下一学习目标：</strong>
+        区分 gravimetric energy density（Wh/kg）与 volumetric energy density（Wh/L），并理解“材料理论值—电极值—电芯值—电池包值”为什么会逐层下降。
+      </div>
+    </section>
+
+    <p class="small">
+      Learning guide for Paper 01 Section 4, based on Koech et al. (2024),
+      <em>South African Journal of Chemical Engineering</em>, 50, 321–339.
+      本讲义中的机器人制造映射为面向硕士课题的分析性推论，并非原文直接研究结论。
+    </p>
+  </main>
+</body>
+</html>

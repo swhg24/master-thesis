@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper 01 Section 5 - Energy Density Learning Guide</title>
+  <style>
+    :root {
+      --bg:#f6f7f9; --paper:#fff; --ink:#17202a; --muted:#5d6877; --line:#d8dee8;
+      --blue:#1f5f99; --green:#26745b; --amber:#9a630b; --red:#9a3333; --violet:#674b98;
+      --soft-blue:#eaf3fb; --soft-green:#e9f7f1; --soft-amber:#fff4df;
+      --soft-red:#fdecec; --soft-violet:#f2edfa; --shadow:0 12px 30px rgba(23,32,42,.08);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0; background:var(--bg); color:var(--ink);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.65;
+    }
+    .page { max-width:1120px; margin:0 auto; padding:34px 22px 70px; }
+    .hero,.section {
+      background:var(--paper); border:1px solid var(--line); border-radius:10px;
+      box-shadow:var(--shadow);
+    }
+    .hero { padding:34px; margin-bottom:22px; }
+    .section { padding:28px; margin:18px 0; box-shadow:0 4px 16px rgba(23,32,42,.05); }
+    .eyebrow { margin:0 0 8px; color:var(--blue); font-weight:800; font-size:14px; }
+    h1 { margin:0; font-size:32px; line-height:1.18; }
+    h2 { margin:34px 0 14px; font-size:23px; line-height:1.25; }
+    h2:first-child { margin-top:0; }
+    h3 { margin:20px 0 10px; font-size:18px; }
+    p { margin:10px 0; }
+    .subtitle { color:var(--muted); max-width:880px; margin-top:12px; }
+    .meta,.grid-2,.grid-3,.grid-4 { display:grid; gap:14px; }
+    .meta { grid-template-columns:repeat(4,minmax(0,1fr)); margin-top:20px; }
+    .grid-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .grid-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .grid-4 { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .meta div,.card {
+      border:1px solid var(--line); background:#fbfcfe; border-radius:8px; padding:14px;
+    }
+    .meta div { min-height:76px; }
+    .meta strong { display:block; color:var(--muted); font-size:13px; margin-bottom:5px; }
+    .card h3 { margin-top:0; }
+    .blue { background:var(--soft-blue); border-color:#c8dff1; }
+    .green { background:var(--soft-green); border-color:#c8e7d9; }
+    .amber { background:var(--soft-amber); border-color:#edd39c; }
+    .red { background:var(--soft-red); border-color:#edc1c1; }
+    .violet { background:var(--soft-violet); border-color:#d9c9ef; }
+    .label {
+      display:inline-block; padding:4px 9px; border-radius:999px; background:var(--blue);
+      color:#fff; font-size:13px; font-weight:800; margin-bottom:8px;
+    }
+    .green-label { background:var(--green); }
+    .amber-label { background:var(--amber); }
+    .red-label { background:var(--red); }
+    .violet-label { background:var(--violet); }
+    .note,.thesis,.warning,.danger {
+      padding:14px 16px; border-radius:8px; margin:14px 0; border-left:5px solid;
+    }
+    .note { background:var(--soft-blue); border-color:var(--blue); }
+    .thesis { background:var(--soft-green); border-color:var(--green); }
+    .warning { background:var(--soft-amber); border-color:var(--amber); }
+    .danger { background:var(--soft-red); border-color:var(--red); }
+    .formula {
+      padding:20px; margin:14px 0; text-align:center; background:#17202a; color:#fff;
+      border-radius:8px; font-size:20px; font-weight:750;
+    }
+    .flow {
+      display:grid; grid-template-columns:repeat(4,minmax(130px,1fr)); gap:10px;
+      margin:18px 0 8px;
+    }
+    .step {
+      position:relative; border:1px solid var(--line); border-radius:8px;
+      padding:14px; background:#fbfcfe; min-height:116px;
+    }
+    .step:not(:last-child)::after {
+      content:">"; position:absolute; right:-11px; top:42%; width:18px; text-align:center;
+      background:var(--bg); color:var(--muted); font-weight:900;
+    }
+    .step strong { display:block; color:var(--blue); margin-bottom:5px; }
+    .bar-row {
+      display:grid; grid-template-columns:150px 1fr 70px; gap:10px; align-items:center;
+      margin:10px 0;
+    }
+    .bar { height:18px; background:#e8edf3; border-radius:999px; overflow:hidden; }
+    .bar span { display:block; height:100%; background:var(--blue); border-radius:999px; }
+    .table-wrap { overflow-x:auto; margin:14px 0; }
+    table { width:100%; min-width:800px; border-collapse:collapse; }
+    th,td {
+      border:1px solid var(--line); padding:12px; text-align:left; vertical-align:top;
+    }
+    th { background:#eef2f6; }
+    .quote-box {
+      border:1px solid var(--line); background:#fbfcfe; border-radius:8px;
+      padding:16px; margin:12px 0;
+    }
+    .quote-box .en { font-weight:750; }
+    .quote-box .cn { color:var(--muted); margin-top:6px; }
+    ul { padding-left:20px; }
+    li { margin:6px 0; }
+    .checklist li,.avoid li {
+      list-style:none; margin-left:-22px; padding-left:28px; position:relative;
+    }
+    .checklist li::before {
+      content:"✓"; position:absolute; left:0; color:var(--green); font-weight:900;
+    }
+    .avoid li::before {
+      content:"!"; position:absolute; left:0; color:var(--red); font-weight:900;
+    }
+    details {
+      border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+      margin:10px 0; background:#fbfcfe;
+    }
+    summary { cursor:pointer; font-weight:800; color:var(--blue); }
+    .small { color:var(--muted); font-size:14px; }
+    code { background:#eef2f6; border-radius:5px; padding:2px 5px; }
+    @media (max-width:900px) {
+      .meta,.grid-2,.grid-3,.grid-4,.flow { grid-template-columns:1fr; }
+      .step:not(:last-child)::after { display:none; }
+      .bar-row { grid-template-columns:110px 1fr 60px; }
+      h1 { font-size:25px; }
+      .hero,.section { padding:20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Paper 01 精读学习讲义 · Section 5</p>
+      <h1>Energy Density and Enhancements<br>能量密度与下一代电池技术</h1>
+      <p class="subtitle">
+        这一节回答一个朴素但关键的问题：为什么电动车不能只“多装几块电池”？
+        因为电池同时占据质量、空间和成本。提高能量密度，就是在不同比例尺上与这些约束较量——而实验室材料的漂亮数字，到真实电池包里往往会一路缩水。
+      </p>
+      <div class="meta">
+        <div><strong>原文位置</strong>PDF pp. 7–8 / 期刊 pp. 327–328</div>
+        <div><strong>核心图</strong>Fig. 4 能量密度比较图</div>
+        <div><strong>建议用时</strong>45–60 分钟</div>
+        <div><strong>掌握层级</strong>概念精读 + 数字谨慎使用</div>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>0. 学习目标</h2>
+      <div class="grid-2">
+        <div class="card blue">
+          <span class="label">基础概念</span>
+          <ul class="checklist">
+            <li>区分 gravimetric 与 volumetric energy density。</li>
+            <li>理解 energy density 与 power density 不是一回事。</li>
+            <li>解释为什么更高能量密度通常意味着更长 EV 续航。</li>
+            <li>理解材料、电极、电芯、电池包数值不能混用。</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <span class="label green-label">论文与课题</span>
+          <ul class="checklist">
+            <li>比较 solid-state、Li–S、Li–air、Mg-ion 的承诺与障碍。</li>
+            <li>解释为什么现有 Li-ion 仍然占主导。</li>
+            <li>把新材料变化连接到新制造工艺和自动化需求。</li>
+            <li>识别综述中“理论值”“潜力值”和“当前值”的边界。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>1. 什么是能量密度？先看两个分母</h2>
+      <div class="grid-2">
+        <div class="card blue">
+          <span class="label">Gravimetric</span>
+          <h3>质量能量密度 / Specific energy</h3>
+          <div class="formula">E<sub>g</sub> = Energy ÷ Mass &nbsp; [Wh/kg]</div>
+          <p>单位质量能存多少能量。数值越高，同样续航所需电池可以越轻，直接关系整车质量、能耗和载荷。</p>
+        </div>
+        <div class="card green">
+          <span class="label green-label">Volumetric</span>
+          <h3>体积能量密度</h3>
+          <div class="formula">E<sub>v</sub> = Energy ÷ Volume &nbsp; [Wh/L]</div>
+          <p>单位体积能存多少能量。数值越高，同样续航所需电池可以越小，关系到底盘空间、乘员舱和整车布置。</p>
+        </div>
+      </div>
+      <div class="warning">
+        <strong>典型口试陷阱：</strong>
+        一块电池可以很轻但体积大，也可以很紧凑但较重。因此 Wh/kg 和 Wh/L 必须分别报告；
+        “能量密度提高了”若不说明分母，信息是不完整的。
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Energy · Wh</h3>
+          <p>总共能做多少功，影响可用续航。</p>
+        </div>
+        <div class="card">
+          <h3>Power · W</h3>
+          <p>能以多快的速率做功，影响加速和充放电倍率。</p>
+        </div>
+        <div class="card">
+          <h3>Capacity · Ah</h3>
+          <p>电荷容量；只有结合电压，才能进一步讨论能量。近似关系：<code>Wh ≈ Ah × V</code>。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2. 为什么 EV 如此在意能量密度？</h2>
+      <div class="flow">
+        <div class="step"><strong>目标</strong>一次充电行驶更远</div>
+        <div class="step"><strong>简单做法</strong>增加电池总容量和电芯数量</div>
+        <div class="step"><strong>副作用</strong>质量、体积、成本与热管理负担增加</div>
+        <div class="step"><strong>材料路线</strong>提高单位质量和单位体积可储存的能量</div>
+      </div>
+      <p>
+        论文指出，EV 续航与总电池容量密切相关。若单纯堆叠现有电芯来增加容量，车辆必须同时承担更多非活性材料、
+        结构件、冷却部件和保护系统。因此，研究目标不是只把电池“做大”，而是在可接受的安全、寿命与成本下把它“做得更有效率”。
+      </p>
+      <div class="note">
+        <strong>本节给出的当前 Li-ion 概览：</strong>
+        约 250–693 Wh/L、100–265 Wh/kg，功率密度最高约 340 W/kg，寿命超过 1,000 cycles。
+        这些是论文汇总的范围，不代表任意电芯都同时达到各项上限，也不能与材料理论值直接比较。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. 最重要的尺度问题：漂亮数字为什么会层层打折？</h2>
+      <p>能量密度必须连同 measurement level 一起读。越接近完整车辆，非活性部件越多：</p>
+      <div class="bar-row"><strong>活性材料</strong><div class="bar"><span style="width:100%"></span></div><span>最高</span></div>
+      <div class="bar-row"><strong>电极</strong><div class="bar"><span style="width:82%"></span></div><span>下降</span></div>
+      <div class="bar-row"><strong>电芯 Cell</strong><div class="bar"><span style="width:62%"></span></div><span>再下降</span></div>
+      <div class="bar-row"><strong>模组 Module</strong><div class="bar"><span style="width:49%"></span></div><span>再下降</span></div>
+      <div class="bar-row"><strong>电池包 Pack</strong><div class="bar"><span style="width:40%"></span></div><span>最低</span></div>
+      <p class="small">示意条只表达递减关系，不代表论文中的固定换算比例。</p>
+      <div class="grid-2">
+        <div class="card amber">
+          <h3>哪些东西不储能，却必须存在？</h3>
+          <ul>
+            <li>导电剂、粘结剂、集流体与隔膜</li>
+            <li>电解液、极耳、壳体与密封</li>
+            <li>模组框架、连接件和线束</li>
+            <li>冷却系统、传感器、BMS 与防护结构</li>
+          </ul>
+        </div>
+        <div class="card red">
+          <h3>读论文数字前先问四件事</h3>
+          <ul class="avoid">
+            <li>这是 theoretical 还是 practical？</li>
+            <li>这是材料、电极、cell 还是 pack level？</li>
+            <li>按质量还是按体积归一化？</li>
+            <li>在什么循环、倍率、温度与截止电压下测得？</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>4. 四条下一代技术路线：承诺与障碍必须一起读</h2>
+      <div class="grid-4">
+        <div class="card blue">
+          <span class="label">Solid-state</span>
+          <h3>固态电池</h3>
+          <p><strong>论文给出的潜力：</strong>0.3–0.5 kWh/kg。</p>
+          <p><strong>核心变化：</strong>以固体电解质取代液体或凝胶电解质。</p>
+          <p><strong>承诺：</strong>更高能量密度、更高安全性和更长寿命。</p>
+          <p><strong>别漏掉：</strong>固—固界面接触、压力控制、脆性材料和量产一致性仍是现实制造难点。</p>
+        </div>
+        <div class="card green">
+          <span class="label green-label">Li–S</span>
+          <h3>锂硫电池</h3>
+          <p><strong>论文给出的潜力：</strong>最高约 0.6 kWh/kg。</p>
+          <p><strong>吸引力：</strong>硫具有较高理论容量，并可能降低材料成本。</p>
+          <p><strong>障碍：</strong>polysulfide shuttle 多硫化物穿梭与容量衰减。</p>
+          <p><strong>制造含义：</strong>材料迁移、界面稳定和循环一致性成为关键控制对象。</p>
+        </div>
+        <div class="card amber">
+          <span class="label amber-label">Li–air</span>
+          <h3>锂空气电池</h3>
+          <p><strong>论文给出的理论范围：</strong>1.7–2.0 kWh/kg。</p>
+          <p><strong>吸引力：</strong>理论能量密度最高之一，利用环境中的氧参与反应。</p>
+          <p><strong>障碍：</strong>氧反应、电解液稳定性与副反应复杂。</p>
+          <p><strong>正确姿势：</strong>把它视为远期理论潜力，不要与商业 Li-ion cell 数字直接并列。</p>
+        </div>
+        <div class="card violet">
+          <span class="label violet-label">Mg-ion</span>
+          <h3>镁离子电池</h3>
+          <p><strong>论文给出的潜力：</strong>约 0.4–0.5 kWh/kg。</p>
+          <p><strong>吸引力：</strong>探索更安全、资源更友好的替代体系。</p>
+          <p><strong>障碍：</strong>适用电解液与能高效传导 Mg<sup>2+</sup> 的正极材料仍不足。</p>
+          <p><strong>关键理解：</strong>多价离子并不自动带来易实现的高性能。</p>
+        </div>
+      </div>
+      <div class="danger">
+        <strong>这里最需要科学警惕：</strong>
+        “promise”“potential”“theoretical” 不等于商业电芯已经实现。
+        尤其 Li–air 的理论值与当前 Li-ion 的 cell-level 范围不是同一成熟度、同一边界条件下的数据。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>5. 为什么下一代技术听起来更强，Li-ion 仍然占主导？</h2>
+      <div class="grid-3">
+        <div class="card green">
+          <h3>性能不是单一数字</h3>
+          <p>现有 Li-ion 同时具备较高比能量、较长循环寿命和较高效率，不只是某项理论指标漂亮。</p>
+        </div>
+        <div class="card blue">
+          <h3>制造成熟度是一种能力</h3>
+          <p>规模化工艺、供应链、设备、质量体系和经验已经形成。实验室材料必须跨越可制造性与良率鸿沟。</p>
+        </div>
+        <div class="card amber">
+          <h3>系统安全仍需付出成本</h3>
+          <p>论文也指出 Li-ion 成本较高，且需要复杂的安全和监控系统。主导地位并不意味着没有缺点。</p>
+        </div>
+      </div>
+      <div class="thesis">
+        <strong>成熟技术的“护城河”：</strong>
+        商业竞争比较的不是理论材料极限，而是性能 × 安全 × 寿命 × 良率 × 产能 × 成本 × 可维护性的组合。
+        对制造和机器人研究而言，technology readiness 与 energy density 同样重要。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>6. Fig. 4 怎么读：右上角更好，但不是全部</h2>
+      <p>
+        Fig. 4 把电池技术放在两个坐标上：横轴是 volumetric energy density（Wh/L），越向右，同样能量所需体积越小；
+        纵轴是 gravimetric energy density（Wh/kg），越向上，同样能量所需质量越小。
+      </p>
+      <div class="grid-2">
+        <div class="card blue">
+          <h3>图能告诉你什么</h3>
+          <ul class="checklist">
+            <li>哪些技术在重量和体积上更占优势。</li>
+            <li>为什么 Li-ion 与 Li-polymer 适合移动应用。</li>
+            <li>为什么能量密度必须同时看两个维度。</li>
+          </ul>
+        </div>
+        <div class="card red">
+          <h3>图不能单独告诉你什么</h3>
+          <ul class="avoid">
+            <li>成本、安全、寿命和充电速度。</li>
+            <li>实际 pack 的结构与热管理开销。</li>
+            <li>不同来源数据是否使用同一测试条件。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note">
+        论文称该图为 Ragone plot，但传统 Ragone plot 通常比较 specific energy 与 specific power；
+        本文 Fig. 4 的正文描述和坐标实际是在比较体积与质量能量密度。正式写作时最好直接描述坐标，不机械照搬图名。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>7. 从下一代材料到制造机器人：变化在哪里？</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>技术变化</th>
+              <th>可能出现的制造挑战</th>
+              <th>机器人/自动化需求</th>
+              <th>证据边界</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>液体电解质 → 固体电解质</td>
+              <td>固—固界面接触、薄层完整性、压力均匀性、脆性材料搬运</td>
+              <td>力控装配、精密对齐、低损伤抓取、在线界面检测</td>
+              <td>制造推论；Section 5 只概述固态技术优势</td>
+            </tr>
+            <tr>
+              <td>可能采用 lithium-metal anode</td>
+              <td>表面敏感、枝晶风险、极薄金属箔处理和环境控制</td>
+              <td>低接触搬运、张力控制、视觉检测、惰性/干燥环境兼容</td>
+              <td>跨本节与后续材料内容的推论</td>
+            </tr>
+            <tr>
+              <td>Li–S 的多硫化物迁移</td>
+              <td>配方、界面、密封与循环一致性控制</td>
+              <td>精确供料、过程参数记录、自动取样与质量追溯</td>
+              <td>由 degradation mechanism 推导</td>
+            </tr>
+            <tr>
+              <td>Li–air 与环境氧反应</td>
+              <td>气体纯度、湿度、密封、催化层与电解液稳定性</td>
+              <td>受控气氛操作、泄漏检测、无接触检测和安全隔离</td>
+              <td>远期概念制造推论，成熟度较低</td>
+            </tr>
+            <tr>
+              <td>技术路线快速变化</td>
+              <td>设备专用化可能带来产线锁定与改造成本</td>
+              <td>模块化工作站、可换末端执行器、recipe-driven control</td>
+              <td>与你课题高度相关的系统工程推论</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="warning">
+        <strong>对你的课题最有价值的结论：</strong>
+        下一代电池并不会减少制造挑战，而是改变挑战的类型。
+        机器人价值可能从单纯高速搬运，进一步转向精密力控、敏感材料操作、受控环境适配和全过程数据闭环。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>8. 可以写进论文的表达</h2>
+      <div class="quote-box">
+        <div class="en">
+          Energy density must be specified on both a gravimetric and a volumetric basis, as the former constrains battery mass while the latter constrains packaging space.
+        </div>
+        <div class="cn">
+          能量密度应同时从质量和体积两个维度说明：前者约束电池质量，后者约束封装空间。
+        </div>
+      </div>
+      <div class="quote-box">
+        <div class="en">
+          Although emerging chemistries promise higher theoretical energy densities, their practical adoption depends on overcoming challenges related to material stability, cycle life, safety, and scalable manufacturing.
+        </div>
+        <div class="cn">
+          尽管新兴电池体系展现出更高理论能量密度的潜力，其实际应用仍取决于能否克服材料稳定性、循环寿命、安全与规模化制造方面的挑战。
+        </div>
+      </div>
+      <div class="quote-box">
+        <div class="en">
+          The transition toward next-generation batteries is likely to shift robotic requirements toward delicate-material handling, force-controlled assembly, controlled-atmosphere operation, and data-rich in-line quality assurance.
+        </div>
+        <div class="cn">
+          向下一代电池转型可能使机器人需求进一步转向敏感材料搬运、力控装配、受控气氛作业和数据密集型在线质量保证。
+        </div>
+      </div>
+      <div class="warning">
+        前两段可由本节及其引文支持；第三段属于面向机器人课题的综合推论，后续需要用制造或自动化文献交叉支撑。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>9. 自测：先答，再展开</h2>
+      <details>
+        <summary>Q1. 250 Wh/kg 与 600 Wh/L 分别告诉我们什么？</summary>
+        <p>250 Wh/kg 描述单位质量可储存的能量，关系到重量；600 Wh/L 描述单位体积可储存的能量，关系到空间。二者分母不同，不能相互替代。</p>
+      </details>
+      <details>
+        <summary>Q2. 为什么容量 Ah 不能直接等同于能量 Wh？</summary>
+        <p>Ah 衡量电荷容量，而能量还与电压有关。近似地，Wh = Ah × 平均工作电压，因此相同 Ah 的两个电池可能具有不同 Wh。</p>
+      </details>
+      <details>
+        <summary>Q3. 为什么材料理论能量密度通常高于电池包能量密度？</summary>
+        <p>电极、电芯、模组和电池包逐层加入不直接储能但不可缺少的组件，包括集流体、隔膜、电解液、壳体、连接件、冷却系统、BMS 和防护结构。</p>
+      </details>
+      <details>
+        <summary>Q4. Li–air 的 1.7–2.0 kWh/kg 能否直接证明它优于商业 Li-ion？</summary>
+        <p>不能。该数字代表理论或潜在范围，而商业性能还受氧反应、电解液稳定性、循环寿命、安全、制造可行性及系统附加质量制约，比较边界不一致。</p>
+      </details>
+      <details>
+        <summary>Q5. 为什么现有 Li-ion 仍占主导？</summary>
+        <p>它在比能量、效率、寿命和成熟规模化制造之间形成了可商业化的综合平衡。下一代技术的单项理论优势尚未自动转化为稳定、经济、安全的量产产品。</p>
+      </details>
+      <details>
+        <summary>Q6. 下一代电池对机器人的核心影响是什么？</summary>
+        <p>材料与界面更敏感、环境和压力控制更严格，使机器人从高速重复执行进一步走向精密力控、低损伤搬运、环境兼容、在线感知与可追溯过程控制。</p>
+      </details>
+    </section>
+
+    <section class="section">
+      <h2>10. 这一节只记住五句话</h2>
+      <ol>
+        <li><strong>Wh/kg 决定“多重”，Wh/L 决定“多大”。</strong></li>
+        <li><strong>Wh 是能量，W 是功率，Ah 是电荷容量，三者不能混用。</strong></li>
+        <li><strong>材料 → 电极 → cell → module → pack，能量密度通常逐层下降。</strong></li>
+        <li><strong>下一代技术的理论潜力必须与稳定性、安全、寿命和制造成熟度一起评价。</strong></li>
+        <li><strong>新电池体系不是让制造变简单，而是让机器人面对新的材料、界面和环境约束。</strong></li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <h2>11. 下一步阅读路线</h2>
+      <p>
+        论文接下来出现编号重复的 <strong>“4. Cathode materials”</strong>，随后分成 4.1 spinels、4.2 lithium metal oxides 和 4.3 olivines。
+        这部分很长，不建议逐句平均用力。下一份精读应先做一个“正极材料地图”，再把 LMO、NMC/NCA 和 LFP 三大家族分别放进去。
+      </p>
+      <div class="thesis">
+        <strong>下一学习目标：</strong>
+        用 crystal structure → Li-ion transport → energy/safety/lifetime → manufacturing implication
+        这条链理解三类正极，而不是陷入化学式和单篇实验数值的森林。
+      </div>
+    </section>
+
+    <p class="small">
+      Learning guide for Paper 01 Section 5, based on Koech et al. (2024),
+      <em>South African Journal of Chemical Engineering</em>, 50, 321–339.
+      数值按原综述呈现；示意图与机器人制造映射为学习性解释和分析推论。
+    </p>
+  </main>
+</body>
+</html>
