@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper 01 Final Synthesis Learning Guide</title>
+  <style>
+    :root{
+      --bg:#f7f3ea;--paper:#fffdf8;--ink:#24313f;--muted:#6e7b86;--line:#e6dccb;
+      --blue:#dcecff;--green:#e4f4e8;--amber:#fff1cf;--red:#ffe3dd;--violet:#eee6ff;
+      --teal:#dff5f2;--shadow:rgba(33,42,54,.08)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC",Arial,sans-serif;line-height:1.72}
+    .page{max-width:1160px;margin:auto;padding:34px 22px 78px}
+    .hero,.section{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 26px var(--shadow)}
+    .hero{padding:38px;margin-bottom:22px}
+    .section{padding:28px;margin:18px 0}
+    .eyebrow{letter-spacing:.12em;text-transform:uppercase;color:#8d6b3c;font-size:13px;font-weight:700;margin:0 0 8px}
+    h1{font-size:34px;line-height:1.22;margin:0 0 14px;color:#182635}
+    h2{font-size:24px;margin:0 0 14px;color:#1f3347}
+    h3{font-size:18px;margin:0 0 8px;color:#284057}
+    p{margin:9px 0}
+    ul,ol{margin:10px 0 10px 22px;padding:0}
+    li{margin:6px 0}
+    strong{color:#172838}
+    .muted{color:var(--muted)}
+    .small{font-size:13px;color:var(--muted)}
+    .meta,.grid2,.grid3,.grid4{display:grid;gap:14px}
+    .meta{grid-template-columns:repeat(4,1fr);margin-top:20px}
+    .grid2{grid-template-columns:repeat(2,1fr)}
+    .grid3{grid-template-columns:repeat(3,1fr)}
+    .grid4{grid-template-columns:repeat(4,1fr)}
+    .card,.note,.teacher,.thesis,.warning,.quote-lite{border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,.06)}
+    .card{background:#fff}
+    .blue{background:var(--blue)}.green{background:var(--green)}.amber{background:var(--amber)}.red{background:var(--red)}.violet{background:var(--violet)}.teal{background:var(--teal)}
+    .teacher{background:#fff7e3;border-left:5px solid #d89a2b}
+    .thesis{background:#edf7ff;border-left:5px solid #4a90d9}
+    .warning{background:#fff0eb;border-left:5px solid #df6b4f}
+    .quote-lite{background:#f6f1e8;border-left:5px solid #9c7b4b}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:stretch;margin:14px 0}
+    .step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;position:relative}
+    .step:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:38%;font-weight:800;color:#9a7b4d}
+    table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff;border-radius:12px;overflow:hidden}
+    th,td{border:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+    th{background:#efe5d3;color:#263746}
+    .tag{display:inline-block;background:#efe5d3;border:1px solid #decbaa;border-radius:999px;padding:3px 9px;margin:2px;font-size:13px;color:#5f4726}
+    details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}
+    summary{cursor:pointer;font-weight:700}
+    .two-col{columns:2;column-gap:34px}
+    .sentence{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}
+    .en{color:#20354a;font-weight:650}.cn{color:#52616d;margin-top:4px}
+    @media(max-width:900px){.meta,.grid2,.grid3,.grid4,.flow{grid-template-columns:1fr}.step:not(:last-child)::after{display:none}.hero,.section{padding:21px}h1{font-size:27px}.two-col{columns:1}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">Paper 01 收官精读讲义 · Insights + Safety + Conclusions</p>
+    <h1>把第一篇文献真正吃透：<br>它教我们电池材料，也提醒我们别把材料综述误当机器人证据</h1>
+    <p>
+      这份讲义默认你<strong>没有看原文</strong>。所以我不会只列“作者说了什么”，而是把论文最后三部分放回全文脉络里讲：
+      作者如何总结锂电发展方向、为什么安全问题必须被认真放进制造分析、以及这篇综述对你的毕业论文到底能贡献什么。
+    </p>
+    <div class="meta">
+      <div class="card blue"><strong>论文</strong><br>Koech et al. (2024)</div>
+      <div class="card green"><strong>本讲覆盖</strong><br>Insights, Safety, Conclusions</div>
+      <div class="card amber"><strong>学习目标</strong><br>把 Paper 01 转成 thesis 资产</div>
+      <div class="card violet"><strong>阅读策略</strong><br>收束，不再钻材料兔子洞</div>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>0. 先回答你现在最该知道的：Paper 01 读完了吗？</h2>
+    <p>
+      是的，从我们的 literature review 工作流看，Paper 01 到这份讲义基本可以<strong>收官</strong>。它的角色不是提供机器人应用案例，
+      而是给你补齐“为什么电池制造这么敏感、这么难自动化”的底层语言。
+    </p>
+    <div class="flow">
+      <div class="step"><strong>电池为什么重要</strong><br>EV 增长、续航、能量密度</div>
+      <div class="step"><strong>电芯由什么组成</strong><br>电极、电解液、隔膜、集流体等</div>
+      <div class="step"><strong>材料如何影响性能</strong><br>能量、安全、寿命、成本</div>
+      <div class="step"><strong>材料如何带来风险</strong><br>热失控、衰减、界面副反应</div>
+      <div class="step"><strong>转向制造与机器人</strong><br>工艺控制、检测、搬运、追溯</div>
+    </div>
+    <div class="teacher">
+      <strong>老师提示：</strong>你以后写文献综述时，不要把这篇写成“机器人综述”。正确定位是：
+      <em>它解释了电芯材料和组件为什么会形成严格的制造约束；机器人应用的直接证据，需要下一批制造/自动化文献来补。</em>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>1. 作者在最后想把读者带向哪里？</h2>
+    <p>
+      最后几节的核心不是新增一个完全陌生的技术点，而是把前文材料知识收束成一个未来判断：
+      电动车普及会继续推高对高能量密度、高安全性、低成本、可持续电池的需求；而这些目标主要通过正极材料、负极材料、电解液、BMS 和回收体系共同推进。
+    </p>
+    <div class="grid3">
+      <div class="card blue">
+        <h3>性能压力</h3>
+        <p>EV 要更长续航，电池要更高能量密度。作者认为现有 Li-ion 已显著改善续航，但与燃油车相比仍有差距。</p>
+      </div>
+      <div class="card green">
+        <h3>材料创新</h3>
+        <p>未来正极会继续朝高电压 spinel、高容量 layered oxides、富锰/低钴/无钴方向发展。</p>
+      </div>
+      <div class="card amber">
+        <h3>系统协同</h3>
+        <p>正极不是孤立优化。硅负极、固态电解质、BMS、回收技术也会共同决定下一代电池表现。</p>
+      </div>
+    </div>
+    <div class="quote-lite">
+      <strong>用人话翻译作者最后的立场：</strong>
+      “锂电池还会继续主导 EV 和储能，但它必须继续解决能量密度、安全、寿命、成本和资源可持续性问题；正极材料是其中非常关键的杠杆。”
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>2. Insights and future perspectives：不要只看“未来技术”，要看“未来矛盾”</h2>
+    <p>
+      这一节列了很多未来方向。初学者容易把它读成“技术清单”：高镍 NMC、NMC 811、富锰正极、掺杂、包覆、固态电解质、硅负极、BMS、回收。
+      但文献综述真正要抓的是这些技术背后的矛盾。
+    </p>
+    <table>
+      <thead>
+        <tr><th>未来方向</th><th>它想解决什么</th><th>它又带来什么新问题</th><th>对你 thesis 的启发</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>高镍 NMC / NCA</td>
+          <td>提高容量和能量密度，降低对钴的依赖。</td>
+          <td>更容易出现热稳定性、界面副反应、容量衰减、材料结构不稳定等问题。</td>
+          <td>高性能材料通常要求更严格的过程控制、检测和追溯，不能只看“产线速度”。</td>
+        </tr>
+        <tr>
+          <td>富锰 / 低钴 / 无钴正极</td>
+          <td>降低成本和伦理/供应链压力，提高安全性潜力。</td>
+          <td>需要解决结构稳定、容量衰减、电化学性能平衡等问题。</td>
+          <td>材料路线变化会改变制造窗口和质量标准，机器人系统需要适应产品迭代。</td>
+        </tr>
+        <tr>
+          <td>掺杂与表面包覆</td>
+          <td>稳定晶体结构，减少金属溶解和电解液副反应。</td>
+          <td>工艺步骤更复杂，材料制备和一致性控制更重要。</td>
+          <td>先进材料不是自动降低制造难度，而可能增加计量、混合、涂布和检测要求。</td>
+        </tr>
+        <tr>
+          <td>硅负极 + 固态电解质</td>
+          <td>提升容量、安全和快充潜力。</td>
+          <td>界面接触、膨胀、加工、寿命和规模化仍是难点。</td>
+          <td>下一代电池制造可能出现新的搬运、压力控制、环境控制和质量检测问题。</td>
+        </tr>
+        <tr>
+          <td>BMS 与回收</td>
+          <td>提升安全、寿命、资源可持续性。</td>
+          <td>需要数据、传感、诊断、拆解与材料回收体系。</td>
+          <td>机器人不仅在生产线，还可能进入检测、维护、回收和闭环制造。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="teacher">
+      <strong>你要学会的阅读动作：</strong>看到“future material”时，不要只记名字；要问三件事：
+      它解决哪个性能问题？它制造起来更难还是更容易？它对机器人/自动化提出什么新要求？
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>3. 作者对三类正极未来的判断</h2>
+    <p>
+      这部分其实是在复盘我们上一份正极材料讲义：LMO、NMC/NCA、LFP/其他体系各有 trade-off。
+      最后展望里作者尤其强调 LMO spinel、NMC/NCA layered oxides、低钴/富锰方向。
+    </p>
+    <div class="grid3">
+      <div class="card green">
+        <h3>Li-Mn-O spinels</h3>
+        <p><strong>优点：</strong>成本低、毒性低、热耐受性较好，适合高功率/高放电应用。</p>
+        <p><strong>问题：</strong>Mn³⁺ 不稳定、锰溶解、Jahn–Teller 畸变导致容量衰减。</p>
+        <p><strong>改进：</strong>Al/Mg/F 掺杂、Li₃PO₄ 或 Al₂O₃ 表面包覆。</p>
+      </div>
+      <div class="card blue">
+        <h3>NMC / NCA</h3>
+        <p><strong>优点：</strong>能量密度、寿命和成本之间相对平衡，是 EV 中重要路线。</p>
+        <p><strong>问题：</strong>资源限制、钴成本和伦理问题、安全与热稳定性压力。</p>
+        <p><strong>改进：</strong>高镍、降钴、Zr 等元素掺杂、先进包覆、制造优化。</p>
+      </div>
+      <div class="card amber">
+        <h3>富锰 / 低钴方向</h3>
+        <p><strong>逻辑：</strong>钴的问题推动材料体系寻找替代。</p>
+        <p><strong>潜力：</strong>锰资源和安全性优势可能使其重新受到重视。</p>
+        <p><strong>边界：</strong>“潜力”不等于已经成熟，需要专门文献确认产业化状态。</p>
+      </div>
+    </div>
+    <div class="warning">
+      <strong>文献综述的谨慎点：</strong>作者在 Table 3 中混合了理论值、材料级指标、应用级描述和不同发展阶段的技术。
+      你写论文时不能直接把所有数字当成同一层级比较。尤其是能量密度数字，要区分 material-level、cell-level、pack-level。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>4. Safety：这节对机器人课题比看起来更重要</h2>
+    <p>
+      Paper 01 的第 6 节讲安全。表面上它像是电池安全科普，但对我们的 thesis 很有用，因为机器人进入电池制造产线时，
+      评价标准不能只有速度、节拍和成本，还要包括安全、故障模式、热风险、化学风险、电气风险和人员隔离。
+    </p>
+    <div class="grid3">
+      <div class="card red">
+        <h3>化学危险</h3>
+        <p>电池含有反应性材料和易燃溶剂。泄漏、过热、材料副反应可能引发危险。</p>
+      </div>
+      <div class="card amber">
+        <h3>电气危险</h3>
+        <p>风险与电池储能和 state of charge 有关。高压应用尤其需要绝缘、端子保护和故障控制。</p>
+      </div>
+      <div class="card violet">
+        <h3>热失控</h3>
+        <p>过充、过放、内部短路、高温暴露可能导致放热反应、燃烧、爆炸和有毒气体释放。</p>
+      </div>
+    </div>
+    <div class="thesis">
+      <strong>转成机器人语言：</strong>
+      电池制造机器人不是普通搬运机器人。它工作在材料敏感、环境受控、质量风险高、潜在火灾/化学/电气危险并存的场景中。
+      因此，机器人应用评价必须加入 risk reduction、operator safety、fault detection、traceability 和 emergency response。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>5. Safety 这一节具体怎么变成你的论文素材？</h2>
+    <table>
+      <thead>
+        <tr><th>原文安全主题</th><th>你应该怎么理解</th><th>可连接的制造环节</th><th>可连接的机器人/自动化议题</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Thermal management</td>
+          <td>电芯在充放电、化成、测试中会发热，热管理影响安全和寿命。</td>
+          <td>Formation, aging, testing, module/pack testing</td>
+          <td>自动化测试上下料、热监控、异常电芯隔离、数据追溯。</td>
+        </tr>
+        <tr>
+          <td>Overcharge / overdischarge</td>
+          <td>超出安全工作窗口会诱发不希望的副反应。</td>
+          <td>Formation, end-of-line testing, battery cycling</td>
+          <td>自动化设备联锁、BMS 数据读取、异常处理流程。</td>
+        </tr>
+        <tr>
+          <td>Internal short circuit</td>
+          <td>短路可能来自缺陷、污染、隔膜损伤、毛刺或装配误差。</td>
+          <td>Electrode cutting, stacking/winding, cell assembly</td>
+          <td>视觉检测、缺陷剔除、柔性材料无损搬运、高精度对齐。</td>
+        </tr>
+        <tr>
+          <td>Hazardous chemicals</td>
+          <td>电解液和部分材料对湿度、泄漏、挥发和污染敏感。</td>
+          <td>Electrolyte filling, dry-room processes, sealing</td>
+          <td>干房机器人、密闭搬运、泄漏检测、人员暴露降低。</td>
+        </tr>
+        <tr>
+          <td>Safety tests and fault analysis</td>
+          <td>电池安全需要通过测试、标准和故障树分析来系统评价。</td>
+          <td>Quality control, safety validation, process design</td>
+          <td>自动检测、数据采集、质量追溯、风险导向的自动化评价框架。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="teacher">
+      <strong>这就是 literature review 的手感：</strong>
+      原文没有说“机器人应该怎么做”，但它告诉我们“制造现场为什么危险、为什么必须控制”。
+      你可以把这个作为上游依据，再用制造自动化文献证明具体机器人方案。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>6. Conclusions：作者最终结论其实有 5 个层次</h2>
+    <p>
+      论文结论段不长，但可以拆成五个层次。你读我的这张表，就相当于读完了结论的骨架。
+    </p>
+    <table>
+      <thead>
+        <tr><th>层次</th><th>作者结论</th><th>你应该记住的版本</th><th>对毕设的用法</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>组件理解</td>
+          <td>理解负极、正极、电解液、隔膜、壳体等关键组件，对先进电池发展很重要。</td>
+          <td>电池不是一个黑盒，而是多组件耦合系统。</td>
+          <td>支撑 thesis background：机器人应用必须理解对象产品的材料和结构。</td>
+        </tr>
+        <tr>
+          <td>性能需求</td>
+          <td>高容量、轻量、空间高效的电池需求会继续增长。</td>
+          <td>EV 和储能增长会持续推动电芯性能提升。</td>
+          <td>支撑 introduction：为什么电池制造规模化和高质量制造重要。</td>
+        </tr>
+        <tr>
+          <td>正极核心性</td>
+          <td>正极材料对性能、安全和可持续性起关键作用。</td>
+          <td>正极是能量密度、安全、成本和寿命 trade-off 的关键入口。</td>
+          <td>支撑 process requirement：不同材料体系可能带来不同质量控制要求。</td>
+        </tr>
+        <tr>
+          <td>持续研发</td>
+          <td>研究继续聚焦能量密度、循环寿命和安全性。</td>
+          <td>电池技术仍在演进，制造系统要面对变化。</td>
+          <td>支撑 robotics evaluation：柔性、可扩展、可追溯系统有意义。</td>
+        </tr>
+        <tr>
+          <td>安全议题</td>
+          <td>热管理和电子保护是电池设计与运行的关键安全问题。</td>
+          <td>安全不是附属章节，而是电池制造和使用的核心约束。</td>
+          <td>支撑评价指标：安全风险降低应成为机器人应用价值之一。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>7. 这篇文献对你的 thesis 到底贡献什么？</h2>
+    <div class="grid2">
+      <div class="card green">
+        <h3>它能贡献的</h3>
+        <ul>
+          <li>解释 lithium-ion battery 的基本组成和工作逻辑。</li>
+          <li>说明正极材料为什么影响能量密度、安全、成本和寿命。</li>
+          <li>提供材料性能 trade-off 的背景语言。</li>
+          <li>支持“制造自动化必须考虑材料敏感性和安全风险”的上游论证。</li>
+          <li>帮你理解为什么电池产线需要干燥、洁净、检测、追溯和严格过程控制。</li>
+        </ul>
+      </div>
+      <div class="card red">
+        <h3>它不能直接贡献的</h3>
+        <ul>
+          <li>不能证明某种机器人系统在电芯制造中经济上最优。</li>
+          <li>不能直接说明 AGV、AMR、cobot、六轴机器人分别适合哪个工序。</li>
+          <li>不能提供产线节拍、投资回收期、OEE、良率提升等自动化经济数据。</li>
+          <li>不能替代 battery manufacturing process review。</li>
+          <li>不能替代 robotics in battery manufacturing 的案例文献。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warning">
+      <strong>最重要的边界：</strong>
+      Paper 01 是 battery fundamentals/cathode materials review，不是 manufacturing robotics review。
+      我们可以用它建立“为什么需要严格制造”的原因，但不能用它直接推出“某机器人方案有效”。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>8. 你以后写 literature review 时，可以这样安放 Paper 01</h2>
+    <p>
+      这篇文献适合放在 literature review 的前半部分：先介绍锂离子电芯为什么复杂，再进入制造流程和机器人应用。
+      它的位置应该像地基，不应该像主角。
+    </p>
+    <div class="flow">
+      <div class="step"><strong>Battery fundamentals</strong><br>Paper 01</div>
+      <div class="step"><strong>Manufacturing process</strong><br>电极制造、装配、化成</div>
+      <div class="step"><strong>Process requirements</strong><br>精度、洁净、干燥、安全</div>
+      <div class="step"><strong>Robotics applications</strong><br>搬运、检测、上下料、物流</div>
+      <div class="step"><strong>Evaluation</strong><br>技术可行性 + 经济性</div>
+    </div>
+    <div class="sentence">
+      <div class="en">
+        Lithium-ion battery performance and safety are governed by the interactions among electrode materials, electrolytes, separators, current collectors, and cell casing; therefore, automation in battery cell manufacturing must be assessed against material sensitivity, process stability, contamination control, and safety requirements.
+      </div>
+      <div class="cn">
+        锂离子电池的性能和安全由电极材料、电解液、隔膜、集流体和壳体等组件之间的相互作用共同决定；因此，电芯制造自动化不能只按产能评价，还必须结合材料敏感性、工艺稳定性、污染控制和安全要求。
+      </div>
+    </div>
+    <p class="small">这句话是 thesis-ready 的综合表达：事实基础来自 Paper 01；“automation must be assessed...” 是我们面向毕设主题的分析连接。</p>
+  </section>
+
+  <section class="section">
+    <h2>9. 作为 reviewer，你要保留的批判性判断</h2>
+    <div class="grid3">
+      <div class="card amber">
+        <h3>数字不能乱引用</h3>
+        <p>论文中不同能量密度数字有理论值、材料级、cell-level 等混合现象。写正式论文时要精确说明层级。</p>
+      </div>
+      <div class="card amber">
+        <h3>材料分类要小心</h3>
+        <p>前面我们已经注意到：LMO 是 spinel，LFP 是 olivine/polyanion，不应粗暴归为 layered oxide。</p>
+      </div>
+      <div class="card amber">
+        <h3>机器人推论要补证据</h3>
+        <p>从材料风险推到机器人需求是合理分析，但还需要制造/自动化文献证明具体应用和收益。</p>
+      </div>
+    </div>
+    <div class="teacher">
+      <strong>Codex 老师碎碎念：</strong>
+      好的 literature review 不是“每篇都相信”，而是知道每篇文献能负责哪一段、不能负责哪一段。
+      Paper 01 能负责“电池为什么难”；下一批文献要负责“制造哪里难”和“机器人怎么介入”。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>10. 现在你应该真正 get 到 Paper 01 的点</h2>
+    <ol>
+      <li><strong>Li-ion battery 是多组件耦合系统。</strong>正极、负极、电解液、隔膜、集流体、壳体都影响性能与安全。</li>
+      <li><strong>正极材料是性能 trade-off 的核心入口。</strong>能量密度、成本、安全、寿命、资源伦理往往互相牵制。</li>
+      <li><strong>材料创新不等于制造更简单。</strong>高镍、低钴、富锰、固态、硅负极等方向可能引入新的工艺窗口和质量控制问题。</li>
+      <li><strong>安全是制造和自动化评价的核心。</strong>热失控、过充过放、短路、化学泄漏和高压风险都影响产线设计。</li>
+      <li><strong>这篇文献给我们的是上游逻辑。</strong>它让我们有资格读制造和机器人文献，因为我们知道电池对象为什么敏感、为什么不能粗暴搬运和生产。</li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2>11. 自测：如果你能答出来，就说明这篇文献已经被你吸收了</h2>
+    <details>
+      <summary>Q1. Paper 01 对我们 thesis 最大的价值是什么？</summary>
+      <p>它提供 battery fundamentals 和材料/组件层面的约束，帮助解释为什么电池制造需要严格的过程控制、安全控制、质量检测和环境控制。</p>
+    </details>
+    <details>
+      <summary>Q2. 为什么不能直接用 Paper 01 证明某个机器人方案有效？</summary>
+      <p>因为它不是机器人或制造自动化研究，没有提供具体机器人应用案例、节拍、成本、ROI、集成难点或产线数据。</p>
+    </details>
+    <details>
+      <summary>Q3. Safety 这一节怎么连接到机器人？</summary>
+      <p>安全风险意味着机器人应用评价要考虑人员隔离、异常检测、危险物料搬运、热监控、质量追溯、应急联锁，而不是只看搬运速度。</p>
+    </details>
+    <details>
+      <summary>Q4. 未来材料方向对制造系统意味着什么？</summary>
+      <p>材料路线持续变化会改变工艺窗口、环境控制、检测要求和质量标准，因此制造自动化系统需要柔性、可追溯和可扩展。</p>
+    </details>
+    <details>
+      <summary>Q5. 下一篇文献应该找什么类型？</summary>
+      <p>应该找 battery cell manufacturing process review，尤其是 electrode manufacturing、cell assembly、formation/aging、quality control、dry-room automation、robotics applications in battery production。</p>
+    </details>
+  </section>
+
+  <section class="section">
+    <h2>12. 下一步：从电池基础转入制造与机器人证据链</h2>
+    <p>
+      Paper 01 到这里完成“电池对象理解”。下一步不要继续把时间投进更细的正极材料化学，除非导师明确要求。
+      我建议切换到第二类文献：battery cell manufacturing process review。
+    </p>
+    <div class="grid2">
+      <div class="card blue">
+        <h3>下一篇优先读</h3>
+        <ul>
+          <li>锂离子电池制造流程综述。</li>
+          <li>电极制造：mixing, coating, drying, calendering, slitting。</li>
+          <li>电芯装配：stacking/winding, electrolyte filling, sealing。</li>
+          <li>化成老化：formation, aging, testing, grading。</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>读的时候重点抓</h3>
+        <ul>
+          <li>每个工序的输入/输出是什么。</li>
+          <li>质量缺陷来自哪里。</li>
+          <li>哪些环节需要高精度、干燥、洁净、检测、搬运。</li>
+          <li>哪些环节可能适合机器人、视觉、AMR/AGV、自动上下料。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="thesis">
+      <strong>我们的 literature review 下一阶段主线：</strong>
+      Battery materials explain <em>why manufacturing is constrained</em>; manufacturing-process literature explains <em>where constraints occur</em>;
+      robotics literature explains <em>how automation can respond and whether it is worth it</em>.
+    </div>
+  </section>
+
+  <p class="small">
+    Final synthesis guide based on Koech et al. (2024), <em>South African Journal of Chemical Engineering</em>, 50, 321–339.
+    原文事实按论文最后三节组织；制造和机器人连接为面向硕士毕业论文 literature review 的教学性综合分析。
+  </p>
+</main>
+</body>
+</html>

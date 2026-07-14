@@ -45,6 +45,13 @@ If the English terms feel difficult, read the files in this order:
 13. `paper_notes_01_lithium_ion_fundamentals_cathode_review_2024.md` - first paper notes / 第一篇文献精读笔记
 14. `paper01_learning_guide.html` - visual learning guide / 第一篇文献可视化学习讲义
 15. `paper01_section3_learning_guide.html` - Section 3 visual guide / 第一篇第 3 节可视化讲义
+16. `paper01_section4_learning_guide.html` - Section 4 chemistry comparison guide / 第一篇第 4 节电池化学体系比较讲义
+17. `paper01_section5_learning_guide.html` - Section 5 energy-density guide / 第一篇第 5 节能量密度讲义
+18. `paper01_cathode_materials_learning_guide.html` - cathode materials deep-reading guide / 第一篇正极材料深度精读讲义
+19. `paper01_final_synthesis_learning_guide.html` - final synthesis guide / 第一篇展望、安全与结论收官讲义
+20. `supervisor_reference_reading_map.html` - supervisor reference roadmap / 带教参考文献阅读路线图
+21. `paper02_intro_form_factor_learning_guide.html` - Paper 02 intro and form-factor guide / 第二篇引言与电芯形式精读讲义
+22. `paper02_main_components_learning_guide.html` - Paper 02 main components guide / 第二篇主要组件精读讲义
 
 ## First Week Success Criteria
 

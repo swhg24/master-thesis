@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supervisor Reference Reading Map</title>
+  <style>
+    :root{--bg:#f6f2ea;--paper:#fffdf8;--ink:#24313f;--muted:#6b7884;--line:#e5d8c5;--blue:#e0efff;--green:#e4f5e7;--amber:#fff0cc;--red:#ffe1da;--violet:#efe7ff}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC",Arial,sans-serif;line-height:1.72}
+    .page{max-width:1120px;margin:auto;padding:34px 22px 70px}.hero,.section{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(30,40,55,.07)}
+    .hero{padding:36px;margin-bottom:20px}.section{padding:26px;margin:18px 0}h1{font-size:33px;line-height:1.22;margin:0 0 12px}h2{font-size:23px;margin:0 0 14px}h3{font-size:18px;margin:0 0 8px}
+    p{margin:8px 0}.eyebrow{font-size:13px;color:#8a6a3d;letter-spacing:.12em;text-transform:uppercase;font-weight:800}.muted{color:var(--muted)}
+    .grid2,.grid3,.grid4{display:grid;gap:14px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}
+    .card,.teacher,.warning,.thesis{border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,.06)}.card{background:white}.blue{background:var(--blue)}.green{background:var(--green)}.amber{background:var(--amber)}.red{background:var(--red)}.violet{background:var(--violet)}
+    .teacher{background:#fff7e3;border-left:5px solid #d99b2f}.warning{background:#fff0eb;border-left:5px solid #db674d}.thesis{background:#eef7ff;border-left:5px solid #4c91d7}
+    table{width:100%;border-collapse:collapse;margin:12px 0;background:white;border-radius:12px;overflow:hidden}th,td{border:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}th{background:#efe4d1}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}.step{background:white;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;position:relative}.step:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:38%;font-weight:900;color:#9b7a4a}
+    ul,ol{margin:8px 0 8px 22px;padding:0}li{margin:5px 0}.tag{display:inline-block;border:1px solid #d9c6a6;background:#f4ead7;border-radius:999px;padding:3px 9px;margin:2px;font-size:13px}.small{font-size:13px;color:var(--muted)}
+    @media(max-width:900px){.grid2,.grid3,.grid4,.flow{grid-template-columns:1fr}.step:not(:last-child)::after{display:none}.hero,.section{padding:20px}h1{font-size:27px}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">Supervisor References · Reading Map</p>
+    <h1>带教参考文献不是让我们乱读，<br>而是在搭一条从电池基础到机器人制造的证据链</h1>
+    <p>
+      这份路线图把带教给出的参考文献和主题重新整理成我们的毕业论文阅读顺序。你可以把它当作“接下来几周 literature review 的地图”：
+      哪篇负责基础，哪篇负责设计，哪篇负责经典背景，哪一类文献负责制造和机器人证据。
+    </p>
+    <div class="grid4">
+      <div class="card green"><strong>已完成</strong><br>Paper 01 深度精读</div>
+      <div class="card blue"><strong>下一步</strong><br>Full-cell design / cell formats</div>
+      <div class="card amber"><strong>随后</strong><br>经典原理、挑战、电解液/SEI</div>
+      <div class="card violet"><strong>主战场</strong><br>制造流程 + 质量控制 + 机器人</div>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>1. 带教给你的文献，其实分成四层</h2>
+    <div class="flow">
+      <div class="step"><strong>Layer 1</strong><br>Battery fundamentals<br>电池基础</div>
+      <div class="step"><strong>Layer 2</strong><br>Full-cell design<br>电芯设计</div>
+      <div class="step"><strong>Layer 3</strong><br>Classic challenges<br>经典问题</div>
+      <div class="step"><strong>Layer 4</strong><br>Manufacturing process<br>制造流程</div>
+      <div class="step"><strong>Layer 5</strong><br>Robotics evaluation<br>机器人评价</div>
+    </div>
+    <div class="teacher">
+      <strong>老师判断：</strong>我们已经完成 Layer 1 的核心任务。现在不要继续贪多读材料化学，应该进入 Layer 2 和 Layer 4：
+      电芯设计/形式会影响机器人怎么抓、怎么定位、怎么装配；制造流程会告诉我们机器人真正可以在哪里创造价值。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>2. 每篇参考文献应该承担什么任务？</h2>
+    <table>
+      <thead>
+        <tr><th>文献</th><th>带教推荐目的</th><th>我们精读时抓什么</th><th>对 thesis 的作用</th><th>状态</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Koech et al. 2024</strong><br>Lithium-ion Battery Fundamentals and Exploration of Cathode Materials</td>
+          <td>锂电原理、电芯组件、正极材料、电解液、隔膜、SEI。</td>
+          <td>组件如何影响性能、安全、制造约束。</td>
+          <td>作为 battery fundamentals 背景，解释为什么电芯制造敏感、质量要求高。</td>
+          <td>已完成深度 HTML 精读</td>
+        </tr>
+        <tr>
+          <td><strong>A Review on Design Parameters for Full-Cell Lithium-Ion Batteries (2024)</strong></td>
+          <td>cell design、正负极平衡、不同 cell formats：coin, pouch, cylindrical, prismatic。</td>
+          <td>N/P ratio、capacity balancing、format choice、cell geometry、设计参数如何影响制造。</td>
+          <td>连接“电池对象设计”与“机器人搬运/夹具/装配策略”。</td>
+          <td>下一篇优先；需定位 PDF/DOI</td>
+        </tr>
+        <tr>
+          <td><strong>Goodenough & Park 2013</strong><br>The Li-Ion Rechargeable Battery: A Perspective</td>
+          <td>经典综述：锂电发展和工作原理。</td>
+          <td>技术历史、为什么 Li-ion 成为主流、基本 electrochemistry。</td>
+          <td>用于 thesis introduction 的经典背景，不必逐段深挖。</td>
+          <td>待读，建议选择性</td>
+        </tr>
+        <tr>
+          <td><strong>Tarascon & Armand 2001</strong><br>Issues and Challenges Facing Rechargeable Lithium Batteries</td>
+          <td>最具影响力的经典综述之一：可充电锂电池基础挑战。</td>
+          <td>安全、材料稳定性、能量密度、成本、资源限制。</td>
+          <td>用于解释“锂电挑战不是新问题”，增强背景论证厚度。</td>
+          <td>待读，建议选择性</td>
+        </tr>
+        <tr>
+          <td><strong>Xu 2014</strong><br>Electrolytes and Interphases in Li-Ion Batteries and Beyond</td>
+          <td>电解液、界面、SEI 的综合综述。</td>
+          <td>electrolyte sensitivity、SEI formation、interphase、formation process 为什么关键。</td>
+          <td>强连接化成、老化、干房、注液、安全和质量追溯。</td>
+          <td>待读，建议 selective deep reading</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>3. 带教要求熟悉的 topic，要转成我们的 thesis 问题</h2>
+    <table>
+      <thead>
+        <tr><th>Topic</th><th>你需要懂到什么程度</th><th>机器人/制造连接</th><th>优先级</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Operating principles of lithium-ion batteries</td>
+          <td>知道 Li⁺ 在正负极间迁移、电子走外电路、充放电方向、formation 的意义。</td>
+          <td>解释化成、测试、BMS、质量追溯为什么重要。</td>
+          <td>已基本完成</td>
+        </tr>
+        <tr>
+          <td>Cell components</td>
+          <td>知道 anode, cathode, separator, electrolyte 的功能和敏感性。</td>
+          <td>解释涂布、干燥、隔膜搬运、注液、洁净/干燥环境。</td>
+          <td>已基本完成</td>
+        </tr>
+        <tr>
+          <td>Cell formats</td>
+          <td>理解 coin/pouch/cylindrical/prismatic 的结构差异和使用场景。</td>
+          <td>直接影响夹具、抓取、装配、托盘、物流和机器人可行性。</td>
+          <td>下一步重点</td>
+        </tr>
+        <tr>
+          <td>Electrode manufacturing</td>
+          <td>理解 mixing, coating, drying, calendering 不是孤立步骤，而是决定电极微结构。</td>
+          <td>机器人多在 roll handling、上料、取样、检测、物流支持，而不是替代核心连续设备。</td>
+          <td>高</td>
+        </tr>
+        <tr>
+          <td>Cell assembly</td>
+          <td>理解 stacking/winding、tab welding、housing insertion、electrolyte filling、sealing。</td>
+          <td>高精度、柔性薄片、污染控制、格式依赖，是机器人装配难点集中区。</td>
+          <td>高</td>
+        </tr>
+        <tr>
+          <td>Formation and aging</td>
+          <td>理解首次充放电、SEI 形成、长时间过程、安全和分选。</td>
+          <td>托盘搬运、测试上下料、AMR 物流、数据追踪是强机器人 use case。</td>
+          <td>很高</td>
+        </tr>
+        <tr>
+          <td>Manufacturing processes and quality control</td>
+          <td>理解每个工序的缺陷来源、检测点、过程窗口和质量追溯。</td>
+          <td>视觉检测、在线监控、机器人上下料、MES/traceability 是 thesis 主线。</td>
+          <td>很高</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>4. 我建议的下一步阅读顺序</h2>
+    <ol>
+      <li>
+        <strong>先读 Full-Cell Design Parameters 2024。</strong>
+        目标是补齐 cell formats 和 design parameters，因为这会直接影响机器人抓取、夹具、装配和产线布局。
+      </li>
+      <li>
+        <strong>并行建立制造流程证据链。</strong>
+        找一篇 battery cell manufacturing process review，重点读 electrode manufacturing、cell assembly、formation/aging、quality control。
+      </li>
+      <li>
+        <strong>Goodenough & Park 2013 作为经典背景轻读。</strong>
+        不需要做超长精读，做一份“经典原理和发展脉络”笔记即可。
+      </li>
+      <li>
+        <strong>Tarascon & Armand 2001 用来补挑战和动机。</strong>
+        抓安全、材料限制、能量密度和可持续挑战。
+      </li>
+      <li>
+        <strong>Xu 2014 选择性深读 electrolyte + SEI。</strong>
+        这篇很化学，不要整篇硬啃；重点服务注液、化成、老化、干房和安全。
+      </li>
+    </ol>
+    <div class="thesis">
+      <strong>一句话路线：</strong>
+      Paper 01 让我们知道电池为什么敏感；Full-cell design 让我们知道电芯形式为什么影响制造；
+      manufacturing review 让我们知道机器人可以在哪里介入；robotics/industry sources 再证明技术和经济价值。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>5. 下一份 HTML 精读笔记应该怎么做？</h2>
+    <div class="grid2">
+      <div class="card blue">
+        <h3>如果先读 Full-Cell Design</h3>
+        <ul>
+          <li>讲清楚 full cell 不是半电池，为什么正负极容量匹配重要。</li>
+          <li>讲 cell formats：coin, pouch, cylindrical, prismatic。</li>
+          <li>把 cell format 连接到 robot gripping、fixture、tray、assembly。</li>
+          <li>生成“电芯形式 → 工艺要求 → 机器人方案”的表。</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>如果先读 Manufacturing Review</h3>
+        <ul>
+          <li>建立完整工艺链：mixing → coating → drying → calendering → slitting → assembly → formation。</li>
+          <li>每个工序提取 defects、quality control、automation opportunity。</li>
+          <li>直接服务 thesis 主体章节和 use-case selection。</li>
+          <li>生成“工序 → 质量风险 → 机器人价值”的矩阵。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="teacher">
+      <strong>我的建议：</strong>下一份先读 Full-Cell Design Parameters 2024。原因是带教明确点名它，而且它能补齐 cell formats；
+      cell formats 是后面讨论机器人搬运和装配时绕不开的变量。读完它，我们再切 manufacturing review，会更稳。
+    </div>
+  </section>
+
+  <p class="small">
+    Working roadmap derived from supervisor-provided references and the current thesis repository status.
+    这不是最终论文文本，而是后续 literature review 的导航文件。
+  </p>
+</main>
+</body>
+</html>

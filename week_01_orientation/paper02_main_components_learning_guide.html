@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper 02 Main Components Learning Guide</title>
+  <style>
+    :root{--bg:#f6f2ea;--paper:#fffdf8;--ink:#233140;--muted:#687684;--line:#e5d9c8;--blue:#dfeeff;--green:#e5f5e8;--amber:#fff0cc;--red:#ffe2dc;--violet:#eee7ff;--teal:#ddf5f1;--shadow:rgba(30,42,58,.08)}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC",Arial,sans-serif;line-height:1.72}
+    .page{max-width:1180px;margin:auto;padding:34px 22px 76px}.hero,.section{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 26px var(--shadow)}.hero{padding:38px;margin-bottom:22px}.section{padding:28px;margin:18px 0}
+    .eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8a6839;font-weight:800;margin:0 0 8px}h1{font-size:34px;line-height:1.22;margin:0 0 14px;color:#182635}h2{font-size:24px;margin:0 0 14px;color:#20364c}h3{font-size:18px;margin:0 0 8px;color:#28435c}
+    p{margin:9px 0}ul,ol{margin:9px 0 9px 22px;padding:0}li{margin:6px 0}strong{color:#172838}.muted{color:var(--muted)}.small{font-size:13px;color:var(--muted)}
+    .meta,.grid2,.grid3,.grid4,.grid5{display:grid;gap:14px}.meta{grid-template-columns:repeat(4,1fr)}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}.grid5{grid-template-columns:repeat(5,1fr)}
+    .card,.teacher,.thesis,.warning,.quote-lite{border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,.06)}.card{background:#fff}.blue{background:var(--blue)}.green{background:var(--green)}.amber{background:var(--amber)}.red{background:var(--red)}.violet{background:var(--violet)}.teal{background:var(--teal)}
+    .teacher{background:#fff7e3;border-left:5px solid #d69a2e}.thesis{background:#eef7ff;border-left:5px solid #4b91d7}.warning{background:#fff0eb;border-left:5px solid #dc674e}.quote-lite{background:#f6f0e6;border-left:5px solid #9b7a4b}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;position:relative}.step:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:38%;font-weight:900;color:#9a7a4b}
+    table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff;border-radius:12px;overflow:hidden}th,td{border:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}th{background:#efe4d1;color:#263746}
+    .tag{display:inline-block;background:#f1e5cf;border:1px solid #dac6a6;border-radius:999px;padding:3px 9px;margin:2px;font-size:13px;color:#604827}
+    details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}summary{cursor:pointer;font-weight:800}.sentence{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}.en{font-weight:650;color:#20354a}.cn{color:#53616d;margin-top:4px}
+    @media(max-width:980px){.meta,.grid2,.grid3,.grid4,.grid5,.flow{grid-template-columns:1fr}.step:not(:last-child)::after{display:none}.hero,.section{padding:21px}h1{font-size:27px}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">Paper 02 精读学习讲义 · Section 3.2 Main Components</p>
+    <h1>完整电芯不是材料堆叠，<br>而是五类组件共同决定性能、制造与机器人难度</h1>
+    <p>
+      这份讲义继续默认你<strong>没有阅读英文原文</strong>。我已经替你精读 Section 3.2，并把它改写成适合我们毕业论文的学习版本：
+      电极、粘结剂、隔膜、集流体、电解液分别做什么、设计参数是什么、失效风险在哪里、对应哪些制造工序、以及如何影响机器人系统。
+    </p>
+    <div class="meta">
+      <div class="card blue"><strong>论文</strong><br>Ghani, An & Lee (2024)</div>
+      <div class="card green"><strong>章节</strong><br>3.2 Main Components</div>
+      <div class="card amber"><strong>学习目标</strong><br>组件 → 工序 → 自动化</div>
+      <div class="card violet"><strong>阅读深度</strong><br>精读概念，选择性记材料</div>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>0. 先给你结论：Section 3.2 为什么重要？</h2>
+    <p>
+      Paper 02 的 Section 3.2 讲的是 full-cell LIB 的主要组件材料选择。作者的核心意思是：
+      组件材料不是孤立存在的，它们决定电化学窗口、反应机理、导电性、机械稳定性、热稳定性、寿命和安全。
+    </p>
+    <div class="flow">
+      <div class="step"><strong>Electrode</strong><br>储锂与反应主体</div>
+      <div class="step"><strong>Binder</strong><br>把电极颗粒粘成稳定涂层</div>
+      <div class="step"><strong>Separator</strong><br>隔电子、通离子、防短路</div>
+      <div class="step"><strong>Current collector</strong><br>支撑电极并导电子</div>
+      <div class="step"><strong>Electrolyte</strong><br>传输 Li⁺ 并影响界面</div>
+    </div>
+    <div class="teacher">
+      <strong>老师讲重点：</strong>
+      你不要把这一节读成材料百科。对我们 thesis 来说，它的价值是把“电池为什么难制造”讲得更具体：
+      电极要均匀，粘结剂要稳定，隔膜不能损伤，集流体要导电且不断裂，电解液要润湿且安全。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>1. 作者的总论点：材料选择决定 full-cell 的反应窗口和稳定性</h2>
+    <p>
+      作者在 3.2 开头强调，材料本身是最基础的设计因素，因为它们决定：
+    </p>
+    <div class="grid3">
+      <div class="card blue"><h3>Electrochemical potential window</h3><p>电池能在多大电压范围内稳定工作。</p></div>
+      <div class="card green"><h3>Reaction chemistry</h3><p>Li⁺ 如何嵌入、脱出、转化、合金化，以及反应动力学快慢。</p></div>
+      <div class="card amber"><h3>Thermal / mechanical stability</h3><p>材料在热、压力、膨胀、循环中是否保持稳定。</p></div>
+    </div>
+    <p>
+      这和 Paper 01 是连起来的：Paper 01 告诉我们“组件有什么”；Paper 02 进一步告诉我们“每个组件的设计参数如何共同决定 full cell 表现”。
+    </p>
+    <div class="thesis">
+      <strong>转成毕业论文语言：</strong>
+      Battery cell manufacturing automation must be evaluated against component-level constraints, because electrode coatings, binders, separators, current collectors, and electrolytes each introduce distinct requirements for handling, process control, contamination prevention, inspection, and safety.
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>2. Electrode 电极：不是“正负极材料名字”，而是性能和制造难度的起点</h2>
+    <p>
+      作者说 electrode 是 LIB 的 primary component，因为它决定电化学窗口、比容量、能量/功率密度、反应机理和整体性能。
+      理想电极要有高导电性、宽电位窗口、好循环/倍率性能、低成本、稳定和安全。
+    </p>
+    <div class="grid2">
+      <div class="card blue">
+        <h3>Intrinsic design 内在设计</h3>
+        <p>改变材料本身：化学组成、晶体缺陷、晶体取向。</p>
+        <ul>
+          <li><strong>Chemical composition：</strong>决定晶体结构、Li⁺ 可嵌入量、稳定性和导电性。</li>
+          <li><strong>Point defects：</strong>可能提升导电性、稳定性和赝电容反应，但需要控制。</li>
+          <li><strong>Crystal orientation：</strong>影响界面反应、表面能、扩散路径和循环寿命。</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>Extrinsic design 外在设计</h3>
+        <p>改变颗粒和表面：粒径、形貌、表面修饰。</p>
+        <ul>
+          <li><strong>Size reduction：</strong>缩短 Li⁺ 扩散路径，但表面积增大会带来更多副反应。</li>
+          <li><strong>Morphology：</strong>孔隙、tap density、扩散通道和接触面积会影响容量与倍率。</li>
+          <li><strong>Surface modification：</strong>包覆、刻蚀、掺杂可改善导电性、界面和结构稳定性。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warning">
+      <strong>别被术语吓住：</strong>
+      intrinsic/extrinsic 本质就是“改材料内部”和“改颗粒外部”。对制造来说，外在设计尤其重要，因为粒径、形貌、表面包覆会影响粉体流动、浆料分散、涂布均匀性、干燥和辊压。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>3. 电极设计如何连接制造？这是本讲最重要的桥</h2>
+    <table>
+      <thead>
+        <tr><th>电极设计因素</th><th>作者关注的性能</th><th>制造含义</th><th>机器人/自动化含义</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Particle size 粒径</td>
+          <td>扩散路径、反应面积、倍率性能、副反应。</td>
+          <td>影响浆料分散、涂层均匀性、干燥、粉尘和颗粒污染。</td>
+          <td>上料、取样、混料辅助、环境控制和视觉/传感检测需要关注颗粒一致性。</td>
+        </tr>
+        <tr>
+          <td>Particle size distribution 粒径分布</td>
+          <td>能量密度、均匀性、应力分布、循环稳定性。</td>
+          <td>分布太宽可能提高堆积密度，但会降低 cell homogeneity。</td>
+          <td>质量检测不能只看宏观尺寸，还要关注涂层和颗粒分布相关缺陷。</td>
+        </tr>
+        <tr>
+          <td>Morphology 形貌</td>
+          <td>孔隙率、tap density、扩散路径、界面接触。</td>
+          <td>影响涂布流变、辊压后孔结构、活性材料利用率。</td>
+          <td>机器人不是直接“改变形貌”，但可服务取样、检测、闭环质量控制。</td>
+        </tr>
+        <tr>
+          <td>Surface modification 表面修饰</td>
+          <td>界面稳定、SEI/CEI、体积变化缓冲、容量保持。</td>
+          <td>增加材料制备复杂度，对一致性和过程控制要求更高。</td>
+          <td>自动化系统需要支持多材料批次追踪、配方管理和质量追溯。</td>
+        </tr>
+        <tr>
+          <td>Cracks / deformation 裂纹与变形</td>
+          <td>容量衰减、导电路径破坏、电极脱落。</td>
+          <td>干燥、辊压、分切、搬运都可能引入机械损伤。</td>
+          <td>视觉检测、无损搬运、张力控制、边缘毛刺检测是关键应用。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="teacher">
+      <strong>你要真正 get 的点：</strong>
+      电极不是做好以后才交给机器人搬。电极的材料设计会一路影响 slurry、coating、drying、calendering、slitting 和 inspection。
+      所以机器人应用不能脱离工艺窗口和质量控制。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>4. Tables 2 & 3：正负极材料表怎么读？不要背全表</h2>
+    <p>
+      论文 Tables 2 和 3 总结了 cathode 和 anode 材料的分类、优势和劣势。它们很长，材料很多。
+      我们不需要全部背下来。对 thesis 来说，读法是抓 trade-off。
+    </p>
+    <table>
+      <thead>
+        <tr><th>材料类别</th><th>典型优势</th><th>典型问题</th><th>对制造/机器人有什么用</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Layered oxides 层状氧化物</td>
+          <td>高容量、高能量密度、循环和倍率潜力。</td>
+          <td>成本、毒性、热/化学不稳定、氧释放、结构转变。</td>
+          <td>支持高能量路线，但安全和质量控制压力更大。</td>
+        </tr>
+        <tr>
+          <td>Spinel oxides 尖晶石</td>
+          <td>低成本、高电压、扩散快、安全性较好。</td>
+          <td>循环寿命和能量密度受限，Mn 溶解、Jahn–Teller 畸变。</td>
+          <td>说明不同材料路线会改变性能和失效模式。</td>
+        </tr>
+        <tr>
+          <td>Polyanionic / phosphate 多阴离子/磷酸盐</td>
+          <td>低成本、高安全、热稳定、循环寿命好。</td>
+          <td>导电性差、体积能量密度低、加工成本和实际容量问题。</td>
+          <td>安全性强，但制造中需要解决导电网络和电极结构。</td>
+        </tr>
+        <tr>
+          <td>Carbonaceous anodes 碳基负极</td>
+          <td>低成本、安全、循环好、结构稳定、导电性好。</td>
+          <td>容量较低、首次不可逆容量、枝晶/短路风险等。</td>
+          <td>主流负极背景；连接 formation 和 SEI。</td>
+        </tr>
+        <tr>
+          <td>Si / alloy anodes 硅/合金负极</td>
+          <td>容量和能量密度高。</td>
+          <td>体积膨胀、粉化、SEI 不稳定、容量衰减。</td>
+          <td>高容量路线可能带来更强机械稳定和 binder 要求。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warning">
+      <strong>正式写论文时的边界：</strong>
+      这些表格可以用来证明“不同材料体系有不同 trade-off”，但不适合直接作为机器人应用证据。机器人证据还需要制造工艺、设备和产线案例文献补强。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>5. Binder 粘结剂：不起眼，但它决定电极涂层会不会散架</h2>
+    <p>
+      论文说，LIB 电极通常是把 active material、conductive additives 和 binder 做成 slurry，然后涂覆到 current collector foil 上。
+      Binder 的作用不是“提供容量”，而是把电极颗粒、导电剂和集流体连接成稳定结构。
+    </p>
+    <div class="grid3">
+      <div class="card green"><h3>结构完整性</h3><p>把活性材料颗粒和导电添加剂粘在一起，防止涂层脱落。</p></div>
+      <div class="card blue"><h3>电接触</h3><p>帮助维持活性材料与集流体之间的接触，保证电子通路。</p></div>
+      <div class="card amber"><h3>缓冲应力</h3><p>充放电时电极会膨胀收缩，binder 要吸收应力和体积变化。</p></div>
+    </div>
+    <p>
+      作者强调 binder 要有高机械强度、良好粘附性、低成本、可回收、无毒、电化学稳定，还要在电解液中化学稳定。
+      如果 binder 分布不均匀，会限制电子/离子传导，影响电极机械接触和电池性能。
+    </p>
+    <table>
+      <thead>
+        <tr><th>Binder 设计要求</th><th>制造意义</th><th>机器人/自动化意义</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Uniform slurry 均匀浆料</td>
+          <td>涂布均匀，避免局部缺料、团聚、厚度不均。</td>
+          <td>在线检测、自动取样、混料过程监控。</td>
+        </tr>
+        <tr>
+          <td>Adhesion 粘附性</td>
+          <td>避免活性材料从集流体上剥落。</td>
+          <td>搬运、卷绕、分切时要避免机械冲击和边缘损伤。</td>
+        </tr>
+        <tr>
+          <td>Mechanical flexibility 机械柔性</td>
+          <td>缓冲循环中的膨胀/收缩。</td>
+          <td>硅负极等高膨胀材料会提高质量控制和检测要求。</td>
+        </tr>
+        <tr>
+          <td>Thermal / chemical stability 热/化学稳定</td>
+          <td>避免分解、短路和热不稳定。</td>
+          <td>安全评价、异常检测、工艺环境控制。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="teacher">
+      <strong>一句话记 binder：</strong>
+      Binder 不负责储能，但负责让储能材料“站得住、连得上、循环中不散架”。这就是为什么涂布、干燥、辊压、分切和搬运都不能粗暴。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>6. Separator 隔膜：薄薄一层，决定短路和热失控风险</h2>
+    <p>
+      Separator 是最容易被初学者低估的组件。作者说它的任务是隔离正负极、提供离子扩散通道、防止电子导通、降低内部短路和热失控风险。
+      也就是说，它必须“让 Li⁺ 过、让电子不过、让两极别碰上”。
+    </p>
+    <div class="grid4">
+      <div class="card blue"><h3>Thickness</h3><p>通常约 20–50 μm；影响重量、阻抗、机械稳定。</p></div>
+      <div class="card green"><h3>Porosity</h3><p>影响 Li⁺ 传输，常见商业隔膜约 40% porosity。</p></div>
+      <div class="card amber"><h3>Pore size</h3><p>要允许 Li⁺ 通过，同时阻挡枝晶和短路风险。</p></div>
+      <div class="card violet"><h3>Wettability</h3><p>决定电解液吸收和均匀 Li⁺ 运输。</p></div>
+    </div>
+    <div class="grid3" style="margin-top:14px">
+      <div class="card red"><h3>Thermal stability</h3><p>高温下不能严重收缩或起皱，否则可能接触不良、短路、热失控。</p></div>
+      <div class="card teal"><h3>Mechanical properties</h3><p>装配和运行中会受压力、软化、膨胀影响。</p></div>
+      <div class="card amber"><h3>Shutdown effect</h3><p>异常升温时孔道关闭，阻止进一步反应和短路。</p></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>隔膜参数</th><th>风险</th><th>制造/机器人含义</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>薄且多孔</td>
+          <td>容易被毛刺、颗粒、拉伸或夹持损伤。</td>
+          <td>stacking/winding 需要高精度、低损伤搬运和视觉对齐。</td>
+        </tr>
+        <tr>
+          <td>润湿性</td>
+          <td>电解液浸润不均会影响容量和循环。</td>
+          <td>注液、静置、化成需要过程控制和数据追踪。</td>
+        </tr>
+        <tr>
+          <td>热收缩</td>
+          <td>高温变形可能导致内部短路和热失控。</td>
+          <td>安全检测、异常品隔离和热管理非常重要。</td>
+        </tr>
+        <tr>
+          <td>机械强度</td>
+          <td>压力下微结构改变、离子通道受阻。</td>
+          <td>夹具压力、堆叠压力、搬运姿态都要控制。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="thesis">
+      <strong>机器人连接最强的一点：</strong>
+      隔膜是柔性薄膜，既要精准定位，又不能损伤。这正是 vision-guided handling、柔性夹具、张力控制、缺陷检测可以发挥价值的地方。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>7. Current Collector 集流体：它不储能，但承担机械支撑和电子高速路</h2>
+    <p>
+      Current collector 是 full-cell 中的 non-active material，不直接储锂，但非常关键。
+      作者说它提供机械支撑、提高电导率、抗腐蚀、降低接触电阻，从而影响容量、效率、循环稳定和倍率性能。
+    </p>
+    <div class="grid3">
+      <div class="card blue"><h3>常见材料</h3><p>负极常用 Cu，正极常用 Al；也有 Ti、Ni、不锈钢、碳材料等。</p></div>
+      <div class="card green"><h3>结构形式</h3><p>foils、foams、meshes、etched surfaces、coated layers。</p></div>
+      <div class="card amber"><h3>重量问题</h3><p>作者提到集流体是除壳体外 full-cell 中重量占比较大的部分之一，减薄有助于能量密度。</p></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>设计参数</th><th>作者关注点</th><th>制造/机器人连接</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Electrochemical stability</td>
+          <td>高低电位下不发生不希望的副反应。</td>
+          <td>材料批次、表面处理、污染控制。</td>
+        </tr>
+        <tr>
+          <td>Density</td>
+          <td>低密度有助于减重和提高能量密度。</td>
+          <td>更薄箔材可能更难搬运、更易皱折。</td>
+        </tr>
+        <tr>
+          <td>Mechanical strength</td>
+          <td>防止电极粉化、脱层，维持结构完整。</td>
+          <td>卷材搬运、张力控制、分切、极耳焊接质量。</td>
+        </tr>
+        <tr>
+          <td>Electrical conductivity</td>
+          <td>降低热损失，提高能量效率。</td>
+          <td>焊接、接触电阻、极耳连接检测。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="teacher">
+      <strong>一句话记 current collector：</strong>
+      它像电极的“骨架 + 高速公路”：既支撑涂层，又把电子导到外电路。对制造来说，它连接卷材处理、分切、焊接、极耳和缺陷检测。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>8. Electrolyte 电解液：Li⁺ 的通道，也是安全和 formation 的入口</h2>
+    <p>
+      作者说 electrolyte 是 non-electroactive component，原则上不应该参与氧化还原反应，也不允许电子通过。
+      它的主要作用是为离子传输提供介质，让电极反应产生的离子能在电池内部迁移。
+    </p>
+    <div class="grid4">
+      <div class="card blue"><h3>Ionic conductivity</h3><p>Li⁺ 迁移越顺畅，倍率和功率表现越好。</p></div>
+      <div class="card green"><h3>Wide potential window</h3><p>电压范围内稳定，不轻易分解。</p></div>
+      <div class="card amber"><h3>Electron insulator</h3><p>允许离子过，不允许电子过，防止内部短路路径。</p></div>
+      <div class="card red"><h3>Safety</h3><p>低毒、低挥发、低可燃、化学稳定是关键。</p></div>
+    </div>
+    <p>
+      论文还列出电解液应具备 chemically inert、low cost、environment-friendly、high fluidity、low vapor pressure 等特性。
+      商业 LIB 常见盐包括 LiPF₆；作者也提到 LiTFSI 等高能量路线候选，但高电压下可能腐蚀集流体。
+    </p>
+    <table>
+      <thead>
+        <tr><th>电解液要求</th><th>制造环节</th><th>机器人/自动化含义</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>高离子电导</td>
+          <td>注液、浸润、静置、化成。</td>
+          <td>需要稳定节拍、过程监控和 cell-level 数据追踪。</td>
+        </tr>
+        <tr>
+          <td>宽稳定电位窗口</td>
+          <td>化成、充放电测试、安全测试。</td>
+          <td>自动测试上下料、异常电芯识别和隔离。</td>
+        </tr>
+        <tr>
+          <td>良好润湿与流动性</td>
+          <td>注液质量、隔膜/电极孔隙浸润。</td>
+          <td>注液设备接口、称重检测、真空/压力控制、追溯。</td>
+        </tr>
+        <tr>
+          <td>低挥发/低毒/低可燃</td>
+          <td>干房、密封、泄漏控制。</td>
+          <td>机器人可降低人员暴露，但必须适配防爆/洁净/干燥环境。</td>
+        </tr>
+        <tr>
+          <td>SEI 稳定</td>
+          <td>formation 和 aging。</td>
+          <td>化成托盘搬运、测试通道管理、数据绑定是强 use case。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="thesis">
+      <strong>为什么电解液对我们特别重要：</strong>
+      它把材料文献直接连接到制造后段：electrolyte filling、wetting、formation、aging、testing、quality tracing。
+      这也是机器人和 AMR/AGV 最容易形成清晰经济逻辑的区域之一。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>9. 五类组件一张总表：这是你以后写 literature review 的核心素材</h2>
+    <table>
+      <thead>
+        <tr><th>组件</th><th>核心功能</th><th>关键设计参数</th><th>相关制造工序</th><th>机器人/自动化切入点</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Electrode</td>
+          <td>储存/释放 Li⁺，决定容量、能量和功率。</td>
+          <td>组成、粒径、形貌、缺陷、表面修饰、导电性。</td>
+          <td>mixing, coating, drying, calendering, slitting。</td>
+          <td>卷材搬运、取样、视觉检测、缺陷剔除、工艺数据闭环。</td>
+        </tr>
+        <tr>
+          <td>Binder</td>
+          <td>粘结活性材料、导电剂和集流体。</td>
+          <td>粘附性、机械强度、化学稳定、分散均匀性。</td>
+          <td>slurry mixing, coating, drying, calendering。</td>
+          <td>混料监控、涂层质量检测、避免搬运冲击和脱层。</td>
+        </tr>
+        <tr>
+          <td>Separator</td>
+          <td>隔开正负极，允许 Li⁺ 通过，防短路。</td>
+          <td>厚度、孔隙率、孔径、润湿性、热稳定、机械强度。</td>
+          <td>stacking/winding, electrolyte wetting, assembly。</td>
+          <td>柔性薄膜搬运、视觉对齐、张力控制、缺陷检测。</td>
+        </tr>
+        <tr>
+          <td>Current collector</td>
+          <td>支撑电极并导电子。</td>
+          <td>稳定性、密度、机械强度、电导率、表面处理。</td>
+          <td>coating substrate, slitting, tab welding, cell assembly。</td>
+          <td>卷材物流、极耳焊接上下料、表面缺陷/毛刺检测。</td>
+        </tr>
+        <tr>
+          <td>Electrolyte</td>
+          <td>传输 Li⁺，影响界面和安全。</td>
+          <td>离子电导、稳定窗口、润湿性、低挥发、低毒、安全。</td>
+          <td>electrolyte filling, wetting, formation, aging。</td>
+          <td>注液上下料、干房物流、泄漏检测、化成托盘搬运、追溯。</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>10. 这节最容易误读的地方</h2>
+    <div class="grid3">
+      <div class="card red">
+        <h3>误读 1：材料越先进，制造越简单</h3>
+        <p>不一定。更高容量、更复杂表面修饰、更薄隔膜、更高载量往往会提高过程控制难度。</p>
+      </div>
+      <div class="card red">
+        <h3>误读 2：机器人只负责搬运</h3>
+        <p>对电池制造来说，机器人价值常常来自搬运 + 检测 + 数据追溯 + 工艺接口，而不是单纯替代人手。</p>
+      </div>
+      <div class="card red">
+        <h3>误读 3：组件知识和机器人无关</h3>
+        <p>组件决定了哪些东西怕水、怕热、怕压、怕颗粒、怕变形，正是自动化系统设计的边界条件。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>11. 这部分可以怎么写进毕业论文？</h2>
+    <div class="sentence">
+      <div class="en">
+        The main components of a full-cell lithium-ion battery impose distinct manufacturing constraints: electrodes require controlled microstructure and coating uniformity, binders maintain mechanical integrity, separators require damage-free handling and thermal stability, current collectors provide mechanical and electrical pathways, and electrolytes introduce wetting, safety, and formation-related requirements.
+      </div>
+      <div class="cn">
+        完整锂离子电芯的主要组件分别带来不同制造约束：电极要求受控微结构和涂层均匀性，粘结剂维持机械完整性，隔膜需要无损搬运和热稳定性，集流体提供机械与电子通路，电解液则引入润湿、安全和化成相关要求。
+      </div>
+    </div>
+    <div class="sentence">
+      <div class="en">
+        Consequently, robotic systems in battery cell production should be evaluated not only as handling devices, but also as components of a process-control and quality-assurance infrastructure.
+      </div>
+      <div class="cn">
+        因此，电芯生产中的机器人系统不应只被评价为搬运设备，也应被视为过程控制和质量保证基础设施的一部分。
+      </div>
+    </div>
+    <p class="small">第一句主要基于 Paper 02 Section 3.2；第二句是我们面向机器人课题的综合推论，后续需要制造/机器人文献补证。</p>
+  </section>
+
+  <section class="section">
+    <h2>12. 自测：你能答出来，就说明这一节被你吸收了</h2>
+    <details><summary>Q1. 为什么 electrode 不是只看材料名字？</summary><p>因为电极的粒径、形貌、表面修饰、晶体结构和导电性都会影响容量、倍率、稳定性，也会影响浆料、涂布、干燥、辊压和分切质量。</p></details>
+    <details><summary>Q2. Binder 为什么重要？</summary><p>Binder 维持电极结构完整性和电接触，缓冲充放电引起的应力和体积变化。它不储能，但决定涂层是否稳定。</p></details>
+    <details><summary>Q3. Separator 的一句话功能是什么？</summary><p>隔开正负极、防止电子直接导通，同时允许 Li⁺ 通过；它直接关系到短路和热失控风险。</p></details>
+    <details><summary>Q4. Current collector 为什么和制造有关？</summary><p>它既是电极涂层基底，又承担电子传导和机械支撑，因此连接卷材搬运、涂布、分切、极耳焊接和接触电阻检测。</p></details>
+    <details><summary>Q5. Electrolyte 为什么能连接到 formation？</summary><p>电解液负责 Li⁺ 传输并参与界面形成。注液和润湿质量会影响后续化成、SEI 稳定、寿命、安全和质量追溯。</p></details>
+  </section>
+
+  <section class="section">
+    <h2>13. 下一步阅读路线</h2>
+    <p>
+      下一节是 Section 3.3 “Design Parameters Directly Affecting Performance”。它会把刚才这些组件进一步抽象成性能参数：
+      conductivity、electrochemical potential window、reaction kinetics、efficiency。
+    </p>
+    <div class="thesis">
+      <strong>下一份 HTML 的任务：</strong>
+      把这些性能参数翻译成制造评价语言。比如 conductivity 对应导电路径和接触质量；potential window 对应电解液稳定和安全；
+      reaction kinetics 对应倍率/快充和热管理；efficiency 对应能量损失、循环和测试。
+    </div>
+  </section>
+
+  <p class="small">
+    Learning guide based on Ghani, F.; An, K.; Lee, D. A Review on Design Parameters for the Full-Cell Lithium-Ion Batteries.
+    <em>Batteries</em> 2024, 10, 340. DOI: 10.3390/batteries10100340.
+    原文事实按 Section 3.2 组织；制造和机器人连接为面向硕士毕业论文 literature review 的教学性综合分析。
+  </p>
+</main>
+</body>
+</html>

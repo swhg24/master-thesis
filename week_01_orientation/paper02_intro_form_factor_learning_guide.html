@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper 02 Intro and Form Factor Learning Guide</title>
+  <style>
+    :root{
+      --bg:#f6f2ea;--paper:#fffdf8;--ink:#233140;--muted:#687684;--line:#e5d9c8;
+      --blue:#dfeeff;--green:#e5f5e8;--amber:#fff0cc;--red:#ffe2dc;--violet:#eee7ff;--teal:#ddf5f1;
+      --shadow:rgba(30,42,58,.08)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC",Arial,sans-serif;line-height:1.72}
+    .page{max-width:1180px;margin:auto;padding:34px 22px 76px}
+    .hero,.section{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 26px var(--shadow)}
+    .hero{padding:38px;margin-bottom:22px}.section{padding:28px;margin:18px 0}
+    .eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8a6839;font-weight:800;margin:0 0 8px}
+    h1{font-size:34px;line-height:1.22;margin:0 0 14px;color:#182635}
+    h2{font-size:24px;margin:0 0 14px;color:#20364c}
+    h3{font-size:18px;margin:0 0 8px;color:#28435c}
+    p{margin:9px 0}ul,ol{margin:9px 0 9px 22px;padding:0}li{margin:6px 0}
+    strong{color:#172838}.muted{color:var(--muted)}.small{font-size:13px;color:var(--muted)}
+    .meta,.grid2,.grid3,.grid4{display:grid;gap:14px}.meta{grid-template-columns:repeat(4,1fr)}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}
+    .card,.teacher,.thesis,.warning,.quote-lite{border-radius:12px;padding:16px;border:1px solid rgba(0,0,0,.06)}
+    .card{background:#fff}.blue{background:var(--blue)}.green{background:var(--green)}.amber{background:var(--amber)}.red{background:var(--red)}.violet{background:var(--violet)}.teal{background:var(--teal)}
+    .teacher{background:#fff7e3;border-left:5px solid #d69a2e}.thesis{background:#eef7ff;border-left:5px solid #4b91d7}.warning{background:#fff0eb;border-left:5px solid #dc674e}.quote-lite{background:#f6f0e6;border-left:5px solid #9b7a4b}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;position:relative}.step:not(:last-child)::after{content:"→";position:absolute;right:-15px;top:38%;font-weight:900;color:#9a7a4b}
+    table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff;border-radius:12px;overflow:hidden}th,td{border:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}th{background:#efe4d1;color:#263746}
+    .tag{display:inline-block;background:#f1e5cf;border:1px solid #dac6a6;border-radius:999px;padding:3px 9px;margin:2px;font-size:13px;color:#604827}
+    details{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}summary{cursor:pointer;font-weight:800}
+    .sentence{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}.en{font-weight:650;color:#20354a}.cn{color:#53616d;margin-top:4px}
+    .formula{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0;overflow:auto}
+    @media(max-width:900px){.meta,.grid2,.grid3,.grid4,.flow{grid-template-columns:1fr}.step:not(:last-child)::after{display:none}.hero,.section{padding:21px}h1{font-size:27px}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">Paper 02 精读学习讲义 · Abstract + Introduction + Working Principle + Form Factor</p>
+    <h1>从“电池材料”走到“完整电芯设计”：<br>第二篇文献开始把机器人问题拉近了</h1>
+    <p>
+      这份讲义默认你<strong>没有阅读英文原文</strong>。所以我会把作者的概念、图、表和我们毕设的联系嚼碎讲清楚。
+      本讲覆盖第二篇的开头部分：摘要、引言、锂离子电池工作原理、full-cell 设计参数总图，以及第一类关键参数——<strong>form factor 电芯形式</strong>。
+    </p>
+    <div class="meta">
+      <div class="card blue"><strong>论文</strong><br>Ghani, An & Lee (2024)</div>
+      <div class="card green"><strong>题名</strong><br>Design Parameters for Full-Cell LIBs</div>
+      <div class="card amber"><strong>本讲重点</strong><br>full cell + cell formats</div>
+      <div class="card violet"><strong>连接 thesis</strong><br>电芯形式 → 夹具/搬运/装配</div>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>0. 先把 Paper 02 和 Paper 01 的关系说清楚</h2>
+    <p>
+      Paper 01 教我们“锂电池由什么组成、材料为什么影响性能和安全”。Paper 02 往前走一步：
+      当你真的要做一个完整电芯时，不能只问正极好不好、负极好不好，而要问这些组件<strong>如何被设计成一个 full cell</strong>。
+    </p>
+    <div class="flow">
+      <div class="step"><strong>Paper 01</strong><br>材料与组件</div>
+      <div class="step"><strong>Paper 02</strong><br>完整电芯设计参数</div>
+      <div class="step"><strong>制造流程</strong><br>如何做出来</div>
+      <div class="step"><strong>机器人应用</strong><br>如何搬、装、检、追溯</div>
+      <div class="step"><strong>thesis 评价</strong><br>技术 + 经济 + 风险</div>
+    </div>
+    <div class="teacher">
+      <strong>老师提示：</strong>这篇比 Paper 01 更接近你的毕业论文，因为它开始讨论 form factor，也就是 coin、cylindrical、pouch 等电芯形式。
+      电芯形式会直接改变机器人抓取、夹具设计、托盘物流、装配公差和安全风险。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>1. 这篇论文到底想解决什么问题？</h2>
+    <p>
+      作者在摘要里说，很多已有综述讨论了电极材料、电解液、反应机理、建模和实验方法，但 full-cell LIBs 的一些设计参数经常被忽略。
+      因此，这篇综述想做一件事：把 full-cell lithium-ion batteries 的关键设计参数和 modification strategies 进行系统总结。
+    </p>
+    <div class="grid3">
+      <div class="card blue">
+        <h3>不是只看材料</h3>
+        <p>它不只问“哪个正极/负极材料容量高”，而是问材料放进完整电芯后如何协同工作。</p>
+      </div>
+      <div class="card green">
+        <h3>不是只看实验半电池</h3>
+        <p>很多材料研究在 half-cell 里看起来很好，但 full cell 还要考虑正负极匹配、电解液窗口、效率和成本。</p>
+      </div>
+      <div class="card amber">
+        <h3>不是只看性能</h3>
+        <p>作者把 form factor、组件选择、性能参数、productivity 和 cost 都放进设计框架。</p>
+      </div>
+    </div>
+    <div class="quote-lite">
+      <strong>用人话翻译摘要：</strong>
+      “锂电池已经很重要，但要真正设计好一个完整电芯，需要同时考虑形状尺寸、材料选择、组件相容性、电化学窗口、反应动力学、效率、产能和成本。”
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>2. Full cell 是什么？为什么它比你想的更重要？</h2>
+    <p>
+      初学电池时常见一个坑：看到某个材料“容量很高”，就以为它做成电池一定好。其实不一定。
+      因为材料测试常常用 half-cell；而真正产品是 full cell。
+    </p>
+    <table>
+      <thead>
+        <tr><th>概念</th><th>简单理解</th><th>为什么重要</th><th>和我们 thesis 的关系</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Half-cell</td>
+          <td>常用锂金属作为对电极，主要测试某个材料本身的性能。</td>
+          <td>适合材料研究，但不等于真实产品表现。</td>
+          <td>对机器人制造帮助有限，因为它不是量产电芯形态。</td>
+        </tr>
+        <tr>
+          <td>Full cell</td>
+          <td>同时有真实正极、负极、电解液、隔膜、集流体和封装结构。</td>
+          <td>更接近实际电池产品，需要考虑组件匹配和整体设计。</td>
+          <td>我们讨论机器人搬运、装配、化成、测试，面对的是 full cell 或接近 full-cell 的生产对象。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="thesis">
+      <strong>毕业论文视角：</strong>
+      机器人不是在搬一个“理论容量”，而是在搬一个有尺寸、重量、壳体、柔软度、极耳、密封、电解液、安全风险和追溯编号的 full cell。
+      所以 Paper 02 对我们非常有用。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>3. Introduction：作者为什么说 design parameter 很关键？</h2>
+    <p>
+      引言的逻辑可以拆成四步。你不用记作者列的每个历史细节，抓住这条链就够了。
+    </p>
+    <ol>
+      <li><strong>能源存储需求增加。</strong>电池在消费电子、电动车等领域成为重要储能方式。</li>
+      <li><strong>锂电池靠高电压正极、低电位负极和合适电解液工作。</strong>这呼应 Paper 01 的组件知识。</li>
+      <li><strong>电池需求不只是容量。</strong>还包括能量密度、功率密度、寿命、热稳定性和维护成本。</li>
+      <li><strong>已有研究常分散在单个材料或单个参数上。</strong>作者认为需要 full-cell 层面的综合设计框架。</li>
+    </ol>
+    <div class="teacher">
+      <strong>你要养成的读法：</strong>
+      看到“design parameters”，不要翻译成很抽象的“设计参数”。它具体指：
+      形状尺寸、材料选择、组件兼容、电化学窗口、N/P ratio、导电性、反应动力学、效率、产能和成本。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>4. Figure 1：工作原理不要背，要会画出充放电方向</h2>
+    <p>
+      论文 Figure 1 画的是 full-cell LIBs 在 charging 和 discharging 时的工作原理。这里和 Paper 01 相同，但我们再用更适合你记忆的方式讲一遍。
+    </p>
+    <div class="grid2">
+      <div class="card blue">
+        <h3>充电 Charging</h3>
+        <p>外部电源推动反应。Li⁺ 从正极脱出，穿过电解液和隔膜，进入负极并储存在负极结构中。</p>
+        <div class="formula">Charging: Cathode → Li⁺ → Electrolyte/Separator → Anode</div>
+      </div>
+      <div class="card green">
+        <h3>放电 Discharging</h3>
+        <p>电池向外部负载供能。Li⁺ 从负极释放，穿过电解液和隔膜回到正极；电子通过外电路形成电流。</p>
+        <div class="formula">Discharging: Anode → Li⁺ → Electrolyte/Separator → Cathode</div>
+      </div>
+    </div>
+    <p>
+      这里最关键的不是方向本身，而是隔膜和电解液的分工：隔膜阻止电子直接穿过去，避免内部短路；电解液允许 Li⁺ 迁移。
+      所以电芯设计必须同时考虑离子通道、电子通道和安全隔离。
+    </p>
+    <div class="thesis">
+      <strong>连接机器人：</strong>
+      只要工艺损伤隔膜、引入颗粒污染、造成极片错位或毛刺，就可能影响离子/电子路径，甚至诱发短路。
+      这就是为什么 assembly、stacking/winding、slitting、inspection 对机器人和视觉系统很关键。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>5. Figure 2：这篇论文的“设计参数地图”</h2>
+    <p>
+      Figure 2 是本篇的地图。作者把 full-cell LIB 设计参数分成四大类：
+    </p>
+    <div class="grid4">
+      <div class="card blue">
+        <h3>Form factor</h3>
+        <p>电池的形状、尺寸、体积、重量。决定能否放进目标产品，也影响制造和搬运。</p>
+      </div>
+      <div class="card green">
+        <h3>Choice and types of materials</h3>
+        <p>正极、负极、电解液、隔膜、集流体、粘结剂等材料选择。</p>
+      </div>
+      <div class="card amber">
+        <h3>Performance of components</h3>
+        <p>电化学窗口、导电性、反应动力学、效率、N/P ratio 等。</p>
+      </div>
+      <div class="card violet">
+        <h3>Productivity and cost</h3>
+        <p>能不能高效、低成本、可规模化制造，这是从实验室走向产业的关键。</p>
+      </div>
+    </div>
+    <div class="warning">
+      <strong>不要把这四类分开背。</strong>
+      它们是互相牵连的：比如 pouch cell 形状轻薄、空间效率高，但柔软和 swelling 会影响装配、搬运和安全；高质量材料可能提升性能，但也可能增加成本和制造难度。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>6. 3.1 Form Factor：为什么电芯形式是机器人论文的黄金入口？</h2>
+    <p>
+      Form factor 指电芯的 size、shape、volume、weight。作者强调它影响电芯能否装进设备、影响能量密度，也影响整体性能。
+      对我们来说，它还决定机器人系统“能不能抓、怎么抓、放哪里、用什么夹具、走什么物流”。
+    </p>
+    <table>
+      <thead>
+        <tr><th>参数</th><th>作者意思</th><th>机器人语言</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Size</td>
+          <td>高度、宽度、厚度等实际尺寸。</td>
+          <td>决定夹爪开口、托盘槽位、视觉定位范围和设备接口。</td>
+        </tr>
+        <tr>
+          <td>Shape</td>
+          <td>coin, cylindrical, prismatic, pouch 等几何形式。</td>
+          <td>决定抓取方式：吸盘、夹爪、包络夹具、定位销、托盘。</td>
+        </tr>
+        <tr>
+          <td>Volume</td>
+          <td>电芯占据的空间。</td>
+          <td>影响包装密度、物流节拍、缓存区、AMR/AGV 载具设计。</td>
+        </tr>
+        <tr>
+          <td>Weight</td>
+          <td>由组件质量、mass loading、电芯数量等影响。</td>
+          <td>影响机器人负载、加速度、末端执行器刚度和安全距离。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="teacher">
+      <strong>所以你以后写 thesis 时可以说：</strong>
+      Cell format is not merely a product-design choice; it shapes handling, fixturing, assembly precision, thermal management, logistics, and automation feasibility.
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>7. Table 1：三类电芯形式怎么理解？</h2>
+    <p>
+      论文 Table 1 总结了 coin/button、cylindrical、pouch-type 三类。这里我们不照抄，而是按“你真正需要记住什么”整理。
+      注意：带教列表还提到 prismatic 方形电芯；本讲覆盖论文当前表格里的三类，prismatic 后续需要用其他材料补齐。
+    </p>
+    <table>
+      <thead>
+        <tr><th>Cell type</th><th>论文中的关键特征</th><th>你应该怎么理解</th><th>机器人/制造启发</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Coin / Button cell</strong><br>扣式电池</td>
+          <td>轻、可靠、成本低；常见 CR2032/CR2016/CR2025；需要壳体、垫片、O-ring、gasket 密封；多用于小型电子设备。</td>
+          <td>实验室和小型设备中常见，但它不是 EV 电芯制造的主战场。</td>
+          <td>适合理解 full-cell 结构和密封概念；对大规模机器人产线参考有限。</td>
+        </tr>
+        <tr>
+          <td><strong>Cylindrical cell</strong><br>圆柱电芯</td>
+          <td>最早大规模生产的 LIB 形式之一；机械强度高；适合较低成本自动化制造；圆柱壳体有助于分布内部压力；但热管理可能较差。</td>
+          <td>圆柱电芯形状规则、刚性好，非常适合标准化高速制造和托盘化搬运。</td>
+          <td>机器人抓取、排序、装盘、测试上下料相对容易；但热管理和高密度排布仍需注意。</td>
+        </tr>
+        <tr>
+          <td><strong>Pouch-type cell</strong><br>软包电芯</td>
+          <td>紧凑、效率高、功率密度高、成本可较低；但可能 swelling，且小尺寸紧凑设计若失控可能引发安全问题。</td>
+          <td>软包的核心特点是“轻薄高效但柔软易变形”。这对机器人最麻烦。</td>
+          <td>需要柔顺夹具、真空吸附、视觉定位、变形控制、极耳保护、swelling 检测和精细化装配策略。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warning">
+      <strong>批判性提醒：</strong>
+      Table 1 对 pouch cell 的表述有些混杂，比如同时说 high energy density 又说 comparatively degraded specific energy density。
+      这说明表格不是严格统一指标比较。正式写论文时，不要直接照搬表格结论，要用“format-dependent trade-offs”来表达。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>8. 把 form factor 翻译成机器人 use case</h2>
+    <table>
+      <thead>
+        <tr><th>电芯形式</th><th>最明显的制造/搬运特征</th><th>机器人机会</th><th>主要难点</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Coin</td>
+          <td>小、标准、刚性壳体、密封件多。</td>
+          <td>实验室自动装配、样品测试、自动扣壳。</td>
+          <td>对 EV cell manufacturing 代表性弱。</td>
+        </tr>
+        <tr>
+          <td>Cylindrical</td>
+          <td>圆柱、刚性高、可滚动、标准化强。</td>
+          <td>高速分拣、装盘、测试上下料、模块前处理、AMR 物流。</td>
+          <td>姿态控制、滚动防止、热管理、密集排布。</td>
+        </tr>
+        <tr>
+          <td>Pouch</td>
+          <td>柔软、薄、易变形、可能 swelling、有极耳。</td>
+          <td>视觉引导搬运、柔性夹具、层叠/入壳辅助、外观检测、swelling 检测。</td>
+          <td>变形、夹持损伤、定位难、极耳保护、封装完整性。</td>
+        </tr>
+        <tr>
+          <td>Prismatic</td>
+          <td>方壳、刚性较强、体积大、常用于 EV。</td>
+          <td>重载搬运、托盘化物流、测试上下料、模组装配前处理。</td>
+          <td>质量大、夹具强度、定位精度、设备接口。</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="small">Prismatic 是带教要求掌握的 cell format；本讲用 thesis 需要先补入，但论文当前 Table 1 主要展开 coin/cylindrical/pouch。</p>
+  </section>
+
+  <section class="section">
+    <h2>9. 这部分对毕业论文可直接贡献什么？</h2>
+    <div class="grid2">
+      <div class="card green">
+        <h3>可用于 literature review</h3>
+        <ul>
+          <li>Full-cell LIB design requires considering geometry, material selection, component compatibility, performance, productivity, and cost together.</li>
+          <li>Form factor affects energy density, device integration, manufacturing route, and handling requirements.</li>
+          <li>Different cell formats create different automation constraints and opportunities.</li>
+        </ul>
+      </div>
+      <div class="card blue">
+        <h3>可用于机器人应用分析</h3>
+        <ul>
+          <li>圆柱电芯：标准化和刚性使其适合高速自动化搬运与装盘。</li>
+          <li>软包电芯：柔软、易变形和 swelling 风险使其需要更复杂的夹具和视觉控制。</li>
+          <li>方形电芯：更接近重载、托盘、测试和模块前处理场景。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sentence">
+      <div class="en">
+        The form factor of a lithium-ion cell is a key interface between electrochemical design and manufacturing automation, because cell geometry, weight, stiffness, and packaging directly shape handling, fixturing, inspection, and logistics requirements.
+      </div>
+      <div class="cn">
+        锂离子电芯的形式是电化学设计与制造自动化之间的关键接口，因为电芯的几何形状、重量、刚度和封装方式会直接塑造搬运、夹具、检测和物流要求。
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>10. 你现在必须掌握的 8 个概念</h2>
+    <div>
+      <span class="tag">full cell 完整电芯</span>
+      <span class="tag">half-cell 半电池</span>
+      <span class="tag">form factor 电芯形式</span>
+      <span class="tag">coin/button cell 扣式电池</span>
+      <span class="tag">cylindrical cell 圆柱电芯</span>
+      <span class="tag">pouch cell 软包电芯</span>
+      <span class="tag">prismatic cell 方形电芯</span>
+      <span class="tag">N/P ratio 正负极容量比</span>
+    </div>
+    <div class="teacher">
+      <strong>这 8 个词别死背。</strong>
+      你要能把它们讲成一句话：完整电芯设计不是只选材料，而是把材料、几何、封装、性能、产能和成本整合起来；其中 cell format 直接决定机器人怎么搬、怎么夹、怎么检测。
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>11. 自测题：你能答出来，就说明第一讲过关</h2>
+    <details>
+      <summary>Q1. Paper 02 和 Paper 01 最大区别是什么？</summary>
+      <p>Paper 01 更偏电池基础和正极材料；Paper 02 更偏 full-cell 层面的设计参数，包括 form factor、材料选择、组件性能、产能和成本。</p>
+    </details>
+    <details>
+      <summary>Q2. 为什么 full cell 比单个材料性能更接近我们的 thesis？</summary>
+      <p>因为机器人产线面对的是实际电芯或电芯组件，而不是单个材料指标。full cell 具有尺寸、重量、封装、极耳、密封、安全和追溯等制造属性。</p>
+    </details>
+    <details>
+      <summary>Q3. Form factor 为什么会影响机器人应用？</summary>
+      <p>它决定电芯的形状、尺寸、体积和重量，从而影响夹具、抓取方式、视觉定位、托盘设计、物流和装配难度。</p>
+    </details>
+    <details>
+      <summary>Q4. 圆柱电芯和软包电芯的机器人难点有什么不同？</summary>
+      <p>圆柱电芯刚性强、标准化高，适合高速装盘和分拣，但要控制滚动和热管理；软包电芯柔软、易变形、有 swelling 和极耳保护问题，需要柔性夹具和视觉定位。</p>
+    </details>
+    <details>
+      <summary>Q5. 下一讲应该读哪里？</summary>
+      <p>下一讲进入 Section 3.2 “Choice and Types of Materials for Main Components”，重点读 electrode、binder、separator、current collector、electrolyte，并把它们连接到制造工序。</p>
+    </details>
+  </section>
+
+  <section class="section">
+    <h2>12. 下一步阅读路线</h2>
+    <p>
+      本讲完成了 Paper 02 的入口：你已经知道 full-cell design 的问题意识，也知道 form factor 为什么对机器人重要。
+      下一讲建议读 Section 3.2 的 main components，但不要平均用力。我们应该按制造相关性来读：
+    </p>
+    <ol>
+      <li><strong>Electrode：</strong>连接涂布、干燥、辊压、分切和缺陷检测。</li>
+      <li><strong>Binder：</strong>连接粘附性、机械完整性、溶剂体系和电极质量。</li>
+      <li><strong>Separator：</strong>连接薄膜搬运、对齐、短路风险和安全。</li>
+      <li><strong>Current collector：</strong>连接铜箔/铝箔、极耳、焊接和导电路径。</li>
+      <li><strong>Electrolyte：</strong>连接注液、润湿、干房、化成和 SEI。</li>
+    </ol>
+    <div class="thesis">
+      <strong>老师安排：</strong>
+      下一份 HTML 我会把 Section 3.2 做成“组件 → 设计参数 → 制造工序 → 机器人影响”的矩阵。
+      这样你不用啃原文，也能把文献内容转成毕业论文的论证材料。
+    </div>
+  </section>
+
+  <p class="small">
+    Learning guide based on Ghani, F.; An, K.; Lee, D. A Review on Design Parameters for the Full-Cell Lithium-Ion Batteries.
+    <em>Batteries</em> 2024, 10, 340. DOI: 10.3390/batteries10100340.
+    原文事实按 Abstract, Introduction, Section 2, Section 3, and Section 3.1 组织；机器人连接为面向硕士毕业论文的教学性综合分析。
+  </p>
+</main>
+</body>
+</html>
