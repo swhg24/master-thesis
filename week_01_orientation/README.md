@@ -52,6 +52,8 @@ If the English terms feel difficult, read the files in this order:
 20. `supervisor_reference_reading_map.html` - supervisor reference roadmap / 带教参考文献阅读路线图
 21. `paper02_intro_form_factor_learning_guide.html` - Paper 02 intro and form-factor guide / 第二篇引言与电芯形式精读讲义
 22. `paper02_main_components_learning_guide.html` - Paper 02 main components guide / 第二篇主要组件精读讲义
+23. `paper02_performance_parameters_learning_guide.html` - Paper 02 Section 3.3 performance guide / 第二篇第 3.3 节性能参数精读讲义
+24. `paper02_productivity_cost_learning_guide.html` - Paper 02 Section 3.4 productivity and cost guide / 第二篇第 3.4 节生产率与成本精读讲义
 
 ## First Week Success Criteria
 
