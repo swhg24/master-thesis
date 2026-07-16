@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 02 Day 1 - Process Problem Map Learning Guide</title>
+  <style>
+    :root{--ink:#172535;--muted:#5a6a7b;--paper:#f5f7fa;--line:#d9e2eb;--navy:#193c59;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}main{max-width:1060px;margin:auto;padding:42px 22px 70px}.hero{padding:42px;border-radius:8px;background:var(--navy);color:#fff}.eyebrow{margin:0 0 12px;color:#b9dcf7;font-size:14px;font-weight:700}h1{margin:0;font-size:34px;line-height:1.3;letter-spacing:0}.hero p:last-child{max-width:790px;margin:17px 0 0;color:#e1edf6;font-size:17px}.section{margin-top:24px;padding:28px 30px;background:#fff;border:1px solid var(--line);border-radius:8px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:0 0 8px;font-size:18px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:18px 0}.card{padding:17px;border:1px solid transparent;border-radius:7px;min-width:0}.card p{margin:0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#f0dca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.teacher,.thesis,.warning,.source{margin:18px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.flow{display:flex;align-items:stretch;gap:8px;margin:20px 0;overflow-x:auto;padding-bottom:4px}.flow div{flex:1 0 145px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:6px;background:#f4f8fc;text-align:center;font-size:15px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}table{width:100%;margin:18px 0;border-collapse:collapse;font-size:15px}th,td{padding:12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.question{margin:16px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.template{margin:16px 0;padding:17px 19px;border:1px dashed #8fa8bd;border-radius:7px;background:#fbfcfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;white-space:pre-wrap}.mini{font-size:14px;color:var(--muted)}details{margin:10px 0;border:1px solid var(--line);border-radius:6px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details p{padding:0 14px 14px}@media(max-width:720px){main{padding:18px 12px 45px}.hero,.section{padding:24px 19px}h1{font-size:27px}h2{font-size:22px}.grid,.grid3{grid-template-columns:1fr}table{font-size:14px}th,td{padding:9px}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Week 02 · Day 1 · 研究训练讲义</p>
+    <h1>先别问“机器人能做什么”：<br>先看制造工序到底需要什么</h1>
+    <p>今天的目标不是选案例，更不是给场景打分。我们要训练一种研究者视角：从一个电池制造工序出发，识别它的目标、风险、人工任务，以及机器人真正可能创造价值的位置。</p>
+  </header>
+
+  <section class="section">
+    <h2>0. 今天的唯一任务：建立 Process Problem Map</h2>
+    <p class="lead">你上周已经学过电芯由电极制造、装配、后处理构成。现在要再走一步：不只知道流程顺序，而是理解每一步在“控制什么”和“害怕什么”。</p>
+    <div class="flow"><div><b>工序</b>发生什么？</div><div class="arrow">→</div><div><b>工艺目标</b>要得到什么？</div><div class="arrow">→</div><div><b>质量风险</b>最怕什么？</div><div class="arrow">→</div><div><b>任务</b>人/设备做什么？</div><div class="arrow">→</div><div><b>机器人角色</b>可能怎样支持？</div></div>
+    <div class="teacher"><strong>今天最重要的一句话：</strong>机器人不是从“动作”出发，而要从“工艺问题”出发。先有问题，才有合适的自动化方案。</div>
+  </section>
+
+  <section class="section">
+    <h2>1. 先把论文的研究对象说准确</h2>
+    <div class="grid"><div class="card blue"><h3>不是研究</h3><p>“怎样设计一台用于电池工厂的机器人”，也不是研究某个夹爪控制算法。</p></div><div class="card green"><h3>而是研究</h3><p>机器人系统在电芯制造的哪里有价值、需要什么条件、哪些场景更适合工业落地。</p></div></div>
+    <p>这里的 <strong>robotic system / 机器人系统</strong> 通常不只是机械臂。它可能包含：机械臂或 AMR、夹具、相机、传感器、输送线接口、安全系统、条码/RFID、MES 和质量数据连接。</p>
+    <div class="source"><strong>和上周两篇文献的连接：</strong>Paper 01 和 Paper 02 解释了为什么材料、隔膜、电解液、孔隙、湿度、化成和一致性重要。今天开始，我们把这些“电池约束”翻译成“自动化系统必须满足的边界条件”。</div>
+  </section>
+
+  <section class="section">
+    <h2>2. 电芯制造的三种“工艺性格”</h2>
+    <p>不要把全厂理解成同一种生产。三个大阶段的物料状态、风险和自动化逻辑截然不同。</p>
+    <table><thead><tr><th>区域</th><th>核心对象</th><th>最关键的工艺目标</th><th>典型风险</th><th>机器人更可能的角色</th></tr></thead><tbody>
+      <tr><td>Electrode manufacturing<br>电极制造</td><td>粉体、浆料、金属箔、卷材</td><td>均匀、连续、稳定地做出电极结构</td><td>团聚、厚度波动、裂纹、颗粒、毛刺、水分</td><td>卷材/容器物流、取样、检测、换卷和异常流转支持</td></tr>
+      <tr><td>Cell assembly<br>电芯装配</td><td>薄极片、隔膜、卷芯/叠片体、电解液、壳体</td><td>精确、无损地形成内部结构并密封</td><td>错位、褶皱、静电、损伤、污染、泄漏</td><td>精密定位、上下料、视觉引导、焊接/封口检测</td></tr>
+      <tr><td>Cell finishing<br>电芯后处理</td><td>已密封电芯、托盘、测试设备、缓存区</td><td>激活、筛选、分类、追溯和稳定物流</td><td>测试数据错配、异常品流出、拥堵、安全与长等待</td><td>托盘搬运、AMR/AGV、测试上下料、分选、数据绑定</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>第一个研究判断：</strong>“电极制造机器人潜力低”这种话不准确。更准确的是：核心工艺由连续专用设备主导，机器人价值通常在其外围的物流、取样、检查和数据连接，而不是取代涂布头或辊压辊。</div>
+  </section>
+
+  <section class="section">
+    <h2>3. 一张通用问题卡：以后每个场景都这样读</h2>
+    <p>面对任何工序或厂商案例，先填下面六格。它比一开始做“高/中/低评分”更重要，因为它逼你先理解事实。</p>
+    <div class="template">1. Process step / 工序：
+2. Process objective / 它必须实现什么：
+3. Product or material state / 此时搬运的对象是什么状态：
+4. Quality and safety risks / 最怕什么出错：
+5. Existing task / 设备、人或物流正在做什么：
+6. Robotic role / 机器人系统具体能支持哪一段：
+
+Evidence needed / 还需要什么证据：
+Industrial constraint / 最大落地约束：</div>
+    <div class="teacher"><strong>研究习惯：</strong>当你暂时不知道某一格，就写“不确定”和需要的证据。研究不是一开始就有答案，而是知道自己还缺哪种答案。</div>
+  </section>
+
+  <section class="section">
+    <h2>4. 用三个例子，带你真正填一次问题卡</h2>
+    <h3>例子 A：Coating 涂布</h3>
+    <div class="grid"><div class="card blue"><h3>工艺事实</h3><p>把浆料稳定涂在集流体箔材上，形成目标厚度和均匀性；之后干燥、辊压会继续改变结构。</p></div><div class="card red"><h3>最怕什么</h3><p>厚度不均、表面缺陷、浆料不稳、卷材跑偏、停机、污染。一个小缺陷可能沿着长卷材被连续复制。</p></div></div>
+    <div class="grid"><div class="card amber"><h3>别得出的错误结论</h3><p>“这里有卷材，所以放机械臂来涂布。”涂布核心通常是高速连续工艺装备，不是通用机械臂任务。</p></div><div class="card green"><h3>更合理的机器人问题</h3><p>如何安全搬运/换卷？如何把取样与缺陷信息连接起来？如何自动隔离有问题的卷材？</p></div></div>
+    <div class="thesis"><strong>你应该学到：</strong>机器人机会要贴着真正的瓶颈出现。对涂布来说，可能是物料流和质量闭环，而不是“用机器人替代涂布机”。</div>
+
+    <h3>例子 B：Stacking 叠片</h3>
+    <div class="grid"><div class="card blue"><h3>工艺事实</h3><p>正极、负极和隔膜按正确顺序、位置和张力形成叠片体。材料薄、软，隔膜尤其敏感。</p></div><div class="card red"><h3>最怕什么</h3><p>错位、褶皱、边缘损伤、异物、静电和节拍不足；这些问题可能导致内部短路或性能不一致。</p></div></div>
+    <div class="grid"><div class="card violet"><h3>机器人可能的角色</h3><p>视觉定位、柔性末端执行器、精密放置、对齐纠偏、异常检测。</p></div><div class="card amber"><h3>最大难点</h3><p>薄软材料的抓取和高速量产之间有张力。实验室能做，不等于大规模稳定生产就能做。</p></div></div>
+    <div class="thesis"><strong>你应该学到：</strong>叠片是高价值、高技术难度场景。它适合在论文中作为“挑战性案例”，但不能只因为技术炫就假定它是近期最佳落地点。</div>
+
+    <h3>例子 C：Formation / Testing 化成与测试</h3>
+    <div class="grid"><div class="card blue"><h3>工艺事实</h3><p>密封后的电芯经历受控充放电、老化和测试；大量电芯常在标准托盘中流转，且每颗电芯都要对应正确数据。</p></div><div class="card red"><h3>最怕什么</h3><p>托盘堵塞、装错/拿错、测试数据与电芯身份错配、异常品混入、安全处理不当。</p></div></div>
+    <div class="grid"><div class="card green"><h3>机器人可能的角色</h3><p>托盘上下料、AMR/AGV 运输、自动测试工位对接、分选和 barcode/RFID 数据绑定。</p></div><div class="card violet"><h3>为什么它有吸引力</h3><p>电芯已经密封，载具容易标准化，任务重复且物流量大；质量、节拍和追溯价值可以同时出现。</p></div></div>
+    <div class="thesis"><strong>你应该学到：</strong>这个方向的价值往往不在单次抓取，而在把“物理流”和“数据流”不出错地连接起来。</div>
+  </section>
+
+  <section class="section">
+    <h2>5. 把“机器人类型”放回正确的位置</h2>
+    <table><thead><tr><th>系统</th><th>它的核心能力</th><th>适合问什么问题</th><th>不要误解成什么</th></tr></thead><tbody>
+      <tr><td>Industrial robot<br>工业机器人</td><td>高速、重复、固定工位动作</td><td>能否稳定上下料、抓取、放置、分选或定位？</td><td>不是所有精密任务都天然适合机械臂。</td></tr>
+      <tr><td>AGV / AMR</td><td>跨工位移动物料</td><td>物流对象是否标准？路径、调度、干房和接口如何解决？</td><td>不是“买车”就等于物流自动化。</td></tr>
+      <tr><td>Vision system<br>视觉系统</td><td>发现缺陷、识别位置、验证方向</td><td>需要看什么？检出率、误报率、节拍与数据归属如何验证？</td><td>不一定需要和机械臂绑定。</td></tr>
+      <tr><td>Cobot / 协作机器人</td><td>柔性、人机邻近部署</td><td>任务是否频繁变化、批量是否较小、人工是否仍必须参与？</td><td>不等于更快，通常也不首先服务高速量产线。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section">
+    <h2>6. 今天你真正要带走的判断</h2>
+    <div class="grid3"><div class="card blue"><h3>先看工艺</h3><p>机器人价值由工艺目标、物料状态和风险决定，不由“这台机器人看起来很先进”决定。</p></div><div class="card green"><h3>再看任务</h3><p>把核心工艺设备、人工动作、物流动作、检测动作和数据动作拆开看。</p></div><div class="card amber"><h3>最后谈方案</h3><p>只有明确痛点、约束和接口，才谈应该用机械臂、AMR、视觉还是它们的组合。</p></div></div>
+    <div class="warning"><strong>本周暂时不做的事：</strong>不急着给案例算 ROI；不急着定最终三大案例；不急着用“高/中/低”代替证据。先把工艺问题读懂，后面才有可靠的比较。</div>
+  </section>
+
+  <section class="section">
+    <h2>7. 小练习：你先自己答，明天我们继续用</h2>
+    <details><summary>Q1. 为什么电极制造不应简单概括为“机器人替代人工涂布”？</summary><p>因为涂布的核心是高度集成的连续工艺设备。更值得研究的机器人位置通常是卷材/容器物流、取样、检测、换卷与质量数据闭环。</p></details>
+    <details><summary>Q2. 同样是“搬运”，叠片和化成托盘搬运的难点为什么不同？</summary><p>叠片面对薄软、易损、易错位的材料，强调精密和无损；化成托盘搬运面对的是密封、标准化程度较高的电芯与载具，强调吞吐、调度、安全和追溯。</p></details>
+    <details><summary>Q3. 你现在如何判断一个机器人案例值得继续读？</summary><p>先问它是否对应真实工艺痛点，是否说明了物料状态、质量风险和系统接口；然后再看有没有关于效果、节拍、可靠性或经济性的直接证据。</p></details>
+  </section>
+
+  <section class="section">
+    <h2>8. Day 2 会做什么？</h2>
+    <p>下一步我们沿着电极制造这条线走，不急着学更多材料化学，而是学习：混料、涂布、干燥、辊压如何共同塑造电极结构；以及质量检测、卷材物流和过程数据为什么是这里最有价值的自动化切入点。</p>
+  </section>
+  <p class="mini">本讲基于本地已有的电芯制造流程、工序要求、机器人系统类型与前两篇电池基础文献进行教学性综合。它建立的是研究问题地图；具体机器人系统的实际性能与经济收益将在后续制造文献和工业案例中单独验证。</p>
+</main>
+</body>
+</html>
