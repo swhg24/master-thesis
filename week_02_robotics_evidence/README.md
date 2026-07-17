@@ -11,6 +11,9 @@ How can we move from battery manufacturing knowledge to evidence-based analysis 
 1. `day1_process_problem_map_learning_guide.html`
    - Learn to read each process as: objective -> risk -> task -> robotic role.
    - 学会把每道工序读成：目标 -> 风险 -> 任务 -> 机器人角色。
+2. `day2_electrode_manufacturing_chinese_learning_guide.html`
+   - Learn the wet electrode process chain and identify realistic robotics entry points around core process equipment.
+   - 学习湿法电极制造流程，并识别核心工艺设备周边真实的机器人切入点。
 
 ## Week 02 Direction / 第二周方向
 
