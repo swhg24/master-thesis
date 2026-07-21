@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第二周 Day 4：化成、老化、终检、分选与托盘物流中文学习讲义</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6a78;--paper:#f3f7fa;--line:#d6e1e9;--navy:#173a56;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff;--slate:#53677a;--slatebg:#eef2f5}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.78} main{max-width:1120px;margin:auto;padding:42px 22px 72px}.hero{padding:44px;border-radius:11px;background:linear-gradient(135deg,#15364f,#20597f);color:#fff}.eyebrow{margin:0 0 12px;color:#b9dcf7;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-child{max-width:890px;margin:17px 0 0;color:#e2edf5;font-size:17px}.section{margin-top:24px;padding:29px 31px;background:#fff;border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:21px 0 8px;font-size:19px;line-height:1.45}h4{margin:16px 0 6px;font-size:16px;color:#244b6e}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:18px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card h3,.card h4{margin:0 0 8px}.card p{margin:0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#f0dca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.slate{background:var(--slatebg);border-color:#d9e0e6}.teacher,.thesis,.warning,.source,.remember{margin:18px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.remember{background:var(--violetbg);border-color:var(--violet)}.flow{display:flex;align-items:stretch;gap:8px;margin:20px 0;overflow-x:auto;padding-bottom:5px}.flow div{flex:1 0 132px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:14px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}.arch{margin:18px 0;padding:20px;background:#f6f9fb;border:1px solid var(--line);border-radius:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;line-height:1.65;overflow-x:auto;white-space:pre}table{width:100%;margin:18px 0;border-collapse:collapse;font-size:15px}th,td{padding:12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap}.fact{background:#dceefb;color:#174e7a}.infer{background:#fff0cf;color:#7a5205}.gap{background:#f7e5e4;color:#8a3530}.official{background:#e6f3ea;color:#216348}.question{margin:16px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.formula{margin:14px 0;padding:14px 17px;border-radius:7px;background:#f2f5f8;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-x:auto}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details>div,details>p{padding:0 14px 14px}ol,ul{padding-left:24px}li{margin:6px 0}a{color:#155f98}.mini{font-size:14px;color:var(--muted)}.toc a{text-decoration:none}.toc li{margin:4px 0}.check li{padding-left:3px}@media(max-width:760px){main{padding:18px 12px 45px}.hero,.section{padding:24px 19px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3{grid-template-columns:1fr}table{font-size:14px;display:block;overflow-x:auto}th,td{padding:9px}.arch{font-size:12px}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">第二周 · Day 4 · 中文学习讲义</p>
+    <h1>电芯后处理：<br>化成、老化、终检、分选与托盘物流</h1>
+    <p>这一讲把“电化学过程、长时间停留、质量判定、物料流和数据流”连接起来。目标不是背诵设备名，而是理解：为什么 cell finishing 是质量关键且资本密集的环节，以及为什么已密封电芯的托盘上下料、缓存运输、异常隔离和追溯，是值得深入研究的机器人系统候选场景。</p>
+  </header>
+
+  <section class="section" id="guide">
+    <h2>0. 使用方法：今天要真正学会什么？</h2>
+    <p class="lead">建议按顺序完整阅读一次，再用最后的自测题复述。你最终应当能用自己的话画出 cell finishing 的物料流和数据流，并解释“工艺设备”和“机器人系统”各自承担什么。</p>
+    <div class="grid3">
+      <div class="card blue"><h3>工艺理解</h3><p>区分润湿、化成、老化、终检和分选，理解它们分别改变电芯、观察电芯还是作出质量决策。</p></div>
+      <div class="card green"><h3>系统理解</h3><p>把机械臂、托盘、立库、输送线、AMR/AGV、测试通道、MES/QMS 和安全隔离视为一个系统。</p></div>
+      <div class="card amber"><h3>论文能力</h3><p>区分文献事实、工程推论与待验证数据，不提前虚构节拍、精度、良率、成本和 ROI。</p></div>
+    </div>
+    <div class="remember"><strong>今天的核心句：</strong>cell finishing 不是“给电池充一次电”，而是把首次电化学激活、稳定化、质量观测、判定分流与可追溯物流组合起来的生产系统。</div>
+    <h3>目录</h3>
+    <ol class="toc">
+      <li><a href="#position">工艺位置与总流程</a></li><li><a href="#wetting">润湿与预处理</a></li><li><a href="#formation">化成原理</a></li><li><a href="#equipment">化成设备系统</a></li><li><a href="#aging">老化与库存</a></li><li><a href="#eol">终检与分选</a></li><li><a href="#handling">托盘与机器人上下料</a></li><li><a href="#mobile">AGV/AMR 与厂内物流</a></li><li><a href="#trace">追溯与数据架构</a></li><li><a href="#safety">异常与安全</a></li><li><a href="#case">论文候选案例</a></li><li><a href="#evidence">证据纪律、练习与参考资料</a></li>
+    </ol>
+  </section>
+
+  <section class="section" id="position">
+    <h2>1. Cell finishing 在整条电芯产线的什么位置？</h2>
+    <p>前两讲中，电极制造把活性材料做成合格极片，电芯装配把极片、隔膜、电解液和壳体组合起来。刚装配、注液并封装的电芯还没有完成稳定的首次电化学激活，也尚未通过最终质量筛选，因此需要进入 cell finishing（常译为电芯后处理、电芯最终处理或电芯激活与后处理）。</p>
+    <div class="flow">
+      <div><b>注液后等待/润湿</b>电解液进入孔隙</div><div class="arrow">→</div>
+      <div><b>化成 Formation</b>受控首次充放电</div><div class="arrow">→</div>
+      <div><b>辅助处理</b>可能含高温老化、排气、二次注液/封口</div><div class="arrow">→</div>
+      <div><b>室温老化</b>观察稳定性与自放电</div><div class="arrow">→</div>
+      <div><b>EoL 终检</b>测量并判断</div><div class="arrow">→</div>
+      <div><b>分级/分流</b>合格、等级、返工或隔离</div>
+    </div>
+    <p><span class="tag fact">文献事实</span> PEM/RWTH 的综述把 cell finishing 分为预处理、化成过程和质量测试三大类，并明确指出不同制造商、电芯形式和目标参数会形成不同流程路线，目前不存在唯一占主导地位的标准流程。<a href="#ref1">[1]</a></p>
+    <div class="warning"><strong>必须避免的误解：</strong>上面的箭头是教学用的通用逻辑，不是所有工厂的固定工艺表。软包电芯可能在化成产生气体后排气并再次封装；方形、圆柱及不同化学体系的顺序、温度、压力、循环数和等待时间都可能不同。论文中必须说明适用对象。</div>
+    <h3>1.1 三类动作：改变、观察、判定</h3>
+    <table><thead><tr><th>类别</th><th>典型步骤</th><th>主要目的</th><th>机器人是否执行核心物理过程？</th></tr></thead><tbody>
+      <tr><td><strong>改变电芯状态</strong></td><td>润湿、化成、排气/封口等</td><td>让电解液充分接触、建立界面层、完成激活与必要的结构处理。</td><td>通常由专用工艺设备完成；机器人多负责其上下料、装夹和转运。</td></tr>
+      <tr><td><strong>观察电芯状态</strong></td><td>老化期间的 OCV/自放电观察、EoL 电性能或外观/尺寸检查</td><td>发现异常、量化性能、形成质量数据。</td><td>测量由测试设备完成；机器人可负责接触前定位、载具搬运和异常品分流。</td></tr>
+      <tr><td><strong>作出并执行决策</strong></td><td>分级、合格/不合格、返工、隔离</td><td>根据规则将电芯送往正确路径。</td><td>软件/MES/QMS 作出或记录决策，自动化物流执行物理分流。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="wetting">
+    <h2>2. 化成之前：为什么注完电解液不能立刻随意充电？</h2>
+    <p>电解液需要进入电极与隔膜的孔隙并形成足够接触，这一过程通常称为润湿或浸润（wetting/soaking）。如果润湿不足，电芯内部不同区域的离子传输和电化学反应可能不均匀。因此，预处理的目标是在尽可能合理的时间内，为化成创造稳定条件。</p>
+    <div class="grid">
+      <div class="card blue"><h3>物理视角</h3><p>电解液要从宏观空间进入多孔电极与隔膜内部；材料孔结构、表面性质、温度、压力/真空与电芯形式都会影响过程。</p></div>
+      <div class="card green"><h3>制造视角</h3><p>等待提高润湿程度，但也占用场地、载具、库存和时间。真正的问题是“何时已经足够”，而不是单纯等待越久越好。</p></div>
+      <div class="card amber"><h3>质量视角</h3><p>上游注液量、密封、材料和装配差异会在这里继续影响后续表现；cell finishing 不能脱离上游历史。</p></div>
+      <div class="card violet"><h3>研究视角</h3><p>阻抗、超声、X 射线等方法被研究用于更快判断润湿状态，但研究方案不等于已经成为量产标准。<a href="#ref1">[1]</a></p></div>
+    </div>
+    <p><span class="tag infer">论文推论</span> 润湿等待和后续老化都可能形成“低频进出、高库存量”的物流对象。适合它们的自动化方案不一定追求机械臂极高速度，更可能强调载具容量、空间利用、身份映射、稳定交接和异常访问。</p>
+  </section>
+
+  <section class="section" id="formation">
+    <h2>3. 化成：它为什么不是普通的第一次充电？</h2>
+    <p>化成（formation）是按照规定的电流、电压、温度、时间与截止条件，对新电芯进行首次受控充放电的过程。它的关键作用是激活电芯并促成电极—电解液界面层的形成与稳定，尤其包括负极侧的固体电解质界面膜（SEI）。界面层会影响锂离子传输、副反应、寿命、功率和安全，因此化成方案与电芯化学体系、材料、结构和目标性能密切相关。<a href="#ref2">[2]</a></p>
+    <div class="grid3">
+      <div class="card blue"><h3>受控</h3><p>不是简单接上电源；充放电步骤、倍率/电流、电压窗口、温度、休息和终止条件均属于工艺配方。</p></div>
+      <div class="card green"><h3>并行</h3><p>单个电芯处理时间长，量产需大量测试通道并行工作，进而带来设备、接触、布线、热管理和数据规模问题。</p></div>
+      <div class="card red"><h3>不可轻率加速</h3><p>缩短时间可能降低在制品和设备占用，但必须证明不会牺牲性能、寿命和安全，不能只用物流效率判断。</p></div>
+    </div>
+    <h3>3.1 SEI 用通俗语言怎么理解？</h3>
+    <p>锂离子电池的工作电位可能超出电解液的稳定范围，首次充电时会发生界面副反应并消耗一部分活性锂。合适的反应产物在负极表面形成能够传导锂离子、同时限制电子继续到达电解液的钝化层，这就是 SEI 的核心意义。理想状态不是“完全没有副反应”，而是用受控方式形成稳定、均匀、阻抗适当的界面。正极侧也可形成相应的电解质界面层（常称 CEI）。<a href="#ref2">[2]</a> <a href="#ref3">[3]</a></p>
+    <div class="teacher"><strong>记忆方法：</strong>装配决定“材料怎样被放在一起”，化成决定“新电芯怎样第一次进入可工作的电化学状态”。它既是生产工序，也是第一次系统性地产生大量电性能数据。</div>
+    <h3>3.2 化成方案为什么没有统一答案？</h3>
+    <ul>
+      <li>正负极材料、电解液添加剂、电芯尺寸和形式不同；</li>
+      <li>目标可能侧重能量、功率、寿命、安全、时间或成本；</li>
+      <li>上游润湿、注液和装配状态会改变初始条件；</li>
+      <li>温度与机械压力会影响界面反应和气体/膨胀行为；</li>
+      <li>过于保守的方案耗时耗资，过度缩短又可能引入未知风险。</li>
+    </ul>
+    <p><span class="tag fact">文献事实</span> 2024 年 <em>Energy &amp; Environmental Science</em> 综述将化成描述为电芯制造中最关键的步骤之一，并强调它对倍率能力、寿命、安全、能耗和成本的影响；其核心研究方向是从经验型流程转向基于机理与数据的工艺设计。<a href="#ref2">[2]</a></p>
+  </section>
+
+  <section class="section" id="equipment">
+    <h2>4. 化成站不是一台充电器，而是一套生产系统</h2>
+    <table><thead><tr><th>系统组成</th><th>作用</th><th>机器人/自动化接口</th><th>失效后果举例</th></tr></thead><tbody>
+      <tr><td>电芯载具、托盘或加压夹具</td><td>固定、分隔和定位电芯；某些软包/方形流程还需受控机械压力。</td><td>抓取基准、载具定位、锁紧确认、载具 ID。</td><td>放置错误、受力不当、接触不到位。</td></tr>
+      <tr><td>电连接与测试通道</td><td>给每个电芯施加配方并采集电压、电流等数据。</td><td>机器人将电芯/载具送入正确通道，系统核对 cell ID—channel ID。</td><td>接触电阻异常、错配方、数据归属错误。</td></tr>
+      <tr><td>温控/环境系统</td><td>控制化成温度，移除或管理热量；可能使用气候箱/温控区域。</td><td>进出联锁、门禁、任务排程、等待安全状态。</td><td>温度偏差、局部过热、错误时机开门。</td></tr>
+      <tr><td>功率电子与能量管理</td><td>完成充放电；放电能量可能通过能量回馈架构再利用。</td><td>物流系统应与通道状态同步，不能在带电/未释放状态搬运。</td><td>未完成即转运、错误断开、能量管理异常。</td></tr>
+      <tr><td>控制、MES/QMS 与数据库</td><td>下发配方、记录曲线、判定状态、维护追溯链。</td><td>任务生成、扫码/识别、通道绑定、放行和异常隔离。</td><td>物理电芯与数字记录失配。</td></tr>
+      <tr><td>消防、监测与隔离</td><td>发现温度、电压、烟气或其他异常，阻止风险扩散。</td><td>机器人必须响应停机/撤离/隔离逻辑，不得绕过安全联锁。</td><td>异常电芯进入正常流，故障扩大。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>设施例证，不是量产统一规格：</strong>Fraunhofer IPA 公开的研发能力包括 50 通道电芯测试器和气候箱；Fraunhofer ISE 说明其软包电芯在模块化载具中施加轴向压力并在气候箱中化成和循环。它们证明“通道—环境—载具”是一个组合系统，但不能用其参数代表所有工厂。<a href="#ref8">[8]</a> <a href="#ref9">[9]</a></div>
+    <h3>4.1 为什么并行化改变物流问题？</h3>
+    <p>若单个工艺持续较长时间，而上游持续产出电芯，就必须增加并行工位或槽位。此时产能不只取决于机器人单次取放时间，还取决于可用通道数、载具装载量、工艺时间分布、设备利用率、缓冲能力和异常恢复。</p>
+    <div class="formula">理论占用量（概念） ≈ 到达率 λ × 平均停留时间 W<br>实际规划还需考虑峰值、良率、载具回流、维护、备用容量与安全间距。</div>
+    <p>上式是 Little's Law 的直观应用，只用于建立思维：在流率不变时，停留时间越长，平均在制品越多。没有真实的 λ、W 和运行分布，就不能给出本项目的槽位数或设备数量。</p>
+  </section>
+
+  <section class="section" id="aging">
+    <h2>5. 老化（Aging）：电芯“放着不动”，工厂却并不轻松</h2>
+    <p>在 cell finishing 中，aging 常指新电芯在规定温度、荷电状态和时间条件下静置，并在前后或期间测量电压等参数，用于稳定电芯并识别异常自放电等问题。它不同于研究电池多年寿命衰减的 cycle aging/calendar aging 试验；两者英文相同，论文必须通过上下文说明。</p>
+    <h3>5.1 静置为什么仍是一道生产工序？</h3>
+    <div class="grid">
+      <div class="card blue"><h3>它占用时间和空间</h3><p>即使没有连续机械动作，电芯仍占据架位、托盘和厂房，并形成大量 WIP（在制品）。</p></div>
+      <div class="card green"><h3>它产生质量信息</h3><p>比较老化前后 OCV 等测量，可用于推断异常自放电；具体阈值与方法是企业/产品知识。</p></div>
+      <div class="card amber"><h3>它要求准确排程</h3><p>何时入库、温度区、何时复测、何时出库都必须与电芯身份对应。</p></div>
+      <div class="card red"><h3>它保留安全风险</h3><p>密封电芯不是“无风险物料”。异常发热、膨胀、泄漏或电压行为需要监测和隔离策略。</p></div>
+    </div>
+    <p><span class="tag fact">文献事实</span> PEM/RWTH 综述说明，室温老化开始进入质量测试阶段，EoL 测试与 grading 随后完成流程；老化持续时间会随制造商、格式和路线显著变化。<a href="#ref1">[1]</a></p>
+    <p><span class="tag fact">研究机构事实</span> Fraunhofer ISE 的 ProTrak 项目明确指出，生产中大量电芯需要在规定条件下临时存储以进行老化测试，研究目标之一是通过更准确的库仑计量和优化化成方案减少相应时间与资源。<a href="#ref10">[10]</a></p>
+    <div class="warning"><strong>关于“几周”的数字：</strong>文献与行业指南常报道某些路线可长达数周，但这不是所有电芯的固定周期。论文若引用，应写“文献报告的范围/上限及适用背景”，不能写成“所有电芯必须老化三周”。</div>
+  </section>
+
+  <section class="section" id="eol">
+    <h2>6. EoL 终检：不是给每个电芯做一场完整寿命试验</h2>
+    <p>End-of-Line（EoL）测试的任务是在可接受的生产时间内，检查电芯是否满足规定的性能和质量要求，并为放行、分级或隔离提供数据。完整寿命试验可能持续数百或数千循环，不可能作为每个量产电芯的终检；量产需要选择可快速测量且与目标质量有关的特征。</p>
+    <table><thead><tr><th>可能的检测类别</th><th>能够回答的问题</th><th>边界与注意事项</th></tr></thead><tbody>
+      <tr><td>OCV 与自放电相关测量</td><td>静置前后电压行为是否异常？</td><td>受到温度、SOC、时间和测量精度影响；判定规则不能脱离产品。</td></tr>
+      <tr><td>容量/能量相关测试</td><td>电芯可释放的电量是否满足要求？</td><td>需要充放电时间；结果取决于倍率、温度和截止条件。</td></tr>
+      <tr><td>内阻/功率相关测试</td><td>电芯对电流的响应是否处于允许范围？</td><td>ACIR、DCIR、EIS 不是同一个量，测试条件必须说明。</td></tr>
+      <tr><td>泄漏、尺寸、膨胀、外观等</td><td>封装和几何状态是否有可观察异常？</td><td>不同电芯形式所需方法不同；视觉检测不能替代所有密封或电学检测。</td></tr>
+      <tr><td>过程曲线特征</td><td>化成数据中是否存在可用于早期质量判断的模式？</td><td>需要有代表性数据、标签、模型验证与漂移监测。</td></tr>
+    </tbody></table>
+    <p><span class="tag fact">文献事实</span> PEM/RWTH 的 cell finishing 综述将 EIS、化成方案优化及其他快速质量检测视为优化方向，同时明确很多技术仍处于研究或工业化进程中。<a href="#ref1">[1]</a></p>
+    <p><span class="tag infer">论文推论</span> 对机器人而言，终检的主要价值并非“机械臂测容量”，而是把正确电芯送至正确测试接口、建立可靠接触、核对身份、按照测试结果执行分流，并在异常时保持可恢复性。</p>
+
+    <h3>6.1 分级、分选和不合格判定不要混为一谈</h3>
+    <table><thead><tr><th>概念</th><th>含义</th><th>例子（仅为逻辑示例）</th></tr></thead><tbody>
+      <tr><td><strong>合格判定</strong></td><td>是否满足最低产品规范。</td><td>满足要求进入合格流；不满足进入隔离/分析/规定的返工或报废流程。</td></tr>
+      <tr><td><strong>分级 Grading</strong></td><td>在合格电芯内部，按规定特征划分等级。</td><td>A/B 等级必须有企业定义，不能假定行业通用。</td></tr>
+      <tr><td><strong>分选/匹配 Sorting</strong></td><td>根据测量特征将电芯分到不同物流单元。</td><td>把性能相近的电芯放入同一组；本论文只讨论电芯制造端的分流，不扩展到模块/包设计。</td></tr>
+    </tbody></table>
+    <p>实际电芯存在由材料波动、工艺公差、设备磨损和运行条件等造成的 cell-to-cell variation。表征和分选的意义是看见并管理这种差异，而不是假设所有成品天然完全一致。<a href="#ref6">[6]</a></p>
+  </section>
+
+  <section class="section" id="handling">
+    <h2>7. 为什么托盘上下料是一个值得研究的机器人场景？</h2>
+    <p>经过封装的电芯相较于裸极片通常更刚性、更容易建立几何基准；它们还会重复地进出化成柜、测试架、老化库和分选工位。托盘/载具可以把若干电芯变成标准化物流单元，减少逐个搬运次数，并承担定位、间距、保护和身份映射等功能。</p>
+    <div class="grid3">
+      <div class="card green"><h3>对象较标准</h3><p>密封电芯或专用载具通常比薄软极片更容易可靠抓取、定位和防护。</p></div>
+      <div class="card blue"><h3>重复性高</h3><p>上下料、入架、出架、复测、分流和空托盘回流都具有重复物料搬运特征。</p></div>
+      <div class="card violet"><h3>数据价值高</h3><p>每次交接都可以成为身份、工位、时间、配方与测试结果的关键追溯点。</p></div>
+    </div>
+    <p><span class="tag infer">研究假设</span> 因对象状态和任务结构，这一场景可能比柔性极片叠片更接近近期工业实施；但“更适合”仍需用节拍、载荷、产品变型、安全、设备接口、异常率、成本和案例成熟度逐项验证。</p>
+    <h3>7.1 托盘不是一块普通塑料板</h3>
+    <table><thead><tr><th>托盘/载具功能</th><th>设计问题</th><th>对机器人接口的影响</th></tr></thead><tbody>
+      <tr><td>定位与保持</td><td>电芯基准、方向、防呆、允许间隙、是否施压。</td><td>夹爪抓托盘还是逐颗抓电芯？定位销和视觉各承担什么？</td></tr>
+      <tr><td>保护与隔离</td><td>防碰撞、短路、掉落和局部挤压；异常电芯如何移出。</td><td>抓取点、最大加速度、掉落监测和安全容器接口。</td></tr>
+      <tr><td>测试接触</td><td>电连接、探针接近、热管理、通道编号。</td><td>装载后如何确认极性、位置、接触状态和 cell-slot-channel 映射。</td></tr>
+      <tr><td>身份承载</td><td>托盘 ID 是否稳定；单槽位如何对应单电芯。</td><td>每次换位、重装或部分取出后必须更新映射。</td></tr>
+      <tr><td>循环与维护</td><td>清洁、磨损、变形、寿命、空载具回收。</td><td>载具状态也应被管理，不能只追踪产品。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>研究设施事实：</strong>Fraunhofer IPA 展示了可扩展的智能工件载具，并给出其圆柱电芯研究线载具容量示例；Fraunhofer ISE 展示软包电芯在模块化载具中受轴向压力。两者支持“载具是工艺接口”的观点，但其尺寸和容量不可直接作为量产通用参数。<a href="#ref8">[8]</a> <a href="#ref9">[9]</a></div>
+
+    <h3>7.2 固定机器人更适合什么？</h3>
+    <ul>
+      <li>从输送线/托盘到化成或测试工装的局部、高重复上下料；</li>
+      <li>需要确定姿态、精确放置和与门/夹紧机构联锁的工位；</li>
+      <li>根据检测结果进行近距离分拣或异常品取出；</li>
+      <li>托盘堆拆、空载具整理和包装前搬运。</li>
+    </ul>
+    <p>但机械臂并不自动等于最佳方案。若运动路径固定、对象一致且只需直线转运，输送机、升降机、龙门、专用移载机构可能更简单。论文要比较任务需求与方案，而不是先指定“必须用六轴机器人”。</p>
+  </section>
+
+  <section class="section" id="mobile">
+    <h2>8. AGV、AMR、输送线和立库：谁负责哪一段？</h2>
+    <p>cell finishing 的物流通常包含工位内定位、工位之间运输、长时间缓存/存储和异常旁路。不同设备解决不同距离和自由度的问题，最常见的不是单一设备包办全线，而是形成组合。</p>
+    <table><thead><tr><th>方案</th><th>优势倾向</th><th>限制/风险</th><th>适合提出的问题</th></tr></thead><tbody>
+      <tr><td>输送线/移载线</td><td>固定路线、稳定流量、接口明确；可连续供给。</td><td>布局柔性较低，占用固定空间，故障可能阻断整段。</td><td>流量是否稳定？是否值得永久铺设？缓冲和旁路如何设计？</td></tr>
+      <tr><td>堆垛机/ASRS 高位库</td><td>高密度存储、受控出入库、适合长等待与大量 WIP。</td><td>投资与消防/温控复杂；单点故障和异常电芯访问需设计。</td><td>老化时长、库位数、分区、先进先出/配方排程怎样定义？</td></tr>
+      <tr><td>AGV</td><td>沿预设引导/路线运输，行为可预测，适合稳定物流网络。</td><td>路线变更可能需要基础设施或系统调整；拥堵与交叉口管理重要。</td><td>路线是否长期固定？任务频率、载荷、交接精度和充电策略如何？</td></tr>
+      <tr><td>AMR</td><td>可基于环境感知与地图规划路径，路线与任务调整通常更灵活。</td><td>动态避障不等于无限自由；定位、交通、无线网络、网络安全和人员混行仍需验证。</td><td>柔性是否真的创造价值？复杂性、车队规模和可用率代价是多少？</td></tr>
+      <tr><td>固定机械臂/龙门</td><td>工位内精确、重复地完成装卸与分流。</td><td>工作范围有限，需要明确基准、护栏/安全和设备接口。</td><td>是否需要六自由度？负载、可达性、末端执行器和故障恢复如何？</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>术语纪律：</strong>行业中 AGV 与 AMR 的营销叫法有时混用。论文应给出自己的操作性定义，例如“是否依赖固定引导路径、是否具备基于环境的自主路径规划”，再根据直接案例分类。</div>
+    <h3>8.1 一个合理的分层架构</h3>
+    <div class="arch">密封电芯到达
+    │
+    ├─ 固定机器人：单颗电芯 ↔ 工艺载具/托盘
+    │
+    ├─ 输送/升降/AMR：托盘 ↔ 化成区 ↔ 老化库 ↔ EoL 测试
+    │
+    ├─ ASRS：按温度、批次、配方、到期时间管理大量 WIP
+    │
+    └─ 固定机器人：测试后分级、异常隔离、合格品出站
+
+控制层：PLC/安全系统 ↔ 车队/仓储控制 ↔ MES/QMS/追溯数据库</div>
+    <p><span class="tag infer">论文推论</span> 移动机器人最可能创造价值的地方是工艺区之间的柔性运输和缓冲衔接；固定机器人更适合设备面前的精确装卸。二者是否都需要，必须通过布局和物流量分析确定。</p>
+    <h3>8.2 选型时必须拿到的数据</h3>
+    <ul class="check">
+      <li>托盘尺寸、质量、重心、电芯数量、允许姿态与最大加速度；</li>
+      <li>每条路线的起终点、距离、交接高度、任务到达分布与峰值；</li>
+      <li>化成/老化/测试时间分布、工位可用率、缓冲规则和优先级；</li>
+      <li>走廊宽度、门、电梯、消防分区、人员/叉车混行与禁入区；</li>
+      <li>定位和对接容差、通信协议、网络覆盖、充电窗口和备用车策略；</li>
+      <li>异常电芯、通信中断、车辆故障、托盘损坏、路径阻塞时的恢复流程。</li>
+    </ul>
+  </section>
+
+  <section class="section" id="trace">
+    <h2>9. 物料流必须绑定数据流：追溯不是“扫过码就完成”</h2>
+    <p>如果电芯进入哪个托盘、托盘进入哪个化成位置、该位置属于哪个测试通道、用了哪个配方、何时开始结束、测得什么结果都无法可靠关联，那么自动化搬得越快，错误也可能传播得越快。</p>
+    <h3>9.1 最小身份链</h3>
+    <div class="arch">Cell ID（电芯）
+  ↕ 装入/取出事件
+Tray ID + Slot ID（载具与槽位）
+  ↕ 入站/出站事件
+Equipment ID + Channel ID（设备与测试通道）
+  ↕ 配方与时间
+Recipe version + start/end + environmental data
+  ↕ 质量结果
+Measured features + decision + destination + operator/system event</div>
+    <p>这里不是要求所有工厂一定采用某种条码或 RFID，而是说明数字关系。可使用 Data Matrix、二维码、RFID、载具编码或其他方法；选择取决于可读性、耐久性、成本、环境、节拍和数据架构。</p>
+    <p><span class="tag fact">学术事实</span> Wessel 等将电池生产追溯的关键任务概括为：定义可追溯资源单元（TRU）、确定关键追溯点、实现标记与在线识别，以及连接不同信息源。追溯支持质量管理和从下游向上游查找历史。<a href="#ref5">[5]</a></p>
+    <h3>9.2 Tracking 与 tracing 的区别</h3>
+    <table><thead><tr><th>概念</th><th>问题方向</th><th>本场景例子</th></tr></thead><tbody>
+      <tr><td><strong>Tracking（跟踪）</strong></td><td>面向当前和下游：它现在在哪里，下一步去哪？</td><td>某托盘正在老化库 A 区，计划 14:30 出库复测。</td></tr>
+      <tr><td><strong>Tracing（追溯）</strong></td><td>面向历史和上游：它经历过什么，问题从哪里来？</td><td>异常电芯曾在何时、以何种配方、在哪个通道化成，与哪些上游批次相关。</td></tr>
+    </tbody></table>
+    <h3>9.3 典型数据失配故障</h3>
+    <ul>
+      <li>电芯物理位置改变，但数据库槽位没有更新；</li>
+      <li>托盘被部分取出/补入后仍沿用旧的 cell-slot 映射；</li>
+      <li>测试通道数据正确，但绑定到了错误 cell ID；</li>
+      <li>异常电芯被取出后，空位或替换品没有记录；</li>
+      <li>返工或复测路线覆盖原结果，失去版本与事件历史；</li>
+      <li>离线操作、扫码失败或网络中断后，系统继续自动放行。</li>
+    </ul>
+    <div class="thesis"><strong>可形成论文评价维度：</strong>机器人方案的“数据集成度”可由身份覆盖、关键追溯点、设备/通道绑定、异常事件记录、数据完整性验证和系统恢复机制评价，而不是只写“连接 MES”。</div>
+  </section>
+
+  <section class="section" id="safety">
+    <h2>10. 安全与异常处理：密封电芯不等于普通货物</h2>
+    <p>新电芯在首次充放电和后续观察期间可能出现异常温升、电压行为、膨胀、泄漏或内部缺陷迹象。讲义不尝试给出通用消防设计；实际系统必须依据具体化学体系、SOC、数量、建筑法规、风险评估和设备供应商/消防专家要求设计。</p>
+    <table><thead><tr><th>异常</th><th>系统需要回答的问题</th><th>机器人/物流要求</th></tr></thead><tbody>
+      <tr><td>温度、电压或测试曲线异常</td><td>由谁检测？阈值在哪里维护？是否自动中止？</td><td>等待安全释放；禁止进入正常流；记录位置和通道。</td></tr>
+      <tr><td>膨胀、泄漏或外观异常</td><td>能否在线发现？怎样避免继续挤压或污染设备？</td><td>使用合适夹具和隔离容器；路径不经过正常缓存区。</td></tr>
+      <tr><td>掉落、碰撞、托盘错位</td><td>电芯是否仍可继续？谁批准？</td><td>停止、保持现场记录、进入评估/隔离流程，不自动复位掩盖事件。</td></tr>
+      <tr><td>车辆/机械臂/仓储故障</td><td>人员如何安全进入？高位库中异常品如何访问？</td><td>安全停机、能量隔离、人工恢复模式、备用路径和任务重分配。</td></tr>
+      <tr><td>数据库或网络中断</td><td>还能否确认产品身份和放行状态？</td><td>采用 fail-safe 逻辑；身份不确定时不继续正常放行。</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>论文边界：</strong>可以评价“方案是否考虑监测、隔离、联锁、故障恢复和追溯”，但没有项目级风险评估时，不应自行规定温度阈值、消防介质、隔离距离或安全等级。</div>
+  </section>
+
+  <section class="section" id="case">
+    <h2>11. 候选用例卡：化成/测试托盘处理与厂内物流</h2>
+    <p>以下是 Week 2 的工作假设，不是最终排名。它把本讲内容压缩成未来文献评价、案例访谈和论文方法章节可使用的结构。</p>
+    <table><thead><tr><th>字段</th><th>当前描述</th><th>证据状态</th></tr></thead><tbody>
+      <tr><td>实际问题</td><td>化成、老化和终检停留时间长、并行设备多、WIP 大；电芯/托盘需要多次搬运、准确排程与身份绑定。</td><td><span class="tag fact">文献支持</span> 时间、并行化、质量关键性由综述支持；具体工厂规模未知。<a href="#ref1">[1]</a> <a href="#ref2">[2]</a></td></tr>
+      <tr><td>目标对象</td><td>已密封的软包/方形/圆柱电芯，或装有这些电芯的标准载具。</td><td><span class="tag gap">待限定</span> 最终必须选择格式、尺寸、质量和载具设计。</td></tr>
+      <tr><td>机器人任务</td><td>电芯装托盘/卸托盘、工艺设备上下料、托盘运输、入库/出库、测试后分流、异常品隔离。</td><td><span class="tag infer">系统推论</span> 需用直接案例验证实际部署和成熟度。</td></tr>
+      <tr><td>价值机制</td><td>减少重复人工搬运与人员进入、稳定交接、支持 24/7 物流、提高数据一致性、改善空间和排程管理。</td><td><span class="tag gap">待量化</span> 不得先写节省比例或 ROI。</td></tr>
+      <tr><td>关键要求</td><td>载荷/尺寸兼容、抓取与对接、极性/方向防错、安全联锁、通道映射、MES/QMS、异常恢复、环境与消防兼容。</td><td><span class="tag infer">工程要求</span> 源于工艺—任务分析，后续需专家/案例确认。</td></tr>
+      <tr><td>主要风险</td><td>错放、掉落、短路/机械损伤、错误测试通道、异常品混回正常流、物流拥堵、系统单点故障。</td><td><span class="tag infer">工程风险</span> 需 FMEA 或访谈深化。</td></tr>
+      <tr><td>替代方案</td><td>人工/叉车、固定输送、龙门或专机、ASRS、AGV、AMR、固定机械臂及其组合。</td><td><span class="tag fact">方案空间</span> 选择必须依据布局和任务数据。</td></tr>
+      <tr><td>验证指标</td><td>任务完成率、误交接/误绑定、有效吞吐量、设备等待、系统可用率、恢复时间、WIP/空间、安全事件与全生命周期成本。</td><td><span class="tag gap">需定义基线</span> 指标及单位需随案例确认。</td></tr>
+    </tbody></table>
+
+    <h3>11.1 与 Day 3 叠片案例的对比</h3>
+    <table><thead><tr><th>维度</th><th>精密叠片</th><th>化成/测试托盘物流</th></tr></thead><tbody>
+      <tr><td>对象</td><td>薄、柔、易皱的极片与隔膜。</td><td>通常是密封电芯或刚性载具。</td></tr>
+      <tr><td>核心技术难题</td><td>高速精密取放、层间对齐、无损接触、颗粒与环境控制。</td><td>多工位物流、载具接口、通道映射、排程、追溯和安全隔离。</td></tr>
+      <tr><td>机器人角色</td><td>可能直接参与质量关键装配动作。</td><td>更多承担专用工艺设备周边的 handling 与 transport。</td></tr>
+      <tr><td>部署推论</td><td>价值高，但技术风险与产品专用性高。</td><td>对象更标准、动作更重复，可能更易近期实施；系统集成难度仍高。</td></tr>
+      <tr><td>当前结论</td><td colspan="2">两者均保留为候选案例，尚不作最终优先级或 ROI 结论。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section">
+    <h2>12. 经济性：Day 4 只建立数据框架，不计算虚假 ROI</h2>
+    <p>自动化是否值得，不由“机器人看起来先进”决定。应比较基准方案与候选方案在同一系统边界、同一产量和质量要求下的全生命周期成本和收益。</p>
+    <div class="grid">
+      <div class="card blue"><h3>必须测量的运营数据</h3><p>任务频率、峰值、平均/分位节拍、搬运距离、人工时间、WIP、等待、设备阻塞/饥饿、错误与返工、停机和恢复时间。</p></div>
+      <div class="card green"><h3>必须询价或估算的数据</h3><p>机器人/车辆、夹具、载具、立库、充电、消防、安全、软件集成、验证、调试、维护、备件、培训和厂房改造。</p></div>
+      <div class="card amber"><h3>收益不能重复计算</h3><p>节省人工、提高设备利用率、减少错误和释放空间可能互相关联；必须说明因果关系与基准。</p></div>
+      <div class="card red"><h3>不确定性必须展示</h3><p>用区间和敏感性分析处理产量、工资、利用率、故障、折旧期等，而不是给出伪精确单值。</p></div>
+    </div>
+    <div class="formula">概念性年净收益 = 可验证的人工/错误/等待/空间等收益 − 新增运行与维护成本<br>概念性回收期 = 初始投资 ÷ 年净收益（仅当口径一致且年净收益为正）</div>
+    <p><span class="tag gap">当前证据缺口</span> 本项目尚没有特定工厂的物流量、人工基线、布局、载具、设备报价和故障数据，因此现在不计算 ROI，也不宣称某方案能提升多少良率或产能。</p>
+  </section>
+
+  <section class="section">
+    <h2>13. 未来趋势：哪些是研究方向，哪些不是现成答案？</h2>
+    <table><thead><tr><th>趋势</th><th>希望解决的问题</th><th>当前写作方式</th></tr></thead><tbody>
+      <tr><td>缩短/自适应化成</td><td>降低设备占用、时间、WIP 与成本，同时维持界面和性能质量。</td><td>写成研究与工业优化方向；除非有特定成熟案例，不写成全行业已实现。</td></tr>
+      <tr><td>更快的润湿与质量检测</td><td>减少固定等待，按实际状态推进流程。</td><td>说明 EIS、超声等候选技术及验证要求，不笼统称为量产标准。</td></tr>
+      <tr><td>基于化成曲线的早期预测</td><td>用已有数据提前发现缺陷或预测性能，减少长时间测试。</td><td>关注数据代表性、标签、跨批次/设备泛化、误判代价与模型漂移。</td></tr>
+      <tr><td>能量回馈</td><td>利用放电阶段能量，降低净能耗。</td><td>作为功率电子/系统架构方向；节能比例必须由具体系统证据支持。</td></tr>
+      <tr><td>数字孪生与闭环追溯</td><td>连接上游过程、化成曲线、终检与下游表现，实现质量反馈。</td><td>先证明身份链和数据质量，再讨论高级分析；数字孪生不是一个标签。</td></tr>
+    </tbody></table>
+    <p><span class="tag fact">研究进展</span> 2026 年关于电芯生产整体 tracking/tracing 的研究强调，可靠的数据获取与聚合是 KPI 监控、质量控制、资源优化和数字化应用的基础；这支持本论文将数据接口纳入机器人系统评价。<a href="#ref7">[7]</a></p>
+  </section>
+
+  <section class="section" id="evidence">
+    <h2>14. 怎样把今天的知识写进毕业论文？</h2>
+    <h3>14.1 四层证据必须分开</h3>
+    <table><thead><tr><th>层级</th><th>本讲例子</th><th>写作措辞</th></tr></thead><tbody>
+      <tr><td><span class="tag official">PEM 要求</span></td><td>关键论断需来源；图表需解释和引用；不能以网页或学位论文替代核心科学文献。</td><td>这是项目写作规则；正式注册/提交前还要核对最新版。</td></tr>
+      <tr><td><span class="tag fact">文献事实</span></td><td>化成影响界面和性能；cell finishing 包含预处理、化成和质量测试；追溯需要定义 TRU 与关键追溯点。</td><td>“文献指出……”，并给出具体来源与章节/页码。</td></tr>
+      <tr><td><span class="tag infer">论文推论</span></td><td>密封电芯托盘搬运可能比叠片更易近期自动化。</td><td>“基于对象刚性、任务重复性和接口可标准化，可推断……；仍需案例验证。”</td></tr>
+      <tr><td><span class="tag gap">待验证数据</span></td><td>节拍、精度、载荷、人工、错误率、成本、ROI、技术成熟度。</td><td>明确写“尚无直接证据”，转为案例数据或访谈问题。</td></tr>
+    </tbody></table>
+
+    <h3>14.2 可直接用于文献笔记的证据链</h3>
+    <table><thead><tr><th>Claim</th><th>Source / section</th><th>对电芯制造的含义</th><th>对机器人的含义</th></tr></thead><tbody>
+      <tr><td>cell finishing 路线受电芯格式与制造商影响，不存在唯一标准流程。</td><td>Kampker et al. 2023, Sections 2, 5.<a href="#ref1">[1]</a></td><td>研究对象必须限定工艺路线和格式。</td><td>不能复制单一通用抓取/物流方案；接口需针对案例。</td></tr>
+      <tr><td>化成影响电芯性能、安全、时间、能耗与成本。</td><td>Schomburg et al. 2024, Abstract, Sections 1–2.<a href="#ref2">[2]</a></td><td>缩短流程必须保持质量证据。</td><td>物流效率不能绕过工艺约束；通道、温控与数据联锁是系统边界。</td></tr>
+      <tr><td>老化需要大量电芯在规定条件下临时存储。</td><td>Fraunhofer ISE ProTrak, project description.<a href="#ref10">[10]</a></td><td>形成大量 WIP、架位与调度需求。</td><td>支持研究载具、ASRS 和移动物流，但具体规模待案例数据。</td></tr>
+      <tr><td>电池生产追溯需定义 TRU、关键点、识别和数据关联。</td><td>Wessel et al. 2023, Sec. 2.1.<a href="#ref5">[5]</a></td><td>产品历史是质量分析的基础。</td><td>每次自动交接都要维护 cell—tray—slot—channel 映射。</td></tr>
+    </tbody></table>
+
+    <h3>14.3 可放入论文的谨慎段落模板</h3>
+    <div class="thesis">电芯后处理包含预处理、化成与质量测试，其具体顺序和持续时间取决于电芯形式、材料体系及制造商流程。化成通过受控首次充放电建立和稳定电极—电解液界面，并显著影响性能与安全。由于化成与老化具有较长停留时间、较高并行化需求和大量数据关联，化成设备上下料、老化区托盘运输及测试后分流构成潜在机器人应用。然而，其技术经济可行性仍需针对电芯形式、载具、布局、吞吐量、安全与追溯接口进行案例级验证。<a href="#ref1">[1]</a> <a href="#ref2">[2]</a> <a href="#ref5">[5]</a></div>
+  </section>
+
+  <section class="section">
+    <h2>15. 今日自测：不要看答案先口头复述</h2>
+    <div class="question"><b>Q1.</b> 为什么 formation 不能简单翻译成“第一次充电”？它对电芯做了什么？</div>
+    <div class="question"><b>Q2.</b> wetting、formation、aging 和 EoL testing 分别属于“改变、观察、判定”中的哪一类？</div>
+    <div class="question"><b>Q3.</b> 为什么老化期间电芯看似不动，却会造成显著的生产系统问题？</div>
+    <div class="question"><b>Q4.</b> 为什么固定机械臂、AMR/AGV、输送线和 ASRS 不是互相替代的同一种设备？</div>
+    <div class="question"><b>Q5.</b> 写出最小的 cell—tray—slot—equipment—channel 身份链。若其中一个映射错误，会有什么后果？</div>
+    <div class="question"><b>Q6.</b> 为什么“托盘处理可能比叠片更适合近期机器人落地”目前只是推论，不是研究结论？</div>
+    <details><summary>参考答案（完成后展开）</summary><div>
+      <p><strong>Q1：</strong>化成是带有明确电流、电压、温度、时间与截止条件的首次受控充放电，目标包括激活电芯、建立/稳定 SEI/CEI 等界面；它会影响寿命、功率和安全。</p>
+      <p><strong>Q2：</strong>润湿与化成主要改变电芯状态；aging 既包含稳定过程，也用于观察自放电等表现；EoL 主要测量并形成判定数据，分级/分流执行决策。</p>
+      <p><strong>Q3：</strong>它占用载具、架位、厂房和时间，造成大量 WIP，还要求温度/SOC/时间管理、复测排程、身份追溯和异常监测。</p>
+      <p><strong>Q4：</strong>固定机器人适合工位内精确装卸，输送线适合固定高频路线，ASRS 适合高密度缓存，AGV/AMR 适合工位间运输；应按距离、自由度、流量、柔性和接口组合。</p>
+      <p><strong>Q5：</strong>每个 Cell ID 必须映射到 Tray ID 与 Slot ID，再对应 Equipment ID 与 Channel ID。错误会把配方或测试数据归到错误电芯，导致错误放行、错误分级和无法追根溯源。</p>
+      <p><strong>Q6：</strong>该判断目前基于对象较刚性、动作重复和接口可能标准化；尚缺直接案例的节拍、可靠性、安全、成本和成熟度证据。</p>
+    </div></details>
+    <h3>15.1 小作业（建议写在自己的学习笔记里）</h3>
+    <ol>
+      <li>不看讲义，画出“密封电芯 → 化成 → 老化 → EoL → 分流”的物料流。</li>
+      <li>在同一张图下画数据流，至少标出 cell、tray、slot、equipment、channel、recipe 和 result。</li>
+      <li>选择一个具体 format（软包/方形/圆柱），写出托盘机器人方案仍缺少的十项数据。</li>
+      <li>用 150–200 字回答：为什么“机器人系统”比“机械臂”更适合作为本论文的分析单位？</li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2>16. Day 4 总结与 Day 5 方向</h2>
+    <ol>
+      <li>cell finishing 将电化学激活、稳定、质量观测、判断与物料分流连接起来。</li>
+      <li>化成是质量关键工序，不能为追求节拍而脱离材料、温度、压力和安全。</li>
+      <li>老化的长停留与大 WIP 使存储、排程和物流成为系统瓶颈候选。</li>
+      <li>已密封电芯和标准载具使机器人/自动物流具备较清晰的接口，但异常处置与追溯是落地核心。</li>
+      <li>目前只能把“化成/测试托盘处理”列为高潜力候选案例，不能提前给出成熟度、收益或 ROI。</li>
+    </ol>
+    <p><strong>Day 5 建议：</strong>进入“视觉引导的检测与上下料”，系统学习二维/三维视觉、定位与缺陷检测的区别、误检/漏检、数据集偏差、质量闸门和机器人闭环。完成后，我们就能把 Week 2 的几个候选场景放入同一张证据化评价矩阵。</p>
+  </section>
+
+  <section class="section">
+    <h2>参考资料与证据边界</h2>
+    <ol>
+      <li id="ref1">Kampker, A.; Heimes, H.; Offermanns, C.; Wennemar, S.; Robben, T.; Lackner, N. (2023). <a href="https://doi.org/10.3390/wevj14040096">Optimizing the Cell Finishing Process: An Overview of Steps, Technologies, and Trends</a>. <em>World Electric Vehicle Journal</em>, 14(4), 96。PEM/RWTH 同行评审综述；用于 cell finishing 分类、工艺差异、润湿、化成、老化、EoL 与趋势。重点阅读 Sections 2–3、5。</li>
+      <li id="ref2">Schomburg, J. et al. (2024). <a href="https://doi.org/10.1039/D3EE03559J">Lithium-ion battery cell formation: status and future directions towards a knowledge-based process design</a>. <em>Energy &amp; Environmental Science</em>, 17, 2686–2733。用于化成机理、SEI/CEI、质量、时间、能耗与知识驱动工艺设计。</li>
+      <li id="ref3">Wood, D. L.; Li, J.; An, S. J. (2019). <a href="https://doi.org/10.1016/j.joule.2019.11.002">Formation Challenges of Lithium-Ion Battery Manufacturing</a>. <em>Joule</em>, 3(12), 2884–2888。用于润湿、化成、老化、SEI/CEI 与制造时间/成本问题的基础背景。</li>
+      <li id="ref4">Liu, Y. et al. (2021). <a href="https://doi.org/10.1016/j.isci.2021.102332">Current and future lithium-ion battery manufacturing</a>. <em>iScience</em>, 24, 102332。用于全流程制造背景和化成/老化的时间、质量与安全意义。</li>
+      <li id="ref5">Wessel, J.; Schoo, A.; Kwade, A.; Herrmann, C. (2023). <a href="https://doi.org/10.1002/ente.202200911">Traceability in Battery Cell Production</a>. <em>Energy Technology</em>, 11, 2200911。用于 TRU、关键追溯点、在线识别、数据关联及 tracking/tracing 框架。重点阅读 Section 2.1。</li>
+      <li id="ref6">Ank, M.; Kröger, T.; Schreiber, M.; Lienkamp, M. (2023). <a href="https://doi.org/10.1016/j.est.2023.107430">Experimental analysis of lithium-ion cell procurement: Quality differences, correlations, and importance of cell characterization</a>. <em>Journal of Energy Storage</em>, 64, 107430。用于 cell-to-cell variation 与电芯表征必要性的实验背景；不将采购样本直接等同于特定工厂产线。</li>
+      <li id="ref7">Kuhr, J. et al. (2026). <a href="https://doi.org/10.3390/batteries12060216">Enabling Holistic Tracking and Tracing in Battery Cell Production: Data Management and Applications</a>. <em>Batteries</em>, 12(6), 216。用于整体追踪追溯、数据聚合与数字化应用；属于较新研究，正式论文引用时应检查最终卷期与 PDF 页码。</li>
+      <li id="ref8">Fraunhofer IPA. <a href="https://www.ipa.fraunhofer.de/en/about-us/guiding-themes/battery-manufacture.html">Battery Manufacture</a>。用于智能工件载具、运输系统及电芯化成/表征设施的研究机构例证；不作为通用量产指标。</li>
+      <li id="ref9">Fraunhofer ISE. <a href="https://www.ise.fraunhofer.de/en/business-areas/electrical-energy-storage/production-technology-for-batteries/battery-cell-production.html">Battery Cell Production</a>。用于软包电芯模块化加压载具、气候箱化成/循环和表征的研究设施例证。</li>
+      <li id="ref10">Fraunhofer ISE. <a href="https://www.ise.fraunhofer.de/en/research-projects/protrak-throughput-optimized-formation-production-technology-for-the-manufacturing-of-lithium-cells.html">ProTrak: Production Technology for the Manufacturing of Lithium Cells</a>。用于化成后大量电芯临时存储及缩短测试时间的项目背景。</li>
+      <li id="ref11">VDMA Battery Production. (2026). <a href="https://www.vdma.eu/">Production Process of a Lithium-Ion Battery Cell</a>。用于当前行业工艺路线对照。该指南属于行业资料；正式引用前应保存 PDF、记录版本、页码和直接链接，且不能代替核心同行评审来源。</li>
+    </ol>
+    <div class="source"><strong>供应商证据边界：</strong>机器人厂商公开展示机器人、移动平台、测试设备上下料和托盘 handling 能力，只能说明市场上存在相关解决方案类别。厂商关于效率、成本、节拍或成熟度的数字，除非有透明案例边界和独立验证，不作为本论文的核心科学证据。</div>
+    <p class="mini">本讲义为学习与论文研究准备材料，不是工厂工艺规范或电池安全设计文件。正式论文引用应回到原始 PDF，记录精确页码/章节，并按导师确认的 PEM 引用样式导入 Citavi 或其他文献管理器。讲义中的系统架构、候选用例和比较结论均为当前研究推论；具体速度、精度、良率、成本、ROI 和成熟度均未假定。</p>
+  </section>
+</main>
+</body>
+</html>

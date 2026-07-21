@@ -14,6 +14,12 @@ How can we move from battery manufacturing knowledge to evidence-based analysis 
 2. `day2_electrode_manufacturing_chinese_learning_guide.html`
    - Learn the wet electrode process chain and identify realistic robotics entry points around core process equipment.
    - 学习湿法电极制造流程，并识别核心工艺设备周边真实的机器人切入点。
+3. `day3_cell_assembly_robotics_chinese_learning_guide.html`
+   - Learn cell-assembly routes, cell-format differences, and why precision robot systems face high implementation demands.
+   - 学习电芯装配路线、电芯形式差异，以及精密机器人系统为何面临很高的落地要求。
+4. `day4_cell_finishing_intralogistics_chinese_learning_guide.html`
+   - Learn formation, aging, end-of-line testing, grading, tray handling, intralogistics, and traceability as one production system.
+   - 把化成、老化、终检、分选、托盘搬运、厂内物流和追溯作为一个生产系统来学习。
 
 ## Week 02 Direction / 第二周方向
 

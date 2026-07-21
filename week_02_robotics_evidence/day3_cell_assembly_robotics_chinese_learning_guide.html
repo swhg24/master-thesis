@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第二周 Day 3：电芯装配与机器人中文学习讲义</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6a78;--paper:#f4f7fa;--line:#d7e1ea;--navy:#193c59;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.78} main{max-width:1100px;margin:auto;padding:42px 22px 70px}.hero{padding:42px;border-radius:10px;background:var(--navy);color:#fff}.eyebrow{margin:0 0 12px;color:#b9dcf7;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-child{max-width:820px;margin:17px 0 0;color:#e1edf6;font-size:17px}.section{margin-top:24px;padding:28px 30px;background:#fff;border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:20px 0 8px;font-size:19px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:18px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card h3{margin:0 0 8px}.card p{margin:0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#f0dca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.teacher,.thesis,.warning,.source{margin:18px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.flow{display:flex;align-items:stretch;gap:8px;margin:20px 0;overflow-x:auto;padding-bottom:4px}.flow div{flex:1 0 125px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:14px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}table{width:100%;margin:18px 0;border-collapse:collapse;font-size:15px}th,td{padding:12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:13px;font-weight:700}.fact{background:#dceefb;color:#174e7a}.infer{background:#fff0cf;color:#7a5205}.gap{background:#f7e5e4;color:#8a3530}.question{margin:16px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details p{padding:0 14px 14px}ol,ul{padding-left:24px}li{margin:6px 0}a{color:#155f98}.mini{font-size:14px;color:var(--muted)}@media(max-width:720px){main{padding:18px 12px 45px}.hero,.section{padding:24px 19px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3{grid-template-columns:1fr}table{font-size:14px}th,td{padding:9px}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">第二周 · Day 3 · 中文学习讲义</p>
+    <h1>电芯装配：<br>叠片、卷绕与精密机器人为什么困难？</h1>
+    <p>电极制造完成后，正极、负极和隔膜还只是“合格的材料”。电芯装配要把它们以正确顺序、正确位置和正确环境组合成内部结构，并完成电连接、封装与注液。这里的机器人价值很高，但难点也最集中。</p>
+  </header>
+
+  <section class="section">
+    <h2>0. 这讲的目标：建立正确的装配视角</h2>
+    <p class="lead">学完后，你不需要会设计夹爪或编写机器人程序；但你应能解释一个电芯装配场景的材料状态、工艺风险、机器人系统要求和证据缺口，并且不会把实验室演示误写成量产成熟方案。</p>
+    <div class="grid3">
+      <div class="card blue"><h3>理解装配链</h3><p>从裁切到叠片/卷绕、焊接、入壳、注液与封口，知道每一步承担什么任务。</p></div>
+      <div class="card green"><h3>比较三种形式</h3><p>理解软包、方形与圆柱电芯的内部结构和装配方式为什么不同。</p></div>
+      <div class="card amber"><h3>识别机器人边界</h3><p>看清视觉、末端执行器、夹具、环境、数据与设备接口为何必须一起考虑。</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>1. 什么叫电芯装配？</h2>
+    <p>电芯装配（cell assembly）是把极片、隔膜、极耳、壳体和电解液组装成可密封电芯的过程。它不是单一动作，而是一串相互耦合的精密制造步骤。</p>
+    <div class="flow">
+      <div><b>裁切/模切</b>得到规定形状的极片</div><div class="arrow">→</div>
+      <div><b>叠片或卷绕</b>形成内部电极结构</div><div class="arrow">→</div>
+      <div><b>极耳连接</b>建立电连接</div><div class="arrow">→</div>
+      <div><b>入壳/封装</b>形成待注液电芯</div><div class="arrow">→</div>
+      <div><b>注液与封口</b>形成密封电芯</div>
+    </div>
+    <div class="source"><strong>工艺事实：</strong>Fraunhofer ISE 的软包电芯中试线依次使用高精度冲切、Z-fold 或单片叠片、极耳超声焊、软包膜成型、热封、真空注液和最终封口。该实例说明装配工艺既依赖材料，也依赖精度与环境控制。<a href="#ref1">[1]</a></div>
+    <div class="teacher"><strong>本论文的研究对象：</strong>不是孤立的“机械臂”，而是机器人系统：机械臂/移动平台 + 末端执行器 + 相机/传感器 + 夹具/载具 + 安全逻辑 + 干房/洁净环境 + 设备和 MES 数据接口。</div>
+  </section>
+
+  <section class="section">
+    <h2>2. 为什么电芯装配比电极制造更难自动化？</h2>
+    <table><thead><tr><th>电极制造</th><th>电芯装配</th><th>对机器人的含义</th></tr></thead><tbody>
+      <tr><td>主要处理浆料和连续卷材；核心常是连续专用设备。</td><td>处理单张极片、隔膜、卷芯/叠片体、极耳和壳体；需要多次定位、抓取和连接。</td><td>装配环节存在更多离散搬运与定位任务，因此机器人潜力更高。</td></tr>
+      <tr><td>主要风险包括涂层均匀性、干燥与卷材稳定。</td><td>主要风险包括错位、褶皱、损伤、颗粒、静电、错误装配和密封失效。</td><td>机器人必须既“拿得住”，又“不伤材料”，还要保持稳定节拍。</td></tr>
+      <tr><td>过程接口以卷对卷设备为主。</td><td>过程接口还包括夹具、工装、焊接、视觉、条码和异常品流转。</td><td>系统集成通常比单一机械动作更决定成败。</td></tr>
+    </tbody></table>
+    <p><span class="tag fact">工艺事实</span> 电芯装配的制造精度、颗粒与湿度等环境条件会影响电芯的老化、安全、能量密度和功率密度。<a href="#ref1">[1]</a></p>
+    <p><span class="tag infer">论文推论</span> 因为这些误差和环境约束在装配中集中出现，机器人系统若能稳定处理、定位、验证和记录，就可能创造质量价值；具体增益必须由案例或数据验证。</p>
+  </section>
+
+  <section class="section">
+    <h2>3. 先分清电芯形式：机器人方案不能脱离 format</h2>
+    <p>同样叫“搬运电芯”或“入壳”，对不同电芯形式可能是完全不同的动作。论文中若不说明 cell format，技术可行性往往无从判断。</p>
+    <table><thead><tr><th>形式</th><th>内部结构与常见装配逻辑</th><th>机器人系统需要特别关注</th></tr></thead><tbody>
+      <tr><td><strong>Pouch / 软包</strong></td><td>通常采用平面叠片或 Z-fold；柔性复合膜承担封装作用，之后经热封、注液、最终封口完成。<a href="#ref1">[1]</a></td><td>薄片定位、软包膜处理、避免压伤、封口定位、真空注液接口和夹具支撑。</td></tr>
+      <tr><td><strong>Prismatic / 方形</strong></td><td>内部结构可采用叠片或卷绕，随后进入刚性方形壳体；具体路线随设计而变。</td><td>叠片/卷芯定向、壳体公差、插入轨迹、碰撞避免、壳体与产品的工装定位。</td></tr>
+      <tr><td><strong>Cylindrical / 圆柱</strong></td><td>常将极片和隔膜卷成 jelly roll（卷芯），再插入圆柱罐；圆柱路线强调卷绕、入罐和后续封装。<a href="#ref3">[3]</a> <a href="#ref4">[4]</a></td><td>卷芯保持、同轴/姿态控制、无碰壁插入、圆柱载具和高速节拍。</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>写论文时的规则：</strong>不要写“入壳机器人可用于所有电芯”。应写成“针对某种电芯形式、某种内部结构和某种产线节拍，机器人系统需要满足哪些要求”。</div>
+  </section>
+
+  <section class="section">
+    <h2>4. 裁切/模切：装配的起点，也是质量屏障</h2>
+    <p>分切后的窄卷还不能直接成为装配对象。裁切或模切将电极做成目标几何形状；几何、边缘与颗粒状态会影响后续叠片或卷绕。</p>
+    <div class="grid">
+      <div class="card blue"><h3>工艺任务</h3><p>得到尺寸正确、边缘质量合格的电极片，并将其按身份和批次送往后续装配。</p></div>
+      <div class="card red"><h3>主要风险</h3><p>尺寸偏差、边缘毛刺、颗粒、极片损伤、错料和检测信息没有与后续电极片关联。</p></div>
+      <div class="card green"><h3>自动化机会</h3><p>极片/料盒上下料、样品转运、视觉检查、合格/异常料分流、批次与检测结果绑定。</p></div>
+      <div class="card amber"><h3>需要谨慎</h3><p>裁切本身常为专用冲切或激光装备；机器人通常是上下游的处理与物流角色，而非替代核心裁切物理过程。</p></div>
+    </div>
+    <p><span class="tag fact">研究设施事实</span> Fraunhofer ISE 在装配前使用高精度机械冲切；其工艺优化工作也包括冲切后对卷材边缘质量进行视觉检查。<a href="#ref1">[1]</a></p>
+  </section>
+
+  <section class="section">
+    <h2>5. 叠片（Stacking）：最典型的“高价值、高难度”场景</h2>
+    <p>叠片的目标是让正极、隔膜、负极按正确顺序和位置重复排列，形成电芯内部的多层结构。这里的对象很薄、很柔软，而且错位、褶皱或颗粒一旦被封在电芯内部，后续很难补救。</p>
+    <h3>5.1 三种常见概念</h3>
+    <table><thead><tr><th>方式</th><th>直观理解</th><th>适合讨论的机器人问题</th></tr></thead><tbody>
+      <tr><td>单片叠片<br>Single-sheet stacking</td><td>将一张张正极、负极与隔膜交替放置。</td><td>逐张取放、视觉定位、夹具基准、末端执行器和节拍。</td></tr>
+      <tr><td>Z-fold</td><td>隔膜连续折成 Z 形，极片依次插入两侧。</td><td>连续隔膜运动与极片供给的同步、张力、定位和异常处理。</td></tr>
+      <tr><td>卷绕<br>Winding</td><td>正极、隔膜和负极连续卷成卷芯；严格说它不是“叠片”，但同样形成内部层状结构。</td><td>连续张力、卷芯几何、材料边缘和高速稳定性。</td></tr>
+    </tbody></table>
+    <p><span class="tag fact">工艺事实</span> Fraunhofer ISE 公开说明其软包中试线使用连续 Z-fold 或单片叠片，并以自动放置维持电极间相对位置。Fraunhofer FFB 的制造课程也将单片叠片与 Z-fold列为常见方法。<a href="#ref1">[1]</a> <a href="#ref5">[5]</a></p>
+    <h3>5.2 为什么“能吸起来”还不够？</h3>
+    <div class="grid3">
+      <div class="card red"><h3>材料问题</h3><p>极片和隔膜薄、柔、易皱；过大接触、过强吸力或不合适的气流都可能改变其状态。</p></div>
+      <div class="card amber"><h3>几何问题</h3><p>每一层都必须对齐。相对位置误差会在多层结构中累积，影响有效重叠区域和一致性。</p></div>
+      <div class="card violet"><h3>量产问题</h3><p>实验室可用慢速动作验证概念；量产还要同时满足节拍、重复性、维护、异常恢复和洁净要求。</p></div>
+    </div>
+    <p><span class="tag fact">质量关联</span> 一篇关于电芯不均匀性的综述指出，装配误差会造成电芯间差异；其中引用的研究观察到叠片中的电极非重叠区域与放电容量存在关联。<a href="#ref6">[6]</a></p>
+    <div class="thesis"><strong>论文可用的表述：</strong>叠片是机器人系统的高潜力场景，因为它包含重复定位与精密搬运；但其实施可行性取决于极片/隔膜材料、对齐要求、末端执行器、视觉/夹具策略、环境条件和目标节拍。</div>
+  </section>
+
+  <section class="section">
+    <h2>6. 卷绕（Winding）：连续过程中的精密控制</h2>
+    <p>卷绕将正极、负极和隔膜连续卷成 jelly roll。圆柱电芯常使用这种内部结构；一些方形设计也可能采用卷绕。它并非“比叠片简单”，而是把主要难题从逐张取放转移到连续供料、张力、边缘和卷芯几何控制。</p>
+    <div class="grid">
+      <div class="card blue"><h3>工艺目标</h3><p>在正确张力和对齐状态下形成稳定卷芯，避免层间错位、松散或边缘问题。</p></div>
+      <div class="card red"><h3>主要风险</h3><p>张力不稳定、层间偏移、褶皱、边缘折损、卷芯形状异常以及高速运行下的稳定性问题。</p></div>
+    </div>
+    <p><span class="tag fact">形式关联</span> Fraunhofer IPA 对圆柱电芯装配的说明中，将电极和隔膜卷成 jelly roll，并强调后续插入壳体时需要高精度且尽量避免与罐壁接触。<a href="#ref4">[4]</a></p>
+    <div class="warning"><strong>机器人边界：</strong>卷绕核心通常是高度集成的专用机台。对本论文来说，更合理的机器人问题是卷材/卷芯供给、上下料、工装流转、视觉检测、异常处理和与专机的接口，而不是笼统地说“机械臂进行卷绕”。</div>
+  </section>
+
+  <section class="section">
+    <h2>7. 极耳连接与焊接（Tab welding）：小部件，大风险</h2>
+    <p>极耳把电极集流体与外部电连接连接起来。连接质量会影响电阻、发热和长期可靠性，因此焊接不是可有可无的辅助步骤。</p>
+    <table><thead><tr><th>要解决的问题</th><th>工艺/质量含义</th><th>机器人系统可能承担什么</th></tr></thead><tbody>
+      <tr><td>位置与姿态</td><td>极耳和集流体必须以正确关系进入焊接区。</td><td>工件定位、夹具装卸、视觉确认、焊前姿态验证。</td></tr>
+      <tr><td>焊接参数</td><td>不同方法与材料需要控制压力、能量、时间等参数；不能只看“是否焊上”。</td><td>与焊接装备联锁、记录配方/批次、搬运和焊后检测接口。</td></tr>
+      <tr><td>质量与追溯</td><td>连接电阻、机械完整性与缺陷可能影响安全和寿命。</td><td>数据绑定、视觉/电学检验结果转运、异常品隔离。</td></tr>
+    </tbody></table>
+    <p><span class="tag fact">中试事实</span> Fraunhofer ISE 的软包流程使用超声焊连接电极与极耳，并说明可通过压力、能量和时间等参数优化该过程。近期设备综述也指出，焊接虽已高度自动化，但极耳连接问题仍具有安全意义。<a href="#ref1">[1]</a> <a href="#ref2">[2]</a></p>
+  </section>
+
+  <section class="section">
+    <h2>8. 入壳与封装：同样是“放进去”，难度却因 format 而变</h2>
+    <p>叠片体或卷芯形成后，必须放入相应的封装结构。软包电芯需要处理柔性复合膜和热封；方形/圆柱电芯需要把内部结构导入刚性壳体。任何“入壳机器人”方案都必须先说明对象到底是哪一种。</p>
+    <div class="grid">
+      <div class="card blue"><h3>软包路线</h3><p>软包膜裁切、成型/深拉、放入叠片体、三边热封、真空注液和最终封口。夹具需要支持柔性膜与叠片体，而非只抓一个刚性零件。<a href="#ref1">[1]</a></p></div>
+      <div class="card green"><h3>圆柱路线</h3><p>卷芯要以正确姿态进入罐体，尽量避免与罐壁非预期接触；后续还有电连接、封口等任务。<a href="#ref4">[4]</a></p></div>
+    </div>
+    <p><span class="tag infer">机器人设计推论</span> 入壳可能需要视觉定位、支撑/导向夹具、受控运动轨迹、碰撞监测和装配完成验证。具体是否需要力控、何种精度和哪种夹爪，必须由特定产品的尺寸、公差、材料和节拍决定。</p>
+  </section>
+
+  <section class="section">
+    <h2>9. 注液与封口：装配的环境边界最清楚的地方</h2>
+    <p>注液将电解液导入已装配的电芯；封口使电芯与外界隔离。由于电解液与水分/氧气敏感，装配环境、人员进入、载具、设备接口和异常处理都是系统的一部分。</p>
+    <p><span class="tag fact">中试事实</span> Fraunhofer ISE 在真空腔中进行软包电芯注液，并可设定充液/脱气压力曲线和惰性气体条件；Fraunhofer ISE 与 FFB 的资料都强调，颗粒与湿度控制是高性能、安全电芯制造的基础条件。<a href="#ref1">[1]</a> <a href="#ref7">[7]</a> <a href="#ref8">[8]</a></p>
+    <div class="thesis"><strong>对机器人研究的含义：</strong>这一环节不应被概括为“机器人给电池注液”。更合理的研究对象包括注液设备周边的上下料、密闭/干房兼容的搬运、定位、身份核验、异常隔离以及与安全和 MES 的接口。</div>
+  </section>
+
+  <section class="section">
+    <h2>10. 把“机器人系统”拆开：别只看机械臂</h2>
+    <table><thead><tr><th>系统部件</th><th>在装配中要解决的问题</th><th>论文中应问的问题</th></tr></thead><tbody>
+      <tr><td>末端执行器</td><td>抓取或支撑薄片、隔膜、叠片体、卷芯或壳体，同时避免损伤和颗粒。</td><td>对象是什么？接触方式是什么？是否可能产生褶皱、吸附痕迹或颗粒？</td></tr>
+      <tr><td>视觉/传感</td><td>识别位置、方向、边缘、缺陷与装配完成状态。</td><td>看什么特征？如何处理反光、柔性变形和节拍？检出率/误报率证据在哪里？</td></tr>
+      <tr><td>夹具与载具</td><td>为薄软材料或卷芯提供稳定基准，保证工位间可重复交接。</td><td>基准如何建立？产品如何防错？载具是否与不同 format 兼容？</td></tr>
+      <tr><td>运动与控制</td><td>实现定位、插入、同步和异常恢复。</td><td>需要的是速度、重复性、柔顺性还是力控？不要在无数据时假定数值。</td></tr>
+      <tr><td>环境与安全</td><td>控制颗粒、水分、静电、化学风险和人员/设备安全。</td><td>系统能否在干房/洁净环境可靠运行？电缆、润滑、维护和人员进入如何处理？</td></tr>
+      <tr><td>数据与接口</td><td>让产品身份、工艺配方、检测结果和异常路径保持对应。</td><td>机器人动作如何与 MES、条码/RFID、设备 PLC、质量系统连接？</td></tr>
+    </tbody></table>
+    <div class="source"><strong>行业研究背景：</strong>Fraunhofer IPA 将干房/洁净区设计、干房内搬运与物流方案、智能载具和电芯装配自动化列为电芯制造系统的一部分。<a href="#ref9">[9]</a></div>
+  </section>
+
+  <section class="section">
+    <h2>11. 一个完整例子：软包叠片机器人系统应怎样分析？</h2>
+    <p>以下不是现成方案，而是一张帮助你读论文和行业案例的“问题清单”。</p>
+    <table><thead><tr><th>问题层</th><th>应问的问题</th><th>需要的证据</th></tr></thead><tbody>
+      <tr><td>工艺目标</td><td>要形成怎样的电极/隔膜层序和相对位置？</td><td>产品设计、装配图、对齐/质量要求。</td></tr>
+      <tr><td>物料状态</td><td>极片与隔膜尺寸、刚度、表面、是否带料、如何供料？</td><td>材料/产品规格与供料方式。</td></tr>
+      <tr><td>动作方案</td><td>单片叠片还是 Z-fold？末端执行器如何取放和释放？</td><td>设备论文、专利、厂商资料或中试案例。</td></tr>
+      <tr><td>定位与检测</td><td>如何建立基准？是否用相机检测边缘/错位/褶皱？</td><td>视觉指标、误差容限、节拍与异常恢复方案。</td></tr>
+      <tr><td>环境与安全</td><td>在何种湿度/洁净条件运行？如何控制颗粒、静电和维护？</td><td>环境规范、设备兼容性、运行记录。</td></tr>
+      <tr><td>经济与规模</td><td>是实验室、试制线还是量产？人工、废品、节拍、设备利用率的数据是否可得？</td><td>案例数据、访谈或透明假设；没有就标记为缺口。</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>这是以后评价案例的纪律：</strong>如果一篇文章只展示“机器人成功抓起一张隔膜”，它最多证明一个动作可行；它不能自动证明该系统适合高速、长期、低颗粒、干房量产。</div>
+  </section>
+
+  <section class="section">
+    <h2>12. 今天可以写进毕业论文的，和暂时不能写的</h2>
+    <div class="grid">
+      <div class="card green"><h3>有来源支撑的表述</h3><p>电芯装配的精度、颗粒和湿度条件会影响电芯性能与安全；电芯装配包含叠片/卷绕、连接、封装和注液等任务；软包、方形、圆柱格式会改变内部结构及装配路线。<a href="#ref1">[1]</a> <a href="#ref6">[6]</a></p></div>
+      <div class="card amber"><h3>现在只能作为假设</h3><p>某种工业机器人、协作机器人或视觉系统会带来多少良率、成本、速度或 ROI 改善；这些必须由直接案例、数据或后续访谈支持。</p></div>
+    </div>
+    <div class="thesis"><strong>本讲的论文定位：</strong>它可以为“电芯装配工艺要求”和“机器人应用约束”两节提供概念与来源基础；后续还要补直接机器人案例，才可进入应用评价。</div>
+  </section>
+
+  <section class="section">
+    <h2>13. 自测：你是否真的理解了？</h2>
+    <div class="question"><b>Q1.</b> 为什么一份关于“入壳机器人”的论文或案例，必须首先交代电芯形式？</div>
+    <div class="question"><b>Q2.</b> 为什么叠片是高价值案例，却不应直接被定为最佳近期落地场景？</div>
+    <div class="question"><b>Q3.</b> 视觉相机在叠片中可能做什么？为什么“装了相机”还不能说明方案一定可行？</div>
+    <div class="question"><b>Q4.</b> 与电极制造相比，电芯装配中机器人系统多出的三类关键组成是什么？</div>
+    <details><summary>参考答案（请先自己作答）</summary><p><strong>Q1：</strong>软包、方形和圆柱的内部结构、壳体、夹具、插入轨迹与允许接触方式不同；没有 format 就不能判断技术要求。<br><strong>Q2：</strong>叠片直接影响内部对齐与质量，但材料薄软、对齐要求高、节拍和环境限制严；实验室可行不代表量产稳健。<br><strong>Q3：</strong>它可用于边缘定位、方向验证、错位/褶皱检测和完成确认；仍需证明其准确性、节拍、对柔性材料/反光的鲁棒性及异常恢复。<br><strong>Q4：</strong>例如末端执行器、视觉/传感、夹具/载具；同时还必须考虑干房/洁净环境与数据接口。</p></details>
+  </section>
+
+  <section class="section">
+    <h2>14. 下一讲：化成、测试与托盘物流</h2>
+    <p>现在你已经理解了“为什么装配难”。下一讲会转入装配之后的化成、老化、测试、分选和托盘流转，回答另一个重要问题：为什么已密封电芯的上下料、AMR/AGV 物流和数据追溯，往往比叠片更适合近期工业机器人落地。</p>
+  </section>
+
+  <section class="section">
+    <h2>参考资料与证据边界</h2>
+    <ol>
+      <li id="ref1">Fraunhofer ISE. <a href="https://www.ise.fraunhofer.de/en/business-areas/electrical-energy-storage/production-technology-for-batteries/battery-cell-production.html">Battery Cell Production</a>。用于软包中试装配路线、自动 Z-fold/单片叠片、超声焊、真空注液、洁净/干房与具体工艺参数示例。</li>
+      <li id="ref2">Li, H. et al. (2025). <a href="https://doi.org/10.1016/j.isci.2025.112691">Advanced lithium-ion battery process manufacturing equipment for gigafactories: Past, present, and future perspectives</a>. <em>iScience</em>, 28, 112691。用于装配方法、焊接及量产设备的综述背景。</li>
+      <li id="ref3">Fraunhofer ISI. <a href="https://www.isi.fraunhofer.de/en/blog/themen/batterie-update/46-mm-rundzellen-potenziale-standardformat-batteriezellen.html">Potentials of 46 mm cylindrical cells</a>。用于圆柱电芯卷绕结构及其制造特点的行业研究背景。</li>
+      <li id="ref4">Fraunhofer IPA. <a href="https://www.ipa.fraunhofer.de/de/presse/presseinformationen/zusammenbau-von-batteriezellen.html">Zusammenbau von Batteriezellen – digital und sicher</a>。用于圆柱卷芯、入罐、焊接与低湿环境的研究设施事实。</li>
+      <li id="ref5">Fraunhofer FFB. <a href="https://www.ffb.fraunhofer.de/en/Events/skill---scale-up/Manufacturing_Chemistry_Battery_Cell.html">Manufacturing process</a>。用于单片叠片、Z-fold 与裁切到装配的培训性工艺说明。</li>
+      <li id="ref6">Hofmann, J. et al. (2021). <a href="https://doi.org/10.3390/en14113276">Inhomogeneities and Cell-to-Cell Variations in Lithium-Ion Batteries, a Review</a>. <em>Energies</em>, 14, 3276。用于装配误差、cell format 与电芯间差异的学术背景。</li>
+      <li id="ref7">Fraunhofer FFB. <a href="https://www.ffb.fraunhofer.de/en/ellb_training/battery_cell_manufacturing/clean_and_drying_rooms.html">Clean and Dry Rooms</a>。用于颗粒和湿度控制在电芯制造质量/安全中的环境要求背景。</li>
+      <li id="ref8">Fraunhofer ISE. <a href="https://www.ise.fraunhofer.de/en/business-areas/electrical-energy-storage/production-technology-for-batteries/energy-efficient-clean-and-dry-rooms-and-mini-environments.html">Energy-Efficient Clean and Dry Rooms and Mini-Environments</a>。用于干房/洁净基础设施、露点和局部环境的行业研究背景。</li>
+      <li id="ref9">Fraunhofer IPA. <a href="https://www.ipa.fraunhofer.de/en/about-us/guiding-themes/battery-manufacture.html">Battery Manufacture</a>。用于智能载具、干房内物流和自动化装配作为系统集成问题的研究设施背景。</li>
+    </ol>
+    <p class="mini">本讲义优先采用同行评审综述和 Fraunhofer 研究/中试设施公开资料。它们支持工艺与环境事实。讲义中关于机器人“可能角色”的内容为面向本硕士论文的系统分析推论；某一具体系统的速度、精度、良率、成本、ROI 和成熟度，需要在后续直接案例、设备数据或访谈中单独验证。</p>
+  </section>
+</main>
+</body>
+</html>
