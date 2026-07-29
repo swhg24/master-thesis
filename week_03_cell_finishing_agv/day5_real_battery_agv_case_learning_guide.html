@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 03 Day 5 — 真实充电电池工厂AGV案例</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6b7b;--paper:#f4f7f9;--line:#d7e1e8;--navy:#173b56;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff;--teal:#176a73;--tealbg:#e5f4f5;--white:#fff}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}main{max-width:1100px;margin:auto;padding:38px 22px 72px}.hero{padding:43px;border-radius:10px;background:linear-gradient(135deg,#173b56,#314f6a 56%,#3d6658);color:#fff}.eyebrow{margin:0 0 10px;color:#c4e8eb;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-of-type{max-width:900px;margin:17px 0 0;color:#e4f2f3;font-size:17px}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}.nav a{padding:7px 11px;border:1px solid #bfd9db;border-radius:999px;color:#eefafa;text-decoration:none;font-size:13px}.section{margin-top:22px;padding:28px 30px;background:var(--white);border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:18px 0 8px;font-size:18px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:17px 0}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card h3{margin:0}.card p,.card ul{margin:7px 0 0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#efdca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.teal{background:var(--tealbg);border-color:#c2e1e4}.teacher,.thesis,.warning,.source,.checkpoint{margin:17px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.checkpoint{background:var(--violetbg);border-color:var(--violet)}.flow{display:flex;align-items:stretch;gap:8px;margin:19px 0;overflow-x:auto;padding-bottom:5px}.flow div{flex:1 0 145px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:15px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .event{background:#e7f5ed;border-color:#b9dcca}.flow .control{background:#f1edff;border-color:#d8cdf2}.flow .wait{background:#fff4dc;border-color:#e8d49b}.flow .optional{border-style:dashed;background:#fffaf0}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}table{width:100%;margin:17px 0;border-collapse:collapse;font-size:15px}th,td{padding:11px 12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}.fact{color:#176044;background:#dff2e8}.infer{color:#795108;background:#fff0c9}.unknown{color:#8c3431;background:#fde3e1}.scope{color:#584091;background:#eae4fb}.question{margin:15px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.template{margin:15px 0;padding:17px 19px;border:1px dashed #8fa8bd;border-radius:7px;background:#fbfcfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;white-space:pre-wrap}.mini{font-size:14px;color:var(--muted)}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details>div{padding:0 14px 14px}code{padding:2px 5px;border-radius:4px;background:#eef2f5;color:#244b6e}.good{color:#176044;font-weight:700}.bad{color:#9e3d39;font-weight:700}.equation{margin:14px 0;padding:14px 17px;background:#f6f8fa;border:1px solid var(--line);border-radius:7px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#244b6e}ul,ol{padding-left:23px}.footer{margin-top:20px;color:var(--muted);font-size:13px}@media(max-width:820px){.grid3,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){main{padding:16px 11px 44px}.hero,.section{padding:23px 18px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3,.grid4{grid-template-columns:1fr}table{font-size:14px}th,td{padding:8px}.nav{display:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Week 03 · Day 5 · 真实案例证据阅读</p>
+    <h1>这篇“真实电池工厂案例”，<br>究竟证明了什么？</h1>
+    <p>Lee、Park和Jang在WSC 2024发表了一篇两页案例论文。它很接近我们的主题，却也最容易被过度解读。今天学习从“真实工厂”四个字往下追问数据、实验环境、决策变量和证据边界。</p>
+    <nav class="nav"><a href="#goal">今日目标</a><a href="#question">研究问题</a><a href="#evidence">证据链</a><a href="#system">案例系统</a><a href="#policy">策略</a><a href="#results">结果</a><a href="#boundary">证明边界</a><a href="#transfer">可借鉴内容</a><a href="#test">自测</a></nav>
+  </header>
+
+  <section class="section" id="goal">
+    <h2>0. 今天学到什么就算完成？</h2>
+    <div class="grid4">
+      <div class="card blue"><h3>Question</h3><p>能说出论文真正研究的是idle-vehicle parking，不是完整AGV设计。</p></div>
+      <div class="card green"><h3>Evidence</h3><p>能区分真实任务记录、模拟器实验和真实生产部署。</p></div>
+      <div class="card amber"><h3>Boundary</h3><p>能列出它没有公开的工艺、物料、托盘和接口。</p></div>
+      <div class="card violet"><h3>Transfer</h3><p>知道哪些指标/方法可借鉴，哪些数值绝不能复制。</p></div>
+    </div>
+    <div class="teacher"><strong>今天最重要的句式：</strong>“这篇论文在什么数据、什么环境、什么决策变量下，支持了什么结论？”不要只说“它用了真实工厂，所以很可靠”。</div>
+  </section>
+
+  <section class="section" id="question">
+    <h2>1. 论文真正研究的不是“AGV好不好”</h2>
+    <p class="lead">论文问题是：当AGV完成任务后进入空闲状态时，应该把它分配到哪个停车位置，以改善后续运输表现？</p>
+    <div class="flow"><div><b>Job completed</b>车辆完成任务</div><div class="arrow">→</div><div class="wait"><b>Vehicle idle</b>等待新任务</div><div class="arrow">→</div><div class="control"><b>Park allocation</b>选择停车位置</div><div class="arrow">→</div><div><b>Next request</b>影响响应距离/时间</div></div>
+    <table><thead><tr><th>它研究</th><th>它不研究</th></tr></thead><tbody>
+      <tr><td>Idle vehicle allocation / park location allocation。</td><td>是否应该使用AGV，而不是conveyor或OHT。</td></tr>
+      <tr><td>Greedy停车策略与Bruno et al. (2000)启发式策略的比较。</td><td>Fleet sizing、完整dispatching、formation工艺或tray接口设计。</td></tr>
+      <tr><td>停车位置策略对等待、运输、交付、利用和充电占比的影响。</td><td>电池质量、yield、设备blocking/starvation或ROI。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>直接证据：</strong>Lee et al. (2024), Abstract与Section 1，PDF p. 1。作者明确把问题定义为idle vehicles的park locations确定与分配，并验证Bruno et al. (2000)的heuristic。</div>
+  </section>
+
+  <section class="section" id="evidence">
+    <h2>2. “真实案例”的证据链要拆开</h2>
+    <div class="flow"><div class="event"><b>Actual site records</b>真实现场任务发生记录</div><div class="arrow">+</div><div class="event"><b>Site configuration</b>节点、ports、充电站、车辆</div><div class="arrow">→</div><div class="control"><b>Factory Emulator</b>FEX模拟环境</div><div class="arrow">→</div><div><b>Policy comparison</b>两种停车策略</div><div class="arrow">→</div><div><b>Reported KPI</b>表1结果</div></div>
+    <div class="grid3">
+      <div class="card green"><h3>真实的部分</h3><p>论文称使用某充电电池生产现场的actual data和一段时间的job occurrence records，并给出现场系统规模。</p></div>
+      <div class="card blue"><h3>实验的部分</h3><p>策略评估在DAIM的xMS / Factory Emulator（FEX）环境中进行，纳入原文所称charging/discharging、车辆交互、运输时间和batch order processing等情景参数；两页正文未进一步解释这些参数的具体定义。</p></div>
+      <div class="card amber"><h3>没有证明的部分</h3><p>论文没有报告把新策略部署到真实生产现场后进行在线A/B测试，也没有给出实施后的长期现场结果。</p></div>
+    </div>
+    <div class="source"><strong>直接证据：</strong>Lee et al. (2024), Section 2，PDF pp. 1–2；Section 3，PDF p. 2。作者使用actual production-facility data在FEX中进行validation experiments。</div>
+    <div class="warning"><strong>更准确的表述：</strong>“使用真实现场任务记录驱动的模拟器案例验证”，而不是“在真实工厂上线后证明”。</div>
+  </section>
+
+  <section class="section" id="system">
+    <h2>3. 论文公开了哪些现场信息？</h2>
+    <div class="grid4">
+      <div class="card blue"><h3>≈200</h3><p>节点（nodes）</p></div>
+      <div class="card green"><h3>100</h3><p>ports</p></div>
+      <div class="card amber"><h3>4</h3><p>charging stations</p></div>
+      <div class="card violet"><h3>9</h3><p>on-site AGVs</p></div>
+    </div>
+    <p>作者还说明布局是uni-directional。以上均只描述这一个客户案例。</p>
+    <div class="source"><strong>直接证据：</strong>Lee et al. (2024), Section 3，PDF p. 2。</div>
+    <h3>看似具体，其实仍缺少很多底层信息</h3>
+    <table><thead><tr><th>公开</th><th>未公开</th></tr></thead><tbody>
+      <tr><td>节点、ports、充电站、AGV数量和单向布局。</td><td>工厂名称、layout图、节点距离和每个port的功能。</td></tr>
+      <tr><td>使用真实任务发生记录。</td><td>记录时长、任务总量、到达分布、班次/产品组合和数据清洗。</td></tr>
+      <tr><td>属于rechargeable battery production。</td><td>cell、module还是其他对象；是否formation/aging/EoL。</td></tr>
+      <tr><td>模拟考虑若干现实参数。</td><td>物料/载具、托盘结构、handover、异常流和空盘回流。</td></tr>
+      <tr><td>9台AGV在现场运行。</td><td>车型、载荷、速度、电池、车辆故障和具体充电策略。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="policy">
+    <h2>4. 两种策略到底有什么区别？</h2>
+    <div class="grid">
+      <div class="card blue"><h3>Greedy policy</h3><p>空闲车辆从预定义停车点中选择离当前位置最近的一个。作者称这是工业中常见、基于从业者经验的策略。</p></div>
+      <div class="card violet"><h3>Bruno heuristic</h3><p>基于Bruno et al. (2000)的启发式，用k-median思想确定停车位置；本案例给所有vertices相同权重，使车辆更均匀分布在整个track。</p></div>
+    </div>
+    <p>作者采用等权重，是因为真实工业环境中往往难以准确估计每个需求节点的运输请求参数。因此策略不是把车辆集中在预测需求最大的节点，而是追求轨道上的均匀覆盖。</p>
+    <div class="source"><strong>直接证据：</strong>Lee et al. (2024), Section 3，PDF p. 2。</div>
+    <div class="warning"><strong>仍然未知：</strong>论文没有披露k取多少、候选停车点集合、算法实现细节、重复实验次数，以及如果使用需求权重结果会怎样。</div>
+  </section>
+
+  <section class="section" id="results">
+    <h2>5. 指标和结果：先读表，再读作者解释</h2>
+    <table><thead><tr><th>Policy</th><th>AWT (s)</th><th>ATT (s)</th><th>ADT (s)</th><th>Utilization (%)</th><th>Charging (%)</th></tr></thead><tbody>
+      <tr><td>Greedy</td><td>136.38</td><td>139.48</td><td>275.85</td><td>33.84</td><td>17.20</td></tr>
+      <tr><td>Bruno et al. (2000)</td><td>113.23</td><td>136.60</td><td>249.83</td><td>30.79</td><td>20.89</td></tr>
+    </tbody></table>
+    <div class="source"><strong>直接证据：</strong>Lee et al. (2024), Table 1，PDF p. 2。原文表格的案例结果如上，不得外推成典型电池工厂基准。</div>
+    <table><thead><tr><th>指标</th><th>论文能告诉我们的</th><th>阅读时要保留的问题</th></tr></thead><tbody>
+      <tr><td>AWT — average waiting time</td><td>作者报告约下降17%；按表中均值计算为16.97%。</td><td>等待的精确定义和计时起止点未在两页正文中说明。</td></tr>
+      <tr><td>ATT — average transport time</td><td>表中略降，按均值计算约2.06%。</td><td>是否包含空驶、pick/drop或仅载货行驶未明确。</td></tr>
+      <tr><td>ADT — average delivery time</td><td>作者报告约改善9%；按表中均值计算为9.43%。</td><td>表中ADT几乎等于AWT+ATT，但正文没有正式给出公式。</td></tr>
+      <tr><td>Utilization</td><td>从33.84%降至30.79%，下降3.05个百分点。</td><td>利用率精确定义未给出；下降不能自动判断为好或坏。</td></tr>
+      <tr><td>Charging</td><td>作者定义为整个运行期用于充电的时间占比；上升3.69个百分点。</td><td>作者认为可能源于空闲车辆移动到停车点消耗更多电量，但这是解释，不是已隔离的因果证明。</td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>不要只挑“17%改善”。</strong>新策略同时带来charging占比增加。案例说明系统决策可能有trade-off：响应更快，但空闲重定位也可能增加能耗和充电时间。</div>
+  </section>
+
+  <section class="section">
+    <h2>6. 三层证据：结果、作者解释、我们的推断</h2>
+    <table><thead><tr><th>层级</th><th>例子</th><th>论文中应怎样写</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">REPORTED RESULT</span></td><td>表1中Bruno策略的AWT和ADT低于Greedy，charging占比更高。</td><td>“In this case-study experiment, the reported mean…”</td></tr>
+      <tr><td><span class="tag infer">AUTHOR INTERPRETATION</span></td><td>ATT轻微下降可能因为车辆分布更均匀、减少车辆干扰；charging增加似乎源于空闲重定位移动。</td><td>明确使用“the authors speculate / suggest”。</td></tr>
+      <tr><td><span class="tag unknown">OUR OPEN QUESTION</span></td><td>如果任务集中在formation/aging接口，等权重停车是否仍合理？</td><td>作为待研究问题，不能写成该论文结论。</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>语言纪律：</strong>原文使用“we speculate”和“seems to be”解释ATT与charging变化。因此不能把这些机制改写成已被实验单独证明的因果关系。</div>
+  </section>
+
+  <section class="section" id="boundary">
+    <h2>7. 它证明了什么，没有证明什么？</h2>
+    <table><thead><tr><th>可以据此说</th><th>不能据此说</th></tr></thead><tbody>
+      <tr><td>充电电池生产设施中确实存在具有多车辆、多ports和充电站的AGV系统案例。</td><td>该系统属于cell finishing，或运输formation tray。</td></tr>
+      <tr><td>在该真实记录驱动的模拟器实验中，停车位置策略改变了报告的物流KPI。</td><td>Bruno策略已在现场上线并长期优于所有其他策略。</td></tr>
+      <tr><td>Idle positioning值得作为AGV控制中的现实问题。</td><td>Parking就是我们论文最合适的research gap。</td></tr>
+      <tr><td>AWT、ATT、ADT、利用率和充电占比可作为候选指标来源。</td><td>我们的模型应直接使用其秒数、9台车、100个ports或4个充电站。</td></tr>
+      <tr><td>真实任务记录可以驱动仿真/模拟器验证。</td><td>没有工厂数据就不能做研究，或有真实记录就不再需要模型验证。</td></tr>
+    </tbody></table>
+    <div class="thesis"><strong>一句准确定位：</strong>这是“电池生产AGV系统 + 真实任务记录 + 停车策略仿真验证”的直接案例，但不是“cell-finishing托盘工艺流”的直接案例。</div>
+  </section>
+
+  <section class="section" id="transfer">
+    <h2>8. 对我们的研究，哪些可以借鉴？</h2>
+    <div class="grid">
+      <div class="card green"><h3>可以借鉴</h3><ul><li>把真实任务记录作为情景输入的思路；</li><li>区分waiting、transport和delivery时间；</li><li>同时观察车辆利用与充电trade-off；</li><li>清楚描述网络、ports、车辆和充电站；</li><li>用基准策略与候选策略进行可复现实验。</li></ul></div>
+      <div class="card red"><h3>不能复制</h3><ul><li>9台AGV；</li><li>约200个节点、100个ports和4个充电站；</li><li>表1中的秒数和百分比；</li><li>任务发生模式；</li><li>停车策略一定适合cell finishing；</li><li>17%改善可在我们的场景复现。</li></ul></div>
+    </div>
+    <h3>它对Week 03真正有用的地方</h3>
+    <ol>
+      <li>证明“充电电池生产中的AGV系统”不是我们凭空想象的应用；</li>
+      <li>提醒我们真实AGV研究需要任务、网络、ports、车辆和交接等系统信息；</li>
+      <li>反过来暴露公开案例的工艺语义缺口：不知道运什么、服务什么工序、怎样交接；</li>
+      <li>这个公开信息限制可以支持后续定向检索，但本身还不能自动成为research gap。</li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2>9. 如果以后真的做我们的案例，需要额外补什么？</h2>
+    <table><thead><tr><th>Lee案例已有</th><th>Cell-finishing概念模型仍需</th></tr></thead><tbody>
+      <tr><td>任务发生记录</td><td>任务与formation、aging、EoL状态的对应关系。</td></tr>
+      <tr><td>nodes和ports</td><td>每个port属于什么设备/库位、怎样handover。</td></tr>
+      <tr><td>AGV数量</td><td>车辆能力与tray/carrier兼容性，以及数量为何合理。</td></tr>
+      <tr><td>AWT/ATT/ADT</td><td>计时起止点、blocking/starvation及质量/工艺后果。</td></tr>
+      <tr><td>Charging比例</td><td>充电规则、可用车辆变化和任务延迟之间的关系。</td></tr>
+      <tr><td>策略比较</td><td>为什么选择某个决策变量，以及它能回答哪个研究问题。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section">
+    <h2>10. 第一版“已知—推断—未知”</h2>
+    <table><thead><tr><th>状态</th><th>Day 5内容</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">FACT</span></td><td>论文报告一个充电电池生产设施AGV案例，系统为单向布局、约200 nodes、100 ports、4 charging stations和9 AGVs；使用真实job records在FEX中比较两种idle parking策略。</td></tr>
+      <tr><td><span class="tag infer">INFERENCE</span></td><td>真实任务数据驱动的仿真可能适合未来验证cell-finishing物流问题；AWT/ATT/ADT等可成为候选指标，但需按我们的事件边界重新定义。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>案例工序、物料、cell format、载具、handover、任务时间窗、数据量、实验重复/不确定性、异常/空盘流和现场上线效果。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="test">
+    <h2>11. 自测：先判断，再展开</h2>
+    <details><summary>Q1. 论文使用真实数据，是否等于新策略已经在真实工厂在线运行？</summary><div><p>不等于。真实任务记录和现场配置进入了FEX模拟器，策略比较发生在该模拟环境中；正文没有报告在线A/B部署。</p></div></details>
+    <details><summary>Q2. 论文是否证明9台AGV适合formation–aging–EoL？</summary><div><p>没有。9台只属于该客户系统；论文没有公开具体电池工序、物料或tray。</p></div></details>
+    <details><summary>Q3. AWT下降约17%，是否说明所有性能都改善？</summary><div><p>不能。ADT也下降，但charging占比上升，utilization下降；而且各指标定义和统计不确定性披露有限。</p></div></details>
+    <details><summary>Q4. ATT下降的原因是否已被证明？</summary><div><p>没有。作者推测车辆更均匀分布可能减少干扰，但没有在本文中单独隔离和检验这一机制。</p></div></details>
+    <details><summary>Q5. 这篇论文为什么仍然有用？</summary><div><p>它提供了真实电池生产AGV案例、真实记录驱动模拟的验证思路、停车决策例子和候选KPI；同时帮助我们识别公开案例缺少工艺/载具/接口语义的边界。</p></div></details>
+  </section>
+
+  <section class="section">
+    <h2>12. 你的Day 5复述任务</h2>
+    <p>请用自己的话回答下面五题。重点是证据边界，不要求背数字。</p>
+    <div class="template">1. 这篇论文真正研究的决策问题是什么？它没有研究哪些相邻问题？
+2. “使用真实工厂数据”与“在真实工厂上线验证”有什么区别？这篇属于哪一种？
+3. 它报告了哪些KPI？为什么不能只讲AWT下降约17%？
+4. 哪些信息证明这是电池生产AGV案例？哪些缺失信息使它不能成为cell-finishing tray flow的直接证据？
+5. 我们可以借鉴什么？哪些参数和结论不能复制到自己的研究？</div>
+    <div class="checkpoint"><strong>Day 5最低完成条件：</strong>你能用“真实记录驱动的停车策略模拟器案例”准确定位论文，并明确区分reported result、author interpretation和our inference。完成后再做Week 03总结，不因Day 5编号自动结束本周。</div>
+  </section>
+
+  <section class="section">
+    <h2>13. 第一轮复述复盘：最接近主题的论文最容易被过度解读</h2>
+    <p class="lead">本轮已经正确理解“真实数据驱动模拟”不等于“真实工厂上线验证”，也知道不能复制9台AGV和100个ports。还需固定三点：研究变量的准确名称、完整KPI与trade-off，以及battery production不等于cell finishing。</p>
+
+    <h3>修正一：它研究的是停车位置分配，不是完整车辆调度</h3>
+    <table><thead><tr><th>更准确的说法</th><th>避免的误解</th></tr></thead><tbody>
+      <tr><td>研究idle vehicle的park location determination/allocation，并比较Greedy与Bruno heuristic。</td><td>“停车算法”方向基本正确，但过于笼统；它没有研究停车轨迹控制、泊车动作或整个AGV调度系统。</td></tr>
+      <tr><td>停车位置会影响下一次请求到来时车辆的响应位置。</td><td>它不是formation与aging之间的工序优先级/任务dispatching研究。</td></tr>
+    </tbody></table>
+
+    <h3>修正二：五个KPI要一起读</h3>
+    <div class="grid4">
+      <div class="card green"><h3>AWT</h3><p>平均等待时间</p></div>
+      <div class="card blue"><h3>ATT</h3><p>平均运输时间</p></div>
+      <div class="card violet"><h3>ADT</h3><p>平均交付时间</p></div>
+      <div class="card amber"><h3>Utilization + Charging</h3><p>车辆利用率与充电时间占比</p></div>
+    </div>
+    <p>不能只讲“AWT下降约17%”，原因至少有三层：</p>
+    <ol>
+      <li><strong>同一实验中的trade-off：</strong>ADT下降，但charging占比上升，utilization下降且含义未充分定义；</li>
+      <li><strong>统计披露有限：</strong>两页论文没有给出重复次数、方差、置信区间或显著性检验；</li>
+      <li><strong>外推边界：</strong>这是一个案例、一段未披露时长的任务记录和特定系统，不能变成所有电池工厂的17%。</li>
+    </ol>
+    <div class="warning"><strong>结果表达：</strong>可以写“该案例实验报告AWT约下降17%”，不能写“该策略可让电池工厂等待时间降低17%”。</div>
+
+    <h3>修正三：Rechargeable battery production不等于cell finishing</h3>
+    <div class="flow"><div class="event"><b>论文直接证明</b>某充电电池生产设施存在AGV系统</div><div class="arrow">→</div><div class="optional"><b>论文没有公开</b>cell/module、formation/aging/EoL、物料与载具</div><div class="arrow">→</div><div class="wait"><b>因此只能推断</b>对我们的选题有邻近工业相关性</div></div>
+    <table><thead><tr><th>证明这是battery-production AGV案例的信息</th><th>缺少的cell-finishing直接证据</th></tr></thead><tbody>
+      <tr><td>作者明确称其为rechargeable battery production facility/client；使用actual facility data和job occurrence records；公开9 AGVs、约200 nodes、100 ports和4 charging stations。</td><td>没有说明运输cell、module还是其他物料；没有formation、aging或EoL节点；没有tray/rack/carrier、handover、质量分流、异常品和空盘回流。</td></tr>
+      <tr><td>以上信息支持案例真实性与AGV系统规模描述。</td><td>任务记录时长/数量、port功能和layout语义也未公开，因此不能从节点数反推出工艺网络。</td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>可复用的准确结论：</strong>该论文提供了充电电池生产中AGV系统及真实记录驱动模拟的直接案例，但只为cell-finishing AGV研究提供邻近证据，不能证明formation–aging–EoL托盘运输已经由AGV实现。</div>
+
+    <h3>当前最合格的“借鉴/不复制”表述</h3>
+    <div class="grid">
+      <div class="card green"><h3>借鉴研究设计</h3><p>用任务记录驱动模拟；明确nodes、ports、车辆和充电站；比较基准与候选策略；同时观察等待、运输、交付、利用与充电。</p></div>
+      <div class="card red"><h3>不复制场景参数</h3><p>不复制9台车、200 nodes、100 ports、4 charging stations、表1秒数、17%改善或停车策略作为我们的默认方案。</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>14. 核心来源与引用边界</h2>
+    <div class="source"><strong>Lee, J., Park, J., &amp; Jang, Y. J. (2024)</strong>, “Idle Vehicle Allocation Problem in Automated Material Handling Systems: A Case Study in Rechargeable Battery Production,” <i>Proceedings of the 2024 Winter Simulation Conference</i>, 2 pages。全文所有案例信息集中在PDF pp. 1–2。<br><a href="../literatures/week_03_cell_finishing_agv/Lee_et_al_2024_AGV_Battery_Production_Case.pdf">本地PDF</a> · <a href="https://informs-sim.org/wsc24papers/cea122.pdf">WSC公开PDF</a></div>
+    <div class="source"><strong>Bruno, G., Ghiani, G., &amp; Improta, G. (2000)</strong>, “Dynamic positioning of idle automated guided vehicles,” <i>Journal of Intelligent Manufacturing</i> 11, 209–215。Lee等验证其heuristic；Day 5不进一步评价原算法。</div>
+    <p class="mini">表1数值只属于Lee等的案例。本文未披露统计重复、置信区间或显著性检验，因此本笔记不把单表均值扩展为普遍因果结论。</p>
+  </section>
+
+  <p class="footer">Week 03 Day 5 · Real rechargeable-battery AGV case learning guide · Editable HTML source retained in the repository.</p>
+</main>
+</body>
+</html>

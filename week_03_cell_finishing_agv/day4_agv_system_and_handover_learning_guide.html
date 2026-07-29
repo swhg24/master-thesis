@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 03 Day 4 — AGV系统与交接边界</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6b7b;--paper:#f4f7f9;--line:#d7e1e8;--navy:#173b56;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff;--teal:#176a73;--tealbg:#e5f4f5;--white:#fff}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}main{max-width:1100px;margin:auto;padding:38px 22px 72px}.hero{padding:43px;border-radius:10px;background:linear-gradient(135deg,#173b56,#274d70 55%,#176a73);color:#fff}.eyebrow{margin:0 0 10px;color:#c4e8eb;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-of-type{max-width:900px;margin:17px 0 0;color:#e4f2f3;font-size:17px}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}.nav a{padding:7px 11px;border:1px solid #bfd9db;border-radius:999px;color:#eefafa;text-decoration:none;font-size:13px}.section{margin-top:22px;padding:28px 30px;background:var(--white);border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:18px 0 8px;font-size:18px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:17px 0}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card h3{margin:0}.card p,.card ul{margin:7px 0 0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#efdca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.teal{background:var(--tealbg);border-color:#c2e1e4}.teacher,.thesis,.warning,.source,.checkpoint{margin:17px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.checkpoint{background:var(--violetbg);border-color:var(--violet)}.flow{display:flex;align-items:stretch;gap:8px;margin:19px 0;overflow-x:auto;padding-bottom:5px}.flow div{flex:1 0 145px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:15px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .event{background:#e7f5ed;border-color:#b9dcca}.flow .control{background:#f1edff;border-color:#d8cdf2}.flow .wait{background:#fff4dc;border-color:#e8d49b}.flow .optional{border-style:dashed;background:#fffaf0}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}table{width:100%;margin:17px 0;border-collapse:collapse;font-size:15px}th,td{padding:11px 12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}.fact{color:#176044;background:#dff2e8}.infer{color:#795108;background:#fff0c9}.unknown{color:#8c3431;background:#fde3e1}.scope{color:#584091;background:#eae4fb}.question{margin:15px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.template{margin:15px 0;padding:17px 19px;border:1px dashed #8fa8bd;border-radius:7px;background:#fbfcfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;white-space:pre-wrap}.mini{font-size:14px;color:var(--muted)}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details>div{padding:0 14px 14px}code{padding:2px 5px;border-radius:4px;background:#eef2f5;color:#244b6e}.good{color:#176044;font-weight:700}.bad{color:#9e3d39;font-weight:700}.equation{margin:14px 0;padding:14px 17px;background:#f6f8fa;border:1px solid var(--line);border-radius:7px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#244b6e}ul,ol{padding-left:23px}.footer{margin-top:20px;color:var(--muted);font-size:13px}@media(max-width:820px){.grid3,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){main{padding:16px 11px 44px}.hero,.section{padding:23px 18px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3,.grid4{grid-template-columns:1fr}table{font-size:14px}th,td{padding:8px}.nav{display:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Week 03 · Day 4 · AGV系统基础带教</p>
+    <h1>托盘请求产生以后，<br>AGV系统到底决定什么？</h1>
+    <p>今天不学习某个调度算法。我们只把生产系统、车队控制、移动机器人与设备交接的责任边界画清楚，避免把所有物流问题都叫作“AGV调度”。</p>
+    <nav class="nav"><a href="#goal">今日目标</a><a href="#layers">责任层级</a><a href="#decisions">决策分类</a><a href="#handover">设备交接</a><a href="#cycle">订单闭环</a><a href="#vda">VDA 5050</a><a href="#case">案例推演</a><a href="#test">自测</a></nav>
+  </header>
+
+  <section class="section" id="goal">
+    <h2>0. 今天学到什么就算完成？</h2>
+    <div class="grid4">
+      <div class="card blue"><h3>Production</h3><p>知道谁定义物料需求和工艺释放，而不是让AGV决定电芯工艺。</p></div>
+      <div class="card violet"><h3>Fleet control</h3><p>理解任务分配、路线、交通和充电属于什么层级。</p></div>
+      <div class="card teal"><h3>Mobile robot</h3><p>理解车辆执行移动、取放、定位并回报状态。</p></div>
+      <div class="card green"><h3>Handover</h3><p>理解到站不等于完成，物理接口可能有固定设备参与。</p></div>
+    </div>
+    <div class="teacher"><strong>最低目标：</strong>看到一个问题时，能判断它属于工艺层、任务/车队控制层、车辆执行层还是设备交接层。今天不比较算法优劣。</div>
+  </section>
+
+  <section class="section">
+    <h2>1. 从Day 3接过来的任务</h2>
+    <div class="flow"><div><b>Tray ready</b>设备释放载荷</div><div class="arrow">→</div><div class="wait"><b>Transport request</b>任务进入队列</div><div class="arrow">→</div><div class="control"><b>Fleet decision</b>选车、路线、时机</div><div class="arrow">→</div><div class="event"><b>Robot execution</b>取货、移动、交付</div><div class="arrow">→</div><div><b>Accepted</b>目标接收、状态更新</div></div>
+    <p>Day 3已经解释了请求从哪里来。Day 4只研究中间两格：车队控制如何组织任务，以及车辆和接口怎样执行。</p>
+    <div class="warning"><strong>不要把这三句话混在一起：</strong>“需要把哪盘电芯送走”来自生产物流需求；“派哪台车”是任务分配；“车辆怎样绕开障碍并准确停车”属于车辆导航/运动与接口执行。</div>
+  </section>
+
+  <section class="section" id="layers">
+    <h2>2. 四层责任：谁决定什么？</h2>
+    <p class="lead">下面是用于学习的通用架构，不是目标工厂已经确认的IT结构。</p>
+    <table><thead><tr><th>层级</th><th>典型问题</th><th>在本案例中的例子</th><th>不能自动假定</th></tr></thead><tbody>
+      <tr><td><strong>Process / production control</strong></td><td>什么产品完成？下一目的地和优先级是什么？何时允许释放？</td><td>Formation完成的tray是否可以去RT-aging storage。</td><td>具体由MES、PLC、WMS还是人工规则发请求仍未知。</td></tr>
+      <tr><td><strong>Fleet control / MCS</strong></td><td>任务分给哪台车？走哪条可行路线？怎样避免冲突？何时充电或停车？</td><td>从可用车辆中选择一台服务formation出口。</td><td>VDA 5050定义通信接口，不替项目提供具体调度算法。</td></tr>
+      <tr><td><strong>Mobile robot</strong></td><td>怎样定位、沿路线/自主路径移动、执行pick/drop并报告状态？</td><td>到formation handover point，取得tray并驶向aging入口。</td><td>不能假设任何AGV都能直接抓取目标tray或进入工艺设备。</td></tr>
+      <tr><td><strong>Handover / peripheral equipment</strong></td><td>怎样对中、转交、锁定、识别并确认载荷？</td><td>滚筒port、升降机或固定transfer unit把tray交给车辆。</td><td>真实接口可能是直接取放，也可能经过固定设备。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>工业规范证据：</strong>VDA 5050 v3.0.0, Section 5.1，PDF pp. 10–11将参与者概括为operator提供基础信息、fleet control组织管理运行、mobile robot执行订单；具体生产IT系统不属于该规范定义的接口范围。</div>
+  </section>
+
+  <section class="section" id="decisions">
+    <h2>3. 七类常被混称为“AGV调度”的问题</h2>
+    <table><thead><tr><th>概念</th><th>它回答的问题</th><th>例子</th><th>当前定位</th></tr></thead><tbody>
+      <tr><td><strong>Fleet sizing</strong></td><td>系统配置多少台车？</td><td>两台是否足够服务formation和EoL任务？</td><td><span class="tag infer">未来候选变量</span></td></tr>
+      <tr><td><strong>Dispatching / task allocation</strong></td><td>当前任务分给哪台可用车，或哪项任务先服务？</td><td>车辆A离formation更近，车辆B电量更高，派谁？</td><td><span class="tag infer">未来候选变量</span></td></tr>
+      <tr><td><strong>Routing</strong></td><td>车辆从起点到终点使用哪条路径？</td><td>走短路还是绕开拥堵路段？</td><td><span class="tag scope">本周只识别</span></td></tr>
+      <tr><td><strong>Traffic control</strong></td><td>多车共享路段时怎样避免冲突、拥堵和deadlock？</td><td>窄通道一次允许哪台车通过？</td><td><span class="tag scope">本周只识别</span></td></tr>
+      <tr><td><strong>Idle positioning / parking</strong></td><td>没有任务时车辆停在哪里？</td><td>停在中央还是formation附近？</td><td><span class="tag scope">以后再判断</span></td></tr>
+      <tr><td><strong>Charging / energy management</strong></td><td>何时、去哪充电，是否中断可服务能力？</td><td>空闲时机会充电还是低电量强制充电？</td><td><span class="tag scope">背景约束</span></td></tr>
+      <tr><td><strong>Handover control</strong></td><td>车辆、port与设备怎样安全完成pick/drop？</td><td>目标port被占用时是否等待或重试？</td><td><span class="tag infer">当前重要接口问题</span></td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>两个最容易混淆的概念：</strong>dispatching决定“派谁/先做谁”，routing决定“从哪里走”。给同一台车分配同一任务，仍可能存在多条路线选择。</div>
+    <div class="source"><strong>学术依据：</strong>Vis (2006), <i>European Journal of Operational Research</i> 170(3), pp. 677–709系统回顾AGV系统设计与控制问题；De Ryck et al. (2020), <i>Journal of Manufacturing Systems</i> 54, pp. 152–173进一步讨论中央式与分布式AGV控制技术。本笔记只借用问题分类，不引入其算法。</div>
+  </section>
+
+  <section class="section">
+    <h2>4. Route、navigation和motion不是同一层</h2>
+    <div class="grid3">
+      <div class="card violet"><h3>Route / path in network</h3><p>在节点—边网络或区域之间决定经过哪些路段，是车队协调关心的系统级问题。</p></div>
+      <div class="card blue"><h3>Navigation / localization</h3><p>车辆知道自己在哪里，并依据地图、轨迹或目标位置移动。</p></div>
+      <div class="card teal"><h3>Motion / local execution</h3><p>车辆控制速度、转向、避障和精确到位，属于更接近底盘与安全执行的层级。</p></div>
+    </div>
+    <p>VDA 5050 v3.0.0同时覆盖line-guided和freely navigating mobile robot：前者遵循预定义轨迹；后者可以自行规划轨迹，但fleet control仍可通过订单、区域和交通协调施加约束。</p>
+    <div class="source"><strong>直接证据：</strong>VDA 5050 v3.0.0, Sections 3.6–3.7，PDF p. 8；Sections 5.3–5.4，PDF pp. 11–12。规范把订单分配、特定路线/交通/能量协调列为fleet control功能，把定位、路线执行、动作执行和持续状态报告列为mobile robot功能。</div>
+    <div class="warning"><strong>范围控制：</strong>我们的论文现在不研究SLAM、局部路径规划、避障控制或轮式底盘动力学。它们可能影响可行性，但不是Week 03核心问题。</div>
+  </section>
+
+  <section class="section" id="handover">
+    <h2>5. AGV不一定直接和Formation设备交接</h2>
+    <p>设备之间存在运输需求，不代表车辆必须把货叉或滚筒伸进工艺设备。至少有三种候选架构：</p>
+    <div class="grid3">
+      <div class="card blue"><h3>A. Direct handover</h3><p>车辆的load-handling device直接与设备port交接。需要精确定位、互锁和载荷确认。</p></div>
+      <div class="card green"><h3>B. Fixed transfer point</h3><p>工艺设备先把tray送到conveyor/roller port，AGV只在标准handover point取放。</p></div>
+      <div class="card amber"><h3>C. Lift / gantry / robot</h3><p>固定设备负责高度变化、精密装卸或多层rack存取，AGV负责区域间水平运输。</p></div>
+    </div>
+    <div class="flow"><div><b>Process equipment</b>Formation/EoL</div><div class="arrow">↔</div><div class="optional"><b>Fixed transfer</b>Conveyor/Lift/Gantry</div><div class="arrow">↔</div><div><b>Handover point</b>标准取放口</div><div class="arrow">↔</div><div class="event"><b>Mobile robot</b>区域运输</div></div>
+    <h3>交接至少要确认什么？</h3>
+    <ul>
+      <li>来源位置确实有正确载荷，目标位置确实可接收；</li>
+      <li>车辆和port到位，相关动作允许执行；</li>
+      <li>pick/drop物理动作成功，载荷没有卡住或遗留；</li>
+      <li>产品/托盘身份和任务状态得到一致更新。</li>
+    </ul>
+    <div class="source"><strong>接口示例证据：</strong>VDA 5050 v3.0.0, Section 6.2.3及Table 5，PDF pp. 27–38定义了pick、drop、finePositioning和waitForTrigger等动作及成功/失败状态。这证明通用移动机器人接口会表达这些动作，不证明cell-finishing工厂采用哪种物理port。</div>
+  </section>
+
+  <section class="section" id="cycle">
+    <h2>6. 从生产请求到车辆状态的闭环</h2>
+    <div class="flow"><div><b>1 Production need</b>托盘ready、目标确定</div><div class="arrow">→</div><div class="control"><b>2 Fleet control</b>分配车辆、形成order</div><div class="arrow">→</div><div class="event"><b>3 Mobile robot</b>接收并执行</div><div class="arrow">→</div><div class="event"><b>4 Pick / drive / drop</b>动作与移动</div><div class="arrow">→</div><div><b>5 State report</b>位置、载荷、动作和错误</div><div class="arrow">↺</div><div class="control"><b>6 Fleet update</b>继续、重试或结束</div></div>
+    <p>在VDA 5050的通信方向中，fleet control向车辆发布order；车辆持续向fleet control发布state。车辆完成最后节点及相关动作后进入idle并可接收新订单。</p>
+    <div class="source"><strong>直接证据：</strong>VDA 5050 v3.0.0, Sections 4.3、5.1、6.1.2.1，PDF pp. 9–11、18。规范的order/state闭环可帮助我们理解责任边界，但目标工厂是否采用VDA 5050仍是unknown。</div>
+    <div class="question"><b>连接Day 3：</b>车辆报告drop完成，只说明载荷已离开车辆。生产系统是否同步确认正确tray进入正确EoL任务，还需要项目特定的外围系统和状态一致性设计。</div>
+  </section>
+
+  <section class="section" id="vda">
+    <h2>7. VDA 5050能告诉我们什么，不能告诉我们什么？</h2>
+    <table><thead><tr><th>它能支持的理解</th><th>它没有替我们解决的内容</th></tr></thead><tbody>
+      <tr><td>中央fleet control与不同移动机器人可以使用vendor-neutral接口交换order和state。</td><td>Formation、aging和EoL何时产生运输请求。</td></tr>
+      <tr><td>可以表达节点/边、动作、载荷、错误和车辆状态等信息。</td><td>哪种dispatching或routing算法最好。</td></tr>
+      <tr><td>规范列出了fleet control和mobile robot的最低功能。</td><td>外围设备、MES/PLC/WMS接口的完整架构。</td></tr>
+      <tr><td>v3.0.0兼顾line-guided与freely navigating mobile robots。</td><td>安全要求、网络安全措施和项目责任分配。</td></tr>
+      <tr><td>它可作为工业接口背景和术语来源。</td><td>不能证明电池工厂已经使用，也不能证明AGV适合我们的案例。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>官方边界：</strong>VDA 5050 v3.0.0, Section 2，PDF pp. 6–7明确排除安全要求、交通管理算法、外围/外部IT接口、实施流程、责任分配和网络安全措施。因此不能把“符合VDA 5050”理解为整个AGV系统设计已经解决。</div>
+    <div class="warning"><strong>来源类型：</strong>VDA 5050是VDA/VDMA工业推荐规范，不是同行评审论文；可用于接口事实与工业背景，不替代AGV学术综述或cell-finishing工艺文献。</div>
+  </section>
+
+  <section class="section" id="case">
+    <h2>8. 用一个小场景区分四类问题</h2>
+    <p>假设formation出口有托盘F，aging出口有托盘A；两台车R1和R2可用。</p>
+    <table><thead><tr><th>问题</th><th>属于哪一层</th><th>为什么</th></tr></thead><tbody>
+      <tr><td>托盘F和A谁更紧急？</td><td>生产优先级 + dispatching输入</td><td>优先级应与工艺、等待后果和生产规则有关，不能由车辆随意决定。</td></tr>
+      <tr><td>把F分给R1还是R2？</td><td>Task allocation / dispatching</td><td>在任务与车辆之间建立匹配。</td></tr>
+      <tr><td>R1经过通道X还是Y？</td><td>Routing</td><td>决定从当前点到取货/交付点的路径。</td></tr>
+      <tr><td>R1和R2同时想进入窄通道怎么办？</td><td>Traffic control</td><td>协调共享空间并避免冲突或deadlock。</td></tr>
+      <tr><td>R1到formation口但托盘没有被推出。</td><td>Handover/peripheral interface</td><td>车辆到站了，但取货条件或设备动作没有完成。</td></tr>
+      <tr><td>Formation协议是否已经满足质量要求？</td><td>Process/quality control</td><td>这是电芯工艺判断，不属于AGV控制。</td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>Day 4最重要的能力：</strong>以后看到“AGV造成延迟”，先定位延迟究竟来自任务未创建、派车晚、路线拥堵、车辆故障，还是handover失败。不同原因不能用同一种算法解决。</div>
+  </section>
+
+  <section class="section">
+    <h2>9. 当前为什么只保留fleet size和dispatching为候选？</h2>
+    <div class="grid">
+      <div class="card green"><h3>与Day 3直接相连</h3><p>车辆数量和任务分配会直接影响托盘等待服务的时间，进而可能影响formation blocking和EoL starvation。</p></div>
+      <div class="card amber"><h3>但仍未成为研究问题</h3><p>只有确认运输任务、接口、需求变化和验证数据后，才能判断它们是否值得成为论文变量。</p></div>
+    </div>
+    <p>Routing、parking、charging、robustness等不是不重要，而是当前没有必要同时展开。先保留完整系统意识，再收缩变量。</p>
+    <div class="thesis"><strong>当前合格表述：</strong>Fleet size and dispatching remain candidate AGV-system decisions because they may affect tray waiting and equipment starvation/blocking. Their research relevance has not yet been established for the selected cell-finishing scenario.</div>
+  </section>
+
+  <section class="section">
+    <h2>10. 第一版“已知—推断—未知”</h2>
+    <table><thead><tr><th>状态</th><th>Day 4内容</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">FACT</span></td><td>AGV研究通常区分系统设计、任务分配、routing、traffic、parking和energy等问题；VDA 5050 v3.0.0定义fleet control—mobile robot的order/state接口及最低功能边界。</td></tr>
+      <tr><td><span class="tag infer">INFERENCE</span></td><td>如果cell-finishing任务由移动机器人承担，fleet size和dispatching可能通过任务waiting影响设备blocking/starvation；标准handover point可能把区域运输与精密设备装卸解耦。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>目标场景是否使用AGV/VDA 5050；请求由谁生成；直接交接还是固定transfer；车辆能力、路线、交通、充电、异常恢复和系统责任边界。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="test">
+    <h2>11. 自测：先判断，再展开</h2>
+    <details><summary>Q1. MES要求把tray送到EoL，这已经完成dispatching了吗？</summary><div><p>没有。这只是形成运输需求/任务。Dispatching还要决定由哪台车服务，或者多项任务中先服务哪一项。</p></div></details>
+    <details><summary>Q2. Fleet control把任务分给R1以后，routing也完成了吗？</summary><div><p>不一定。任务分配回答“派谁”，routing回答“走哪条路径”。两个决定可能在同一系统中计算，但概念不同。</p></div></details>
+    <details><summary>Q3. AGV到站后pick失败，这是routing问题吗？</summary><div><p>通常不是。车辆已经到站，问题更可能位于handover、载荷状态、精确定位、互锁或外围设备接口。</p></div></details>
+    <details><summary>Q4. VDA 5050是否规定了最佳交通控制算法？</summary><div><p>没有。v3.0.0明确把routing、prioritization、congestion和deadlock resolution等交通管理逻辑排除在规范范围之外。</p></div></details>
+    <details><summary>Q5. 为什么固定conveyor/lift仍可能出现在AGV案例里？</summary><div><p>AGV可负责区域运输，固定设备负责设备内部或多层rack的精密装卸。两者通过handover point组合，而不是互相排斥。</p></div></details>
+  </section>
+
+  <section class="section">
+    <h2>12. 你的Day 4复述任务</h2>
+    <p>请先用自己的话回答以下五题。回答不准确的地方会像Day 2–3一样回填学习复盘。</p>
+    <div class="template">1. Process/production control、fleet control、mobile robot和handover分别负责什么？
+2. Fleet sizing、dispatching、routing和traffic control有什么区别？
+3. 为什么AGV已经到达formation出口，取货仍可能失败？
+4. VDA 5050能帮助我们理解什么？为什么它没有解决整个AGV系统设计？
+5. 在当前cell-finishing案例中，哪些AGV内容是Fact、Inference和Unknown？</div>
+    <div class="checkpoint"><strong>Day 4最低完成条件：</strong>你能把一个物流问题放到正确控制层，能区分dispatching与routing，并能解释“AGV区域运输 + 固定设备精密交接”的组合。无需记住协议字段或算法名称。</div>
+  </section>
+
+  <section class="section">
+    <h2>13. 第一轮复述复盘：两个核心混淆</h2>
+    <p class="lead">本轮已经理解生产控制、dispatching、routing和handover的大方向，但“车队设计—车队控制—车辆执行”仍混在一起。下面用一项Formation取货任务重新固定。</p>
+
+    <h3>混淆一：Fleet control不是“决定有几台车”</h3>
+    <div class="flow"><div class="optional"><b>Fleet sizing</b>规划阶段决定配置几台车</div><div class="arrow">≠</div><div class="control"><b>Fleet control</b>运行阶段管理现有车辆</div><div class="arrow">→</div><div class="event"><b>Mobile robot</b>执行被分配的订单</div></div>
+    <table><thead><tr><th>概念</th><th>一句话</th><th>Formation取货例子</th></tr></thead><tbody>
+      <tr><td><strong>Fleet sizing</strong></td><td>决定系统需要配置多少台车及相应运力，不是车身长宽尺寸。</td><td>规划阶段判断两台、三台还是更多车辆才能满足候选需求。</td></tr>
+      <tr><td><strong>Fleet control</strong></td><td>系统运行时组织和管理已有车队。</td><td>当前有R1、R2两台车，决定把Formation任务派给R1，并协调路线、交通和充电。</td></tr>
+      <tr><td><strong>Mobile robot</strong></td><td>接收订单后在物理世界执行。</td><td>R1定位自身、驶向取货点、执行pick、载货行驶、drop并持续报告状态。</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>记忆句：</strong><code>sizing = 需要几台</code>；<code>dispatching = 这次派谁</code>；<code>robot execution = 被派的车实际去做</code>。</div>
+
+    <h3>混淆二：交通控制不是单纯“制定交通规则”</h3>
+    <div class="grid4">
+      <div class="card blue"><h3>Fleet sizing</h3><p>规划多少台车。</p></div>
+      <div class="card green"><h3>Dispatching</h3><p>任务与车辆怎样匹配、任务先后怎样选择。</p></div>
+      <div class="card violet"><h3>Routing</h3><p>某台车从当前点到目标点走哪条路径。</p></div>
+      <div class="card amber"><h3>Traffic control</h3><p>多车共享路口、窄道等资源时，实时协调通行，避免冲突、拥堵和deadlock。</p></div>
+    </div>
+
+    <h3>为什么到站仍可能取货失败？不要只堆系统缩写</h3>
+    <p>PLC、WMS或其他系统可能参与实现，但在不知道真实架构时，列出缩写并不能解释失败原因。应先描述可观察的接口条件：</p>
+    <ul>
+      <li>车辆是否准确停到可交接位置；</li>
+      <li>formation port是否真的有正确托盘，并已允许释放；</li>
+      <li>车辆load-handling device与port高度/方向/载荷能力是否兼容；</li>
+      <li>port、车辆或固定transfer unit是否被占用或发生故障；</li>
+      <li>pick动作、载荷传感和身份/状态确认是否成功。</li>
+    </ul>
+    <div class="teacher"><strong>研究表达方法：</strong>先写“物理或信息条件为什么没有满足”，再写“可能由哪个控制系统负责”。不要在架构未知时用PLC、MES或WMS代替因果解释。</div>
+
+    <h3>VDA 5050不是调度方案</h3>
+    <table><thead><tr><th>它主要提供</th><th>它明确没有提供</th></tr></thead><tbody>
+      <tr><td>fleet control与不同厂商移动机器人之间的统一order/state通信方式；车辆、动作、状态和错误等通用表达。</td><td>最佳dispatching/routing算法；交通管理逻辑；安全要求；外围设备及MES/PLC/WMS接口；网络安全和项目责任分配。</td></tr>
+    </tbody></table>
+    <p>因此不能说“VDA 5050帮助我们完成AGV调度”。更准确的是：它帮助车队控制系统把已经形成的订单传给车辆并接收状态，但如何产生任务、怎样选车和怎样优化仍由项目设计决定。</p>
+
+    <h3>当前案例的Fact—Inference—Unknown示范</h3>
+    <table><thead><tr><th>证据状态</th><th>当前能够说什么</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">FACT</span></td><td>一般AGV研究区分fleet sizing、dispatching、routing、traffic、parking和charging；VDA 5050定义fleet control—mobile robot接口和最低功能。Cell-finishing文献支持formation、aging和EoL等工艺功能。</td></tr>
+      <tr><td><span class="tag infer">INFERENCE</span></td><td>如果这些cell-finishing节点之间由移动机器人运输tray，那么车辆数量和任务分配可能影响tray waiting，并进一步影响blocking/starvation；固定handover可能把区域运输与精密装卸分开。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>目标场景是否真的使用AGV或VDA 5050；谁创建请求；直接交接还是conveyor/lift/gantry；车辆数量与能力；layout、路线、优先级、充电、故障恢复及空盘逻辑。</td></tr>
+    </tbody></table>
+    <div class="checkpoint"><strong>复盘后的检查方法：</strong>先判断这是“规划几台车”“运行时派哪台车”“车辆怎么执行”还是“设备怎样交接”，再讨论具体系统名称。</div>
+  </section>
+
+  <section class="section">
+    <h2>14. 核心来源与证据边界</h2>
+    <div class="source"><strong>Vis, I. F. A. (2006)</strong>, “Survey of Research in the Design and Control of Automated Guided Vehicle Systems,” <i>European Journal of Operational Research</i> 170(3), 677–709. DOI: 10.1016/j.ejor.2004.09.020。用于AGV系统设计与控制问题分类；年代较早，不单独代表当前state of the art。</div>
+    <div class="source"><strong>De Ryck, M., Versteyhe, M., &amp; Debrouwere, F. (2020)</strong>, “Automated Guided Vehicle Systems, State-of-the-Art Control Algorithms and Techniques,” <i>Journal of Manufacturing Systems</i> 54, 152–173. DOI: 10.1016/j.jmsy.2019.12.002。用于中央式/分布式控制与控制层级背景；本周不评价算法。</div>
+    <div class="source"><strong>VDA/VDMA (2026)</strong>, <i>VDA 5050 Version 3.0.0: Interface for the Communication between Mobile Robots and a Fleet Control</i>，重点Sections 2、3.6–3.7、4.3、5、6.1–6.2，PDF pp. 6–38。它是工业推荐规范，不是安全标准，也不是电池工艺证据。<br><a href="../literatures/week_03_cell_finishing_agv/VDA_5050_v3.0.0_2026.pdf">本地PDF</a> · <a href="https://www.vda.de/en/topics/automotive-industry/vda-5050.">VDA官方页面</a></div>
+    <p class="mini">本笔记中的MES/PLC/WMS/MCS架构、固定transfer和具体handover是候选工程架构。真实cell-finishing现场如何实现，仍需设备资料或专家证据。</p>
+  </section>
+
+  <p class="footer">Week 03 Day 4 · AGV system and handover learning guide · Editable HTML source retained in the repository.</p>
+</main>
+</body>
+</html>

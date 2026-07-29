@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 03 Day 3 — 托盘流与运输事件</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6b7b;--paper:#f4f7f9;--line:#d7e1e8;--navy:#173b56;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff;--teal:#176a73;--tealbg:#e5f4f5;--white:#fff}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}main{max-width:1100px;margin:auto;padding:38px 22px 72px}.hero{padding:43px;border-radius:10px;background:linear-gradient(135deg,#173b56,#385477 56%,#21636a);color:#fff}.eyebrow{margin:0 0 10px;color:#c4e8eb;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-of-type{max-width:880px;margin:17px 0 0;color:#e4f2f3;font-size:17px}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}.nav a{padding:7px 11px;border:1px solid #bfd9db;border-radius:999px;color:#eefafa;text-decoration:none;font-size:13px}.section{margin-top:22px;padding:28px 30px;background:var(--white);border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:18px 0 8px;font-size:18px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:17px 0}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card h3{margin:0}.card p,.card ul{margin:7px 0 0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#efdca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.teal{background:var(--tealbg);border-color:#c2e1e4}.teacher,.thesis,.warning,.source,.checkpoint{margin:17px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.checkpoint{background:var(--violetbg);border-color:var(--violet)}.flow{display:flex;align-items:stretch;gap:8px;margin:19px 0;overflow-x:auto;padding-bottom:5px}.flow div{flex:1 0 145px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:15px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .event{background:#e7f5ed;border-color:#b9dcca}.flow .wait{background:#fff4dc;border-color:#e8d49b}.flow .optional{border-style:dashed;background:#fffaf0}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}table{width:100%;margin:17px 0;border-collapse:collapse;font-size:15px}th,td{padding:11px 12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}.fact{color:#176044;background:#dff2e8}.infer{color:#795108;background:#fff0c9}.unknown{color:#8c3431;background:#fde3e1}.scope{color:#584091;background:#eae4fb}.question{margin:15px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.template{margin:15px 0;padding:17px 19px;border:1px dashed #8fa8bd;border-radius:7px;background:#fbfcfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;white-space:pre-wrap}.mini{font-size:14px;color:var(--muted)}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details>div{padding:0 14px 14px}code{padding:2px 5px;border-radius:4px;background:#eef2f5;color:#244b6e}.good{color:#176044;font-weight:700}.bad{color:#9e3d39;font-weight:700}.big{font-size:21px;font-weight:700;color:#244b6e;text-align:center}.equation{margin:14px 0;padding:14px 17px;background:#f6f8fa;border:1px solid var(--line);border-radius:7px;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#244b6e}ul,ol{padding-left:23px}.footer{margin-top:20px;color:var(--muted);font-size:13px}@media(max-width:820px){.grid3,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){main{padding:16px 11px 44px}.hero,.section{padding:23px 18px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3,.grid4{grid-template-columns:1fr}table{font-size:14px}th,td{padding:8px}.nav{display:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Week 03 · Day 3 · 托盘流概念模型带教</p>
+    <h1>一盘电芯为什么移动，<br>一次运输任务何时才算结束？</h1>
+    <p>Day 2解释了电芯为什么经过formation、aging和EoL。Day 3把镜头对准一盘电芯：谁释放它、它在哪里等待、谁搬运它、下游怎样接收，以及延迟为什么会传到上下游设备。</p>
+    <nav class="nav"><a href="#goal">今日目标</a><a href="#objects">对象层级</a><a href="#scenario">学习场景</a><a href="#lifecycle">任务生命</a><a href="#clocks">四种时间</a><a href="#states">系统状态</a><a href="#events">事件表</a><a href="#test">自测</a></nav>
+  </header>
+
+  <section class="section" id="goal">
+    <h2>0. 今天学到什么就算完成？</h2>
+    <div class="grid4">
+      <div class="card blue"><h3>对象</h3><p>不把cell、tray、rack和AGV混成同一种资源。</p></div>
+      <div class="card green"><h3>事件</h3><p>能指出运输请求的触发条件和真正完成条件。</p></div>
+      <div class="card amber"><h3>时间</h3><p>区分process、storage、transport和waiting time。</p></div>
+      <div class="card violet"><h3>状态</h3><p>用具体场景解释WIP、starvation和blocking。</p></div>
+    </div>
+    <div class="teacher"><strong>今天只做conceptual model。</strong>不设托盘数量、不设AGV数量、不设节拍，也不写SimPy。我们先确保模型中的名词对应现实中的不同东西。</div>
+  </section>
+
+  <section class="section">
+    <h2>1. 从Day 2接过来的四个动词</h2>
+    <div class="flow"><div><b>Formation</b>改变/建立状态</div><div class="arrow">→</div><div><b>RT aging</b>等待/观察</div><div class="arrow">→</div><div><b>EoL</b>测量</div><div class="arrow">→</div><div><b>Grading</b>决定去向</div></div>
+    <p>Day 3增加一个新问题：这些工艺功能如果位于不同设备或区域，电芯以什么物理单位被释放、暂存、搬运和接收？</p>
+    <div class="warning"><strong>先纠正一句：</strong>“Formation结束，所以AGV开始运输”仍然跳了好几步。Formation结束只代表工艺处理完成；还要确认设备释放、载具状态、目标位置和交接条件。</div>
+  </section>
+
+  <section class="section" id="objects">
+    <h2>2. 先把五种对象分开</h2>
+    <p class="lead">以下层级用于检查概念，不代表我们已经知道目标工厂的真实载具结构。</p>
+    <table><thead><tr><th>对象</th><th>它是什么</th><th>可能被谁占用或持有</th><th>当前证据状态</th></tr></thead><tbody>
+      <tr><td><strong>Cell</strong></td><td>被加工和检测的产品实体，具有工艺状态与质量状态。</td><td>slot、tray、测试通道或其他夹具。</td><td><span class="tag fact">FACT：产品对象存在</span></td></tr>
+      <tr><td><strong>Slot</strong></td><td>载具或设备中容纳一颗电芯的位置。</td><td>某一颗cell。</td><td><span class="tag unknown">结构与一一对应关系未知</span></td></tr>
+      <tr><td><strong>Tray / goods carrier</strong></td><td>承载一组电芯的候选物流单元。</td><td>若干cell；也可能需要与设备夹具换载。</td><td><span class="tag infer">文献支持tray使用，但是否全程贯穿未知</span></td></tr>
+      <tr><td><strong>Rack / storage position</strong></td><td>在wetting或aging阶段存放电芯/载具的位置资源。</td><td>cell、tray或其他carrier，取决于架构。</td><td><span class="tag fact">FACT：文献描述rack/tray存储</span></td></tr>
+      <tr><td><strong>Equipment channel / fixture</strong></td><td>formation或测试设备实际连接、夹持、通电或测量产品的位置。</td><td>cell或专用载具。</td><td><span class="tag unknown">接口和换载方式未知</span></td></tr>
+    </tbody></table>
+    <div class="source"><strong>文献边界：</strong>Kampker et al. (2023), Sections 2.1、2.3.1，PDF pp. 4–5、8–9描述电芯在rack中进行润湿/存储和常温aging；Plumeyer et al. (2023), Section 3.5，PDF p. 6描述RT aging中电芯通常以tray承载。它们没有证明同一tray必然贯穿formation、aging和EoL。</div>
+    <div class="thesis"><strong>为什么这个区分重要？</strong>如果aging长期占用的是tray和storage position，托盘数量可能限制WIP；如果formation设备必须把cell从物流tray换到专用fixture，设备接口和换载操作就会成为独立事件。</div>
+  </section>
+
+  <section class="section" id="scenario">
+    <h2>3. Day 3采用一个“最小学习场景”</h2>
+    <p>为了练习事件推理，我们临时采用下面的条件性场景。它不是公开工厂的复原图，也不是论文最终方案。</p>
+    <table><thead><tr><th>学习假设</th><th>为什么暂时需要它</th><th>将来怎样验证</th></tr></thead><tbody>
+      <tr><td>一组电芯以tray作为区域间运输单元。</td><td>给运输对象一个清楚边界。</td><td>设备商资料、工厂案例或专家访谈。</td></tr>
+      <tr><td>Formation、RT-aging storage与EoL物理分离。</td><td>只有这样才存在需要研究的区域运输。</td><td>具体layout、工艺路线或工业案例。</td></tr>
+      <tr><td>工艺设备与运输系统之间存在handover/buffer位置。</td><td>区分工艺完成、可取货和下游接收。</td><td>接口图、设备手册或现场信息。</td></tr>
+      <tr><td>空tray需要再次回到某个上游装载点。</td><td>让我们意识到载具形成闭环而产品形成前向流。</td><td>载具管理方案；也可能采用换盘池而非原路返回。</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>假设的正确用法：</strong>它帮助我们提出问题，不帮助我们假装知道答案。所有图中的tray、buffer、空盘回流和AGV都应读作“如果采用这种架构”。</div>
+  </section>
+
+  <section class="section">
+    <h2>4. 满托盘的第一版正向流</h2>
+    <div class="flow"><div><b>Formation</b>工艺完成</div><div class="arrow">→</div><div class="wait"><b>Output / buffer</b>等待搬运</div><div class="arrow">→</div><div class="event"><b>Transport</b>区域运输</div><div class="arrow">→</div><div><b>RT-aging storage</b>入库并长期观察</div><div class="arrow">→</div><div class="wait"><b>Ready for retrieval</b>到期/判定可出库</div><div class="arrow">→</div><div class="event"><b>Transport</b>送往EoL</div><div class="arrow">→</div><div><b>EoL / grading</b>检测与分流</div></div>
+    <p>这张图里至少有两项候选运输，而不是“一项Formation到EoL运输”：</p>
+    <ol>
+      <li>Formation区域 → RT-aging storage；</li>
+      <li>RT-aging storage → EoL testing。</li>
+    </ol>
+    <p>它们的触发条件不同：第一项由formation和设备释放触发；第二项由aging观察窗口完成、出库条件满足触发。</p>
+    <div class="teacher"><strong>重点：</strong>托盘在aging里停留时，没有一项运输任务持续运行。第一项运输已经完成，第二项运输尚未产生；中间属于storage/process-related waiting。</div>
+  </section>
+
+  <section class="section">
+    <h2>5. 产品是前向流，载具可能是闭环流</h2>
+    <div class="grid">
+      <div class="card green"><h3>满托盘 / 产品流</h3><p>装有待处理电芯的tray向下一工序移动。EoL后可能进入正常输出、分类或异常处置。</p></div>
+      <div class="card amber"><h3>空托盘 / 载具流</h3><p>产品被卸下或换载后，空tray需要再次可用于装载。它可能回上游、进入空盘池、清洁/检查或等待。</p></div>
+    </div>
+    <div class="flow"><div><b>Unload / transfer</b>电芯离开物流tray</div><div class="arrow">→</div><div class="optional"><b>Empty-tray buffer</b>空盘等待</div><div class="arrow">→</div><div class="optional"><b>Return / inspection</b>回送或检查</div><div class="arrow">→</div><div><b>Loading point</b>再次装载</div></div>
+    <div class="warning"><strong>证据提醒：</strong>公开cell-finishing综述支持tray/rack作为载具或存储形式，但没有公开目标工厂的空盘网络。因此，空托盘回流现在是概念模型必须询问的分支，不是已确认的AGV任务。</div>
+  </section>
+
+  <section class="section" id="lifecycle">
+    <h2>6. 一次运输任务的完整生命周期</h2>
+    <div class="flow"><div><b>1 Process completed</b>工艺完成</div><div class="arrow">→</div><div><b>2 Load released</b>设备允许取货</div><div class="arrow">→</div><div class="wait"><b>3 Request created</b>任务进入队列</div><div class="arrow">→</div><div class="wait"><b>4 Wait for service</b>等待车辆/系统</div><div class="arrow">→</div><div class="event"><b>5 Empty travel</b>车辆到取货点</div><div class="arrow">→</div><div class="event"><b>6 Pickup</b>对接与取货</div><div class="arrow">→</div><div class="event"><b>7 Loaded travel</b>载货移动</div><div class="arrow">→</div><div class="event"><b>8 Delivery</b>到达与卸货</div><div class="arrow">→</div><div><b>9 Accepted + updated</b>下游接收并更新状态</div></div>
+    <h3>为什么“到达目的地”还不一定算完成？</h3>
+    <p>如果车辆到了EoL入口，但下游接口被占用、身份校验失败或托盘还没有成功转交，那么产品仍未被下游系统接管。用于本概念模型的完成条件是：</p>
+    <div class="equation">Task completed = load physically handed over + destination accepted it + system state updated</div>
+    <p>这是本项目的<strong>操作性定义</strong>，用于防止只记录车辆行驶结束而忽略交接。真实系统的状态名称和责任边界需要通过接口资料验证。</p>
+    <div class="grid3">
+      <div class="card blue"><h3>谁可能发请求？</h3><p>设备控制、MES/WMS/MCS或上层物流控制；当前未知。</p></div>
+      <div class="card amber"><h3>谁决定接单？</h3><p>车队控制器或其他调度层；Day 4再学习。</p></div>
+      <div class="card green"><h3>谁确认完成？</h3><p>来源、车辆、handover与目标系统可能共同参与；当前未知。</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="clocks">
+    <h2>7. 四种时间不能混在一起</h2>
+    <table><thead><tr><th>时间</th><th>从何时到何时</th><th>主要占用什么</th><th>本案例例子</th></tr></thead><tbody>
+      <tr><td><strong>Process time</strong></td><td>工艺处理开始到完成。</td><td>cell、设备通道/夹具，可能还有tray。</td><td>formation受控充放电或EoL测量。</td></tr>
+      <tr><td><strong>Storage time</strong></td><td>进入存储位置到满足出库条件。</td><td>cell、tray/carrier、rack position和WIP空间。</td><td>RT aging观察期。</td></tr>
+      <tr><td><strong>Transport time</strong></td><td>取货/搬运服务开始到交付完成；可继续拆为空驶、取放和载货移动。</td><td>搬运设备、载荷，交接时可能占用接口。</td><td>从aging storage送到EoL入口。</td></tr>
+      <tr><td><strong>Waiting time</strong></td><td>对象已经准备好，但所需资源或接收条件尚不可用。</td><td>cell、tray、buffer position；也可能占住上游设备。</td><td>formation已完成，但没有可用搬运或下游位置。</td></tr>
+    </tbody></table>
+    <div class="question"><b>一个很重要的区别：</b>RT aging的“等待”具有工艺/质量观察目的，因此本笔记把它记作storage time；formation完成后等车辆则是物流waiting time。二者看起来都没有移动，但原因和影响不同。</div>
+  </section>
+
+  <section class="section" id="states">
+    <h2>8. WIP、starvation和blocking到底是谁在等谁？</h2>
+    <table><thead><tr><th>状态</th><th>用于本案例的操作性定义</th><th>Formation–Aging–EoL例子</th></tr></thead><tbody>
+      <tr><td><strong>WIP</strong></td><td>已经进入生产系统、尚未成为该系统最终输出的在制品。它本身是数量/状态，不自动等于故障。</td><td>正在formation、存于aging rack、等待EoL或等待运输的电芯都可能属于WIP。</td></tr>
+      <tr><td><strong>Starvation</strong></td><td>下游设备具备生产能力，但没有可供处理的合格输入。</td><td>EoL空闲，但完成aging的托盘因运输延迟尚未到达。</td></tr>
+      <tr><td><strong>Blocking</strong></td><td>上游已经完成处理，却因为下游/buffer/搬运条件不可用而无法释放产品。</td><td>Formation完成，但output buffer满，电芯仍占着formation位置。</td></tr>
+      <tr><td><strong>Storage-capacity blocking</strong></td><td>blocking的一种具体来源：需要进入的存储区没有可用位置。</td><td>RT-aging rack已满，新完成formation的托盘无法入库。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>概念依据：</strong>Hall &amp; Sriskandarajah (1996), <i>Operations Research</i> 44(3), pp. 510–525，将blocking描述为工件完成当前设备后仍需停留，直到下游设备可用；有限buffer制造系统文献通常将starvation描述为设备可用但输入为空。这里采用面向本案例的简化操作性定义，尚未建立正式排队模型。</div>
+    <h3>同一次物流延迟可以同时伤害上下游</h3>
+    <div class="flow"><div class="wait"><b>Tray waits upstream</b>完成品未取走</div><div class="arrow">→</div><div class="optional"><b>Formation blocked</b>位置无法释放</div><div class="arrow">+</div><div class="optional"><b>EoL starved</b>下游没有输入</div></div>
+    <p>所以未来若研究AGV，不能只看“车辆利用率高不高”。车辆很忙但任务等待很久，仍可能同时造成上游blocking和下游starvation。不过这只是未来评价逻辑，Day 3不选择KPI。</p>
+  </section>
+
+  <section class="section">
+    <h2>9. 资源、队列和状态不要混写</h2>
+    <table><thead><tr><th>概念模型元素</th><th>候选内容</th><th>为什么单独表示</th></tr></thead><tbody>
+      <tr><td>Product entity</td><td>cell或由同批cell构成的运输单元</td><td>携带工艺和质量状态。</td></tr>
+      <tr><td>Carrier resource/entity</td><td>tray / goods carrier</td><td>可能循环使用，数量可能限制流动。</td></tr>
+      <tr><td>Process resource</td><td>formation channel、EoL station</td><td>执行工艺或测量，不等于存储位置。</td></tr>
+      <tr><td>Storage resource</td><td>rack / storage position</td><td>在aging期间长期被占用。</td></tr>
+      <tr><td>Transport resource</td><td>AGV或其他搬运设备</td><td>只在运输服务中被占用。</td></tr>
+      <tr><td>Interface resource</td><td>handover point、lift、conveyor port等</td><td>可能形成独立排队与交接约束。</td></tr>
+      <tr><td>Queue</td><td>等待搬运、等待接口、等待设备的任务/托盘</td><td>不同等待原因需要分开观察。</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>以后写仿真最容易犯的错误：</strong>用一个对象同时代表cell、tray、rack和AGV。这样虽然代码短，却无法回答“aging到底占用了什么”“托盘是否短缺”“设备为什么blocked”。</div>
+  </section>
+
+  <section class="section" id="events">
+    <h2>10. 第一版核心运输事件表</h2>
+    <p>今天只保留六项能帮助理解的候选事件，不追求凑满14项。</p>
+    <table><thead><tr><th>ID / 候选事件</th><th>触发条件</th><th>完成条件</th><th>延迟后果</th><th>状态</th></tr></thead><tbody>
+      <tr><td>T01 Formation → RT-aging storage</td><td>formation完成；设备/载具可释放；存在目标位置。</td><td>载荷交付、库位接收、状态更新。</td><td>output buffer积压；可能阻塞formation。</td><td><span class="tag infer">条件性推断</span></td></tr>
+      <tr><td>T02 RT-aging storage → EoL</td><td>观察期/判定完成；可出库；EoL或其buffer可接收。</td><td>EoL侧成功接收并获得正确身份/状态。</td><td>EoL可能starved；aging位置不能及时释放。</td><td><span class="tag infer">条件性推断</span></td></tr>
+      <tr><td>T03 EoL → normal/grading output</td><td>检测完成且满足对应分类条件。</td><td>目标输出或分类位置接收。</td><td>EoL output积压。</td><td><span class="tag infer">分支存在有依据；接口未知</span></td></tr>
+      <tr><td>T04 EoL → reject/quarantine</td><td>检测结果不满足要求或需要隔离。</td><td>异常处理位置接收并保持可追溯。</td><td>异常品占用EoL输出；错送产生质量风险。</td><td><span class="tag infer">隔离架构未知</span></td></tr>
+      <tr><td>T05 EoL → re-test</td><td>结果可疑或规则要求复测。</td><td>复测站接收。</td><td>形成回流和额外WIP。</td><td><span class="tag unknown">尚无普遍性证据</span></td></tr>
+      <tr><td>T06 Empty tray → loading point/pool</td><td>产品卸下且tray允许再次使用。</td><td>空盘池或装载点接收并更新可用状态。</td><td>上游可能缺少可用载具。</td><td><span class="tag unknown">回流结构未知</span></td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>事件表的价值：</strong>它迫使我们为每项任务写出触发和完成，而不是只画两点之间的一根箭头。箭头很容易画，交接条件才是未来研究真正需要验证的底层信息。</div>
+  </section>
+
+  <section class="section">
+    <h2>11. 第一版“已知—推断—未知”</h2>
+    <table><thead><tr><th>状态</th><th>Day 3内容</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">FACT</span></td><td>公开综述描述cell finishing中存在formation、RT aging、EoL/分类等功能；RT aging可涉及tray/rack存储；路线和设备配置因制造商而异。</td></tr>
+      <tr><td><span class="tag infer">INFERENCE</span></td><td>如果这些功能位于物理分离节点且载具需要换位置，则形成运输；有限output buffer、搬运延迟或满库可能将延迟传递为blocking/starvation。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>cell与tray的数量关系、tray是否贯穿流程、设备内部夹具、请求发起者、handover结构、目标预留规则、整盘/单颗分流、空盘网络以及是否由AGV执行。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="test">
+    <h2>12. 自测：先自己判断，再展开</h2>
+    <details><summary>Q1. Formation刚结束，为什么运输请求不一定已经产生？</summary><div><p>因为“工艺完成”和“载荷可释放”不是同一个事件。还可能需要安全状态确认、断开连接、进入输出位置、确定目标库位，以及满足下游接收规则。</p></div></details>
+    <details><summary>Q2. AGV把托盘开到EoL门口，任务一定完成了吗？</summary><div><p>不一定。本概念模型要求载荷完成物理交接、目标确认接收并更新系统状态。若接口被占用或身份校验失败，任务仍未真正闭环。</p></div></details>
+    <details><summary>Q3. aging三天属于transport time还是waiting time？</summary><div><p>两者都不宜直接概括。若这三天本身是规定的质量观察/存储过程，应记作storage time；等待车辆或等待空库位才属于相应的物流waiting time。</p></div></details>
+    <details><summary>Q4. EoL空闲但没有托盘到达，是什么状态？</summary><div><p>在我们的操作性定义下是starvation：下游设备可用，但缺少可处理输入。</p></div></details>
+    <details><summary>Q5. Formation完成后托盘仍占着设备，因为aging库满，是什么状态？</summary><div><p>是由storage capacity引起的blocking。若存在可用中间buffer，托盘也可能先进入buffer而不立即占住formation设备，因此需要知道真实接口和buffer容量。</p></div></details>
+    <details><summary>Q6. 为什么空托盘回流值得单独画？</summary><div><p>产品通常继续向后流，但载具需要循环复用。若忽略空盘，未来模型无法观察上游是否因缺少可用tray而停顿。不过当前回流路线和执行设备仍未知。</p></div></details>
+  </section>
+
+  <section class="section">
+    <h2>13. 你的Day 3复述任务</h2>
+    <p>今天学完后，请用自己的话回答五题。可以分几次回答，不要求一次说得非常标准。</p>
+    <div class="template">1. 一次运输请求为什么不能只由“formation结束”定义？还缺哪些条件？
+2. 为什么AGV到达目的地不一定代表任务完成？
+3. process time、storage time、transport time、waiting time分别是什么？
+4. 请用formation、aging或EoL举例解释starvation与blocking的区别。
+5. 为什么产品正向流之外，还要考虑空托盘回流？其中哪些仍是unknown？</div>
+    <div class="checkpoint"><strong>Day 3最低完成条件：</strong>你能讲清“一盘电芯为什么移动、在哪里等待、谁可能被占用、延迟怎样影响上下游”，并且不会把学习场景中的tray、AGV和空盘路线说成已知工厂事实。完成后才考虑Day 4的AGV系统决策。</div>
+  </section>
+
+  <section class="section">
+    <h2>14. 第一轮复述复盘：已经理解什么，还需纠正什么？</h2>
+    <p class="lead">这一节根据实际问答补充。重点不是把你的原回答判成对错，而是找出哪些边界若不说清，未来会让事件表和仿真统计发生变化。</p>
+    <table><thead><tr><th>问题</th><th>已经理解的部分</th><th>需要固定的准确边界</th></tr></thead><tbody>
+      <tr><td>请求何时产生？</td><td>认识到formation工艺结束不等于物理交接已经结束；如果后续过程集成在同一位置，也可能没有运输。</td><td>工艺完成后还要确认设备安全释放、载荷到达可取状态、存在目标位置/接收条件并由控制系统创建请求。接口对齐通常属于后续pickup；“质量验证”是否为前置条件取决于工厂规则，当前未知。</td></tr>
+      <tr><td>任务何时完成？</td><td>认识到车辆到达后仍要卸货和交接。</td><td>下一个工序不必已经开始。用于本概念模型的完成条件是：物理交接完成、目的地确认接收、产品/载具/任务状态更新。</td></tr>
+      <tr><td>四种时间</td><td>process time与storage time的核心理解正确。</td><td>transport time还包括空驶、取货、载货移动、卸货/交接等阶段。waiting time是“对象已经ready，但所需资源或条件不可用”；没有任务时AGV停着通常是idle time，不是该任务的waiting time。</td></tr>
+      <tr><td>Starvation与blocking</td><td>认识到starvation发生在下游没有料，blocking与上游继续释放的物料有关。</td><td>starvation要求下游设备可用但没有合格输入；blocking要求上游已经完成却无法卸出。下游仍忙本身不一定造成blocking——如果中间buffer仍有空间，上游仍可释放。</td></tr>
+      <tr><td>空托盘回流</td><td>认识到载具需要循环复用。</td><td>仍未知：是否使用同一tray贯穿、何处卸空、回到上游还是空盘池、是否清洁/检查、由什么设备运输，以及载具短缺是否真的限制生产。</td></tr>
+    </tbody></table>
+
+    <h3>易错点一：谁在等，决定它属于哪一种时间</h3>
+    <div class="grid3">
+      <div class="card amber"><h3>任务/托盘在等</h3><p>载荷已经ready，但没有车辆或目标接口不可用：这是物流waiting time。</p></div>
+      <div class="card blue"><h3>AGV在等</h3><p>当前没有任务，小车停在停车点：通常记为vehicle idle time。</p></div>
+      <div class="card green"><h3>电芯按工艺等待</h3><p>电芯在RT aging中按计划观察：属于storage/process-related time，不是车辆等待。</p></div>
+    </div>
+
+    <h3>易错点二：到达、交付和下游开工是三个事件</h3>
+    <div class="flow"><div><b>Vehicle arrived</b>车辆到达接口</div><div class="arrow">→</div><div class="event"><b>Handover</b>卸货/转交</div><div class="arrow">→</div><div><b>Accepted + updated</b>目标接收、状态更新</div><div class="arrow">→</div><div class="optional"><b>Process start</b>下游稍后开始工艺</div></div>
+    <p>前三步完成后，运输任务可以结束；下游托盘也可能先进入input buffer排队，因此不要求EoL立即开始检测。</p>
+
+    <h3>易错点三：下游忙不一定阻塞上游</h3>
+    <table><thead><tr><th>现场状态</th><th>判断</th></tr></thead><tbody>
+      <tr><td>EoL正在处理上一盘，但EoL input buffer仍有空位，新托盘可以卸入。</td><td>下游忙，但上游不一定blocking。</td></tr>
+      <tr><td>Formation已完成，output buffer满，托盘不能离开设备。</td><td>Formation发生blocking。</td></tr>
+      <tr><td>EoL设备空闲，input buffer为空，合格托盘仍在aging出口等运输。</td><td>EoL发生starvation；托盘发生物流waiting。</td></tr>
+    </tbody></table>
+
+    <div class="teacher"><strong>本轮可复用的一句话：</strong>判断系统状态时，先说清“哪个对象已经ready、它需要什么、缺少什么、因此占住了哪个位置”，再决定这是waiting、idle、starvation还是blocking。</div>
+  </section>
+
+  <section class="section">
+    <h2>15. 核心来源与证据边界</h2>
+    <div class="source"><strong>Kampker et al. (2023)</strong>, “Optimizing the Cell Finishing Process: An Overview of Steps, Technologies, and Trends,” <i>World Electric Vehicle Journal</i> 14(4), 96，Sections 2–2.3.2，PDF pp. 2–10。用于cell-finishing路线、rack存储、RT aging与EoL功能；不用于证明目标工厂的tray/AGV接口。<br><a href="https://publications.rwth-aachen.de/record/955832/files/955832.pdf">RWTH Open Access PDF</a></div>
+    <div class="source"><strong>Plumeyer et al. (2023)</strong>, “A Review of Process Innovations in the Cell Finishing of Lithium-Ion Batteries in Large-Scale Production,” Sections 3.1–3.5，PDF pp. 3–6。用于tray存储、测量位置/二次注液位置改变物流路线的直接例子；不用于证明统一载具结构。<br><a href="https://publications.rwth-aachen.de/record/956678/files/956678.pdf?version=1">RWTH Open Access PDF</a></div>
+    <div class="source"><strong>Hall &amp; Sriskandarajah (1996)</strong>, “A Survey of Machine Scheduling Problems with Blocking and No-Wait in Process,” <i>Operations Research</i> 44(3), 510–525, DOI: 10.1287/opre.44.3.510。用于blocking的一般制造系统概念。本笔记中的starvation和storage-capacity blocking是面向当前案例的操作性解释，未来若进入正式建模再补充模型特定定义。</div>
+    <div class="source"><strong>Wanner et al. (2022)</strong>, “Production Planning and Process Optimization of a Cell Finishing Process in Battery Cell Manufacturing,” <i>Procedia CIRP</i> 112, 507–512, DOI: 10.1016/j.procir.2022.09.056。证明cell-finishing已有离散事件生产规划研究；其情景参数和布局不能直接作为本案例数据。</div>
+    <p class="mini">所有流程图均为可编辑HTML/CSS。图中的区域分离、handover、托盘贯穿、异常分流、空盘回流和AGV承担方式均保留Fact/Inference/Unknown边界。</p>
+  </section>
+
+  <p class="footer">Week 03 Day 3 · Tray flow and transport-event learning guide · Editable HTML source retained in the repository.</p>
+</main>
+</body>
+</html>

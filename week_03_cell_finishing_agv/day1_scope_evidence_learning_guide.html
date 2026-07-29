@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 03 Day 1 — 研究边界与证据纪律</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6b7b;--paper:#f4f7f9;--line:#d7e1e8;--navy:#173b56;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff;--white:#fff}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}main{max-width:1080px;margin:auto;padding:38px 22px 72px}.hero{padding:42px;border-radius:10px;background:linear-gradient(135deg,#173b56,#245e7d);color:#fff}.eyebrow{margin:0 0 10px;color:#bfe1f7;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-child{max-width:850px;margin:17px 0 0;color:#e3f0f7;font-size:17px}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}.nav a{padding:7px 11px;border:1px solid #bfd6e4;border-radius:999px;color:#eaf6fc;text-decoration:none;font-size:13px}.section{margin-top:22px;padding:28px 30px;background:var(--white);border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:0 0 8px;font-size:18px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:17px 0}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card p,.card ul{margin:7px 0 0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#efdca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.teacher,.thesis,.warning,.source,.checkpoint{margin:17px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.checkpoint{background:var(--violetbg);border-color:var(--violet)}.flow{display:flex;align-items:stretch;gap:8px;margin:19px 0;overflow-x:auto;padding-bottom:4px}.flow div{flex:1 0 145px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:15px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}table{width:100%;margin:17px 0;border-collapse:collapse;font-size:15px}th,td{padding:11px 12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}.fact{color:#176044;background:#dff2e8}.infer{color:#795108;background:#fff0c9}.unknown{color:#8c3431;background:#fde3e1}.question{margin:15px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.template{margin:15px 0;padding:17px 19px;border:1px dashed #8fa8bd;border-radius:7px;background:#fbfcfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;white-space:pre-wrap}.mini{font-size:14px;color:var(--muted)}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details>div{padding:0 14px 14px}code{padding:2px 5px;border-radius:4px;background:#eef2f5;color:#244b6e}.good{color:#176044;font-weight:700}.bad{color:#9e3d39;font-weight:700}ul,ol{padding-left:23px}.footer{margin-top:20px;color:var(--muted);font-size:13px}@media(max-width:820px){.grid3,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){main{padding:16px 11px 44px}.hero,.section{padding:23px 18px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3,.grid4{grid-template-columns:1fr}table{font-size:14px}th,td{padding:8px}.nav{display:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Week 03 · Day 1 · 师兄带教导学笔记</p>
+    <h1>研究不是尽快得到答案，<br>而是先知道哪句话现在有资格说</h1>
+    <p>今天不学更多工艺，也不设计AGV。我们训练一项贯穿整篇论文的基本功：控制研究边界，并把现场问题、research gap、data gap、模型假设以及事实、推断、未知严格分开。</p>
+    <nav class="nav"><a href="#goal">今日目标</a><a href="#orientation">案例直觉</a><a href="#four">四种概念</a><a href="#evidence">证据三分法</a><a href="#case">案例拆解</a><a href="#model">模型顺序</a><a href="#test">自测</a></nav>
+  </header>
+
+  <section class="section" id="goal">
+    <h2>0. 今天学到什么就算完成？</h2>
+    <p class="lead">学完后，你不需要找到最终gap。你只需要能听到一句研究表述时，判断它属于哪一类、证据够不够、下一步应该查什么。</p>
+    <div class="grid3">
+      <div class="card blue"><h3>会分类</h3><p>分清现场问题、research gap、data gap和模型假设。</p></div>
+      <div class="card green"><h3>会降级</h3><p>证据不够时，把“事实”降为“推断”或“未知”，而不是补造答案。</p></div>
+      <div class="card amber"><h3>会守边界</h3><p>知道本周研究什么、暂时不研究什么，以及为什么。</p></div>
+    </div>
+    <div class="teacher"><strong>师兄提醒：</strong>研究能力不等于知道很多术语。更重要的是，你知道一句话的确定程度，并能说明它来自哪里。</div>
+  </section>
+
+  <section class="section">
+    <h2>1. 先确定我们今天站在哪里</h2>
+    <div class="flow"><div><b>Week 01</b>电池与制造基础</div><div class="arrow">→</div><div><b>Week 02</b>工序—问题—机器人地图</div><div class="arrow">→</div><div><b>Week 03</b>进入一个托盘物流案例</div><div class="arrow">→</div><div><b>以后才可能</b>gap、方法、仿真</div></div>
+    <table><thead><tr><th>本周研究</th><th>本周不研究</th></tr></thead><tbody>
+      <tr><td>formation、room-temperature aging与EoL之间可能存在的物流对象、运输事件、设备接口和等待关系。</td><td>需要几台AGV、哪个算法最好、成本节省、ROI、最终题目或最终gap。</td></tr>
+      <tr><td>soaking、degassing、second filling等环节只有在它们改变路线或接口时才作为条件分支。</td><td>完整formation电化学模型、AGV底盘导航算法、整厂物流以及module/pack生产。</td></tr>
+    </tbody></table>
+    <div class="warning"><strong>重要修正：</strong>我们不能先写“已完成注液和最终密封的电芯进入formation”。某些路线还可能包含临时封口、排气、二次注液或后续封口。Day 1先把它记作路线相关，Day 2再从原文确认。</div>
+  </section>
+
+  <section class="section" id="orientation">
+    <h2>2. 先建立案例直觉：一盘电芯到底在经历什么？</h2>
+    <div class="warning"><strong>先看清证据等级：</strong>下面是帮助入门的教学型示意，不代表某一家工厂的真实布局，也不代表所有电芯都使用同一种托盘或相同工艺顺序。Day 2会用原始文献逐项校正。</div>
+    <div class="grid3">
+      <div class="card blue"><h3>Formation 化成</h3><p>电芯第一次经历受控充放电。生产上需要把许多电芯连接到相应的电气通道或夹具，并等待化成程序完成。</p></div>
+      <div class="card amber"><h3>Aging 老化</h3><p>完成相应步骤后，电芯在受控条件下存放一段时间，通过后续测量观察其状态是否稳定。长期占用的通常是电芯、载具和库位，不是运输车辆。</p></div>
+      <div class="card green"><h3>EoL Testing 终检</h3><p>对电芯进行生产末端的质量测量和判定，并据结果进入合格、分级、复测或异常处理等后续分支。</p></div>
+    </div>
+    <p class="lead">如果这三类功能位于不同设备或区域，电芯载具就可能需要在它们之间移动。</p>
+    <div class="flow"><div><b>Formation完成</b>设备释放产品</div><div class="arrow">→</div><div><b>载具等待</b>等待运输与下游条件</div><div class="arrow">→</div><div><b>送入Aging</b>占用存储位置</div><div class="arrow">→</div><div><b>Aging完成</b>请求取出</div><div class="arrow">→</div><div><b>送往EoL</b>测试并分流</div></div>
+    <div class="teacher"><strong>最重要的直觉：</strong>AGV不是在整个formation或aging期间“陪着”电芯。它只可能在产品需要改变物理位置时，承担其中一段运输。</div>
+  </section>
+
+  <section class="section">
+    <h2>3. 你反复看到的三个词，分别是什么意思？</h2>
+    <table><thead><tr><th>概念</th><th>用人话解释</th><th>当前案例中的例子</th><th>需要问什么</th></tr></thead><tbody>
+      <tr><td><b>Transport task<br>运输任务</b></td><td>把一个明确对象从起点送到终点，并在规定条件下完成交付。</td><td>候选例：formation输出位置 → aging入口/存储交接点。</td><td>搬什么？为什么现在搬？从哪到哪？何时才算完成？</td></tr>
+      <tr><td><b>Equipment interface<br>设备接口</b></td><td>产品、机械动作和信息在两个系统之间交接的边界。</td><td>候选例：formation出料输送段与AGV取货点；AGV与aging库入口之间的交接点。</td><td>谁释放产品？怎样定位/锁定？谁确认接收？ID怎样同步？</td></tr>
+      <tr><td><b>Process constraint<br>工艺约束</b></td><td>运输和交接过程中必须满足、不能随意破坏的条件。</td><td>候选例：不损伤电芯、正确身份匹配、下游有可用位置、满足安全与环境要求。</td><td>如果不满足会怎样？是质量问题、安全问题，还是物流阻塞？</td></tr>
+    </tbody></table>
+    <div class="thesis"><strong>一句话记忆：</strong>运输任务回答“搬什么、从哪到哪”；设备接口回答“怎样交给对方”；工艺约束回答“搬运时哪些条件绝不能破坏”。</div>
+  </section>
+
+  <section class="section">
+    <h2>4. 一个运输请求怎样产生？</h2>
+    <p>用一个暂定的“formation → aging”教学例子观察。注意：这是一条待验证的候选任务。</p>
+    <div class="flow"><div><b>工序完成</b>formation程序结束</div><div class="arrow">→</div><div><b>安全释放</b>设备允许取出</div><div class="arrow">→</div><div><b>请求产生</b>系统要求搬运载具</div><div class="arrow">→</div><div><b>等待运输</b>车辆与下游位置可用</div><div class="arrow">→</div><div><b>交付完成</b>下游确认接收并更新状态</div></div>
+    <table><thead><tr><th>环节</th><th>现在先理解什么</th><th>仍不知道什么</th></tr></thead><tbody>
+      <tr><td>运输对象</td><td>不是抽象的“电池”，而是某种可识别、可搬运的物流单元。</td><td>单颗cell、tray、rack还是其他goods carrier？</td></tr>
+      <tr><td>请求触发</td><td>工序结束不一定立刻等于可以搬走，还可能需要安全释放和状态确认。</td><td>按整盘、batch还是独立channel释放？</td></tr>
+      <tr><td>取货接口</td><td>车辆通常需要一个能够定位、承载和确认货物的交接点。</td><td>由AGV直接取货，还是先由conveyor/lift转移？</td></tr>
+      <tr><td>下游条件</td><td>aging入口或存储位置必须能够接收，任务才有明确终点。</td><td>无库位时在formation出口、中央buffer还是别处等待？</td></tr>
+      <tr><td>任务完成</td><td>到达坐标不一定等于完成；需要物理交接和数据状态同步。</td><td>由PLC、WMS/MES还是fleet controller确认？</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section">
+    <h2>5. AGV可能只负责中间一段</h2>
+    <p>你可以先把真实系统想象成四段，而不是“AGV直接钻进所有设备”。</p>
+    <div class="flow"><div><b>Process equipment</b>工艺设备完成处理</div><div class="arrow">↔</div><div><b>Fixed transfer</b>输送线/升降机/转运单元</div><div class="arrow">↔</div><div><b>Handover point</b>标准交接位置</div><div class="arrow">↔</div><div><b>AGV</b>承担区域间运输</div></div>
+    <div class="grid">
+      <div class="card green"><h3>AGV可能适合</h3><p>设备或区域之间存在重复运输、路线需要一定柔性、载具和交接点可标准化的任务。</p></div>
+      <div class="card red"><h3>AGV不一定适合</h3><p>同一设备内部的短距离精确动作、连续高速刚性物流，或者缺少可靠交接接口的任务。</p></div>
+    </div>
+    <div class="teacher"><strong>因此本周的问题不是“AGV怎样配置”，而是：</strong>真实物流链中是否存在适合移动机器人承担的中间运输段？它的起点、终点和接口是什么？</div>
+  </section>
+
+  <section class="section">
+    <h2>6. 当前先保留的四类候选物流流</h2>
+    <table><thead><tr><th>候选流</th><th>它为什么可能出现</th><th>当前证据状态</th></tr></thead><tbody>
+      <tr><td>Normal flow</td><td>完成formation/aging/testing后进入正常下游步骤。</td><td><span class="tag infer">流程存在，具体载具与执行方式未知</span></td></tr>
+      <tr><td>Re-test flow</td><td>某些测试结果可能要求再次测量或返回相应环节。</td><td><span class="tag infer">条件性分支，待原文核查</span></td></tr>
+      <tr><td>Quarantine flow</td><td>异常产品可能需要与正常流隔离。</td><td><span class="tag infer">工业上合理，但位置与运输方式未知</span></td></tr>
+      <tr><td>Empty-carrier return</td><td>产品离开载具后，载具可能需要返回上游再次使用。</td><td><span class="tag unknown">是否使用可循环托盘及何处释放尚未知</span></td></tr>
+    </tbody></table>
+    <div class="warning"><strong>不要背四条固定路线。</strong>它们是帮助我们提问的候选分支。Day 2–3要做的是保留有证据的部分、删除不存在的部分，并给未知项找到验证方式。</div>
+  </section>
+
+  <section class="section" id="four">
+    <h2>7. 四种最容易混淆的研究概念</h2>
+    <div class="grid4">
+      <div class="card blue"><h3>Practical problem</h3><p><b>现实中出了什么问题？</b></p><p>例：运输资源响应不及时可能让托盘等待或占满缓存。</p></div>
+      <div class="card green"><h3>Research gap</h3><p><b>现有知识还回答不了什么？</b></p><p>必须通过系统阅读既有研究后才能确认。</p></div>
+      <div class="card red"><h3>Data gap</h3><p><b>完成本项目缺什么参数？</b></p><p>例：真实路程、装卸时间、请求记录和故障率。</p></div>
+      <div class="card amber"><h3>Model assumption</h3><p><b>为了描述或分析系统，暂时怎样简化？</b></p><p>例：先假设托盘以批次整体释放；之后必须验证。</p></div>
+    </div>
+    <table><thead><tr><th>一句话</th><th>属于什么</th><th>为什么</th></tr></thead><tbody>
+      <tr><td>“化成完成后，下游无空位，出料区可能被占满。”</td><td>可能的 practical problem</td><td>描述现场后果，但仍要确认真实系统是否这样交接。</td></tr>
+      <tr><td>“没有公开的托盘重量和路线距离。”</td><td>data/evidence gap</td><td>这是我们缺信息，不代表学术界存在知识空白。</td></tr>
+      <tr><td>“现有cell-finishing研究与AGV配置研究之间缺乏连接。”</td><td>working gap hypothesis</td><td>需要Week 04定向检索并主动找反例。</td></tr>
+      <tr><td>“第一版流程先把aging表示为一个存储资源。”</td><td>model assumption</td><td>这是概念化选择，不是对所有工厂的事实描述。</td></tr>
+    </tbody></table>
+    <div class="thesis"><strong>判断口诀：</strong>现场问题问“现实哪里不顺”；research gap问“知识哪里没回答”；data gap问“我们手里缺什么”；model assumption问“为了研究暂时怎样表示”。</div>
+  </section>
+
+  <section class="section">
+    <h2>8. 为什么“没有数据”不能直接成为论文gap？</h2>
+    <p>假设我们不知道某工厂的AGV速度。这只说明当前项目不能直接计算运输时间，并不说明世界上没有人研究AGV速度，也不说明我们发现了新的科学问题。</p>
+    <div class="grid">
+      <div class="card red"><h3>错误跳跃</h3><p>拿不到工厂数据 → 文献存在gap → 我要建立新方法。</p></div>
+      <div class="card green"><h3>正确顺序</h3><p>先明确要验证的命题 → 再确定最低数据需求 → 再选择文献、专家、案例或情景分析。</p></div>
+    </div>
+    <div class="flow"><div><b>具体命题</b>要判断什么？</div><div class="arrow">→</div><div><b>指标</b>用什么观察？</div><div class="arrow">→</div><div><b>数据</b>最低需要什么？</div><div class="arrow">→</div><div><b>证据方式</b>从哪里获得？</div></div>
+    <div class="teacher"><strong>联系Thomas反馈：</strong>他不是说数据不重要，而是说你此前在题目尚不具体时，就过早焦虑“哪里找数据”。正确顺序是先理解案例，再让研究命题推出数据需求。</div>
+  </section>
+
+  <section class="section" id="evidence">
+    <h2>9. 每句话都放进三个抽屉：Fact、Inference、Unknown</h2>
+    <table><thead><tr><th>证据状态</th><th>你可以怎样写</th><th>你不可以怎样写</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">FACT</span></td><td>“Plumeyer et al.在p. X指出……，其研究边界为……”</td><td>不能省略来源边界后扩展到所有电芯、工厂和设备。</td></tr>
+      <tr><td><span class="tag infer">INFERENCE</span></td><td>“如果该测量位于独立工位，则可能产生额外运输。”</td><td>不能写成“该测量必然由AGV运输”。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>“公开来源尚未说明下游无空位时托盘在哪里等待。”</td><td>不能为使流程图完整而自行指定缓存位置。</td></tr>
+    </tbody></table>
+    <div class="question"><b>为什么Inference不是坏事？</b><br>工程研究必然包含推理。关键不是消灭推理，而是让读者看见推理的前提，并说明还需要什么证据验证。</div>
+    <div class="template">Claim / 结论：
+Evidence status / 状态：Fact | Inference | Unknown
+Source / 来源：
+Page or section / 页码或章节：
+Boundary / 适用边界：
+Reasoning / 推理链：
+What would verify it / 如何验证：</div>
+  </section>
+
+  <section class="section" id="case">
+    <h2>10. 拆解一句看似合理、其实证据不足的话</h2>
+    <p class="lead">原句：“AGV把装有密封电芯的标准托盘从formation运到aging，再送去EoL测试。”</p>
+    <p>这句话很顺，但把至少六个未知项藏起来了：</p>
+    <table><thead><tr><th>隐藏问题</th><th>当前状态</th><th>下一步</th></tr></thead><tbody>
+      <tr><td>此时是否已完成最终密封？</td><td><span class="tag unknown">UNKNOWN / route-dependent</span></td><td>Day 2核查degassing、second filling与sealing顺序。</td></tr>
+      <tr><td>运输对象是单颗cell、tray、rack还是batch？</td><td><span class="tag unknown">UNKNOWN</span></td><td>查设备与goods-carrier资料。</td></tr>
+      <tr><td>formation与aging是否物理分离？</td><td><span class="tag infer">INFERENCE</span></td><td>按具体参考流程确认。</td></tr>
+      <tr><td>托盘是否在全过程保持不变？</td><td><span class="tag unknown">UNKNOWN</span></td><td>确认是否换载具、拆盘或整盘接触。</td></tr>
+      <tr><td>跨区运输是否由AGV承担？</td><td><span class="tag unknown">UNKNOWN</span></td><td>比较conveyor、lift、AS/RS、OHT、AGV等方案。</td></tr>
+      <tr><td>AGV是否直接进入工艺设备？</td><td><span class="tag unknown">UNKNOWN</span></td><td>查handover point和固定转运单元。</td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>更合格的当前表述：</strong>在某些cell-finishing路线中，若formation、aging storage与EoL testing位于分离的设备或区域，则其间会产生载具运输需求。载具类型、交接架构以及是否由AGV承担，目前仍需文献和工业案例确认。</div>
+  </section>
+
+  <section class="section">
+    <h2>11. “省事”可以帮助选题，但不能成为论文论证</h2>
+    <div class="grid">
+      <div class="card amber"><h3>内部筛选理由</h3><p>不依赖机械臂实验平台、可用公开文献学习、后续可能采用情景或仿真方法。这些理由帮助我们控制Master Thesis风险。</p></div>
+      <div class="card blue"><h3>正式学术理由</h3><p>必须来自cell-finishing中的真实物流对象、长时过程、设备/存储接口、WIP和质量分流问题，并由文献或案例支撑。</p></div>
+    </div>
+    <p><span class="bad">不对导师说：</span>“因为AGV比较省事，所以我选它。”</p>
+    <p><span class="good">可以对导师说：</span>“I selected tray transport as a learning case because it provides a concrete interface between cell-finishing process requirements and mobile material handling. I am first reconstructing the actual transport tasks before evaluating any AGV configuration.”</p>
+  </section>
+
+  <section class="section" id="model">
+    <h2>12. Conceptual model为什么必须先于Simulation model？</h2>
+    <div class="grid">
+      <div class="card blue"><h3>Conceptual model</h3><p>决定现实系统里有什么：对象、资源、事件、队列、边界、因果关系和简化假设。</p></div>
+      <div class="card violet"><h3>Simulation model</h3><p>把已定义的概念模型转化为可运行逻辑，并用参数和实验观察行为。</p></div>
+    </div>
+    <div class="flow"><div><b>现实工序</b>发生什么？</div><div class="arrow">→</div><div><b>概念模型</b>保留什么？</div><div class="arrow">→</div><div><b>参数证据</b>数值来自哪里？</div><div class="arrow">→</div><div><b>实现工具</b>最后才是SimPy等</div></div>
+    <div class="warning"><strong>典型失败：</strong>如果还不知道运输对象、请求触发和下游接收条件，就直接生成随机任务让几台小车移动，得到的只是编程练习，不是cell-finishing研究。</div>
+  </section>
+
+  <section class="section">
+    <h2>13. 当前三个候选gap应该怎样摆放？</h2>
+    <table><thead><tr><th>候选</th><th>当前资格</th><th>现在能说什么</th></tr></thead><tbody>
+      <tr><td>Cell-finishing工艺研究与AGV系统研究之间可能缺少连接</td><td><span class="tag infer">WORKING HYPOTHESIS</span></td><td>Week 04通过组合检索和反例搜索核查。</td></tr>
+      <tr><td>公开电池AGV案例缺少工序和接口细节</td><td><span class="tag infer">EVIDENCE LIMITATION</span></td><td>可能说明公开证据有限，但不自动构成强research gap。</td></tr>
+      <tr><td>数据有限条件下的稳健AGV配置</td><td><span class="tag infer">LATER CANDIDATE</span></td><td>只有确认不确定变量、参数范围和方法可行后才讨论。</td></tr>
+    </tbody></table>
+    <div class="thesis"><strong>今天的结论：</strong>我们现在有gap的“候选问题”，还没有gap的“研究结论”。这不是进度落后，而是证据纪律。</div>
+  </section>
+
+  <section class="section" id="test">
+    <h2>14. 自测：先自己判断，再展开答案</h2>
+    <details><summary>Q1. “我们没有真实托盘重量，所以论文的gap是缺少托盘数据。”对吗？</summary><div><p><b>不对。</b>这是data gap。只有在明确研究命题后，才能判断托盘重量是否是必要输入；它不自动成为学术知识缺口。</p></div></details>
+    <details><summary>Q2. “老化持续很久，因此一台AGV会被托盘占用很久。”对吗？</summary><div><p><b>通常不能这样说。</b>aging主要占用cell、carrier和storage position。AGV可能只负责送入与取出。具体交接仍需Day 2–3确认。</p></div></details>
+    <details><summary>Q3. “如果EoL测试后出现不合格品，就一定有一条AGV隔离路线。”对吗？</summary><div><p><b>不一定。</b>不合格品分流可能存在，但运输对象、隔离位置及执行设备未知。当前应写为条件性物流分支。</p></div></details>
+    <details><summary>Q4. 为什么不能直接把WSC案例中的9台AGV用作我们的模型参数？</summary><div><p>该案例未公开具体工序、物料、托盘和接口，也未证明属于cell finishing。9台AGV只描述那个现场，不能外推为我们的参考配置。</p></div></details>
+    <details><summary>Q5. 把“所有工厂都……”改成符合证据纪律的句子。</summary><div><p>可采用：“在所研究的工艺路线中……”“如果A与B为独立工位，则可能……”“现有来源提示……，但尚需确认其对不同cell format的适用性。”</p></div></details>
+  </section>
+
+  <section class="section">
+    <h2>15. 你的Day 1口头复述任务</h2>
+    <p>不用写长报告。你能用自己的话完成下面六句话，Day 1就合格：</p>
+    <div class="template">1. 我们本周研究的是：
+2. 我们本周暂时不研究的是：
+3. Practical problem 与 research gap 的区别是：
+4. “缺少工厂数据”为什么不是 research gap：
+5. 当前关于 AGV 托盘运输，我认为最大的一个 unknown 是：
+6. Conceptual model 为什么要先于 simulation model：</div>
+    <div class="checkpoint"><strong>进入Day 2前的检查：</strong>如果你能不看答案解释这六句，并能把一句过度确定的话改成Fact/Inference/Unknown表述，就可以进入cell-finishing工艺链。若仍混淆，我们继续用实例练习，不赶进度。</div>
+  </section>
+
+  <section class="section">
+    <h2>16. 本讲依据与证据级别</h2>
+    <div class="source"><strong>Thomas明确指导：</strong>先补电池与机器人基础，选择一个案例逐步深入；先明确题目与问题，再讨论数据和专家。依据：<code>week_02_robotics_evidence/第二周导师反馈.md</code> 第3–4节。</div>
+    <div class="source"><strong>PEM工作参考：</strong>论文需要遵循实际问题→研究现状/缺口→方法→验证的逻辑，并保持来源和页码。依据：<code>docs/pem_thesis_requirements.md</code> 第3–4节。正式流程仍须核对最新规定。</div>
+    <div class="source"><strong>项目工作协议：</strong>慢节奏、每周一个问题、最低目标与可选扩展。依据：<code>docs/collaboration_and_pacing.md</code>。这不是PEM官方要求。</div>
+    <p class="mini">本讲主要训练研究方法与证据纪律，没有新增对cell-finishing工艺细节的正式结论。工序顺序、载具和接口将在Day 2依据原始文献逐项核查。</p>
+  </section>
+
+  <p class="footer">Week 03 Day 1 · Master Thesis learning guide · Editable HTML source retained in the project repository.</p>
+</main>
+</body>
+</html>

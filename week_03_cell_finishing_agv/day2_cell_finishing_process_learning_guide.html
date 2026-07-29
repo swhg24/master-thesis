@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 03 Day 2 — Cell Finishing 工艺链</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6b7b;--paper:#f4f7f9;--line:#d7e1e8;--navy:#173b56;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff;--teal:#176a73;--tealbg:#e5f4f5;--white:#fff}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}main{max-width:1100px;margin:auto;padding:38px 22px 72px}.hero{padding:43px;border-radius:10px;background:linear-gradient(135deg,#173b56,#21636a);color:#fff}.eyebrow{margin:0 0 10px;color:#c4e8eb;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-child{max-width:870px;margin:17px 0 0;color:#e4f2f3;font-size:17px}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}.nav a{padding:7px 11px;border:1px solid #bfd9db;border-radius:999px;color:#eefafa;text-decoration:none;font-size:13px}.section{margin-top:22px;padding:28px 30px;background:var(--white);border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:0 0 8px;font-size:18px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:17px 0}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card p,.card ul{margin:7px 0 0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#efdca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.teal{background:var(--tealbg);border-color:#c2e1e4}.teacher,.thesis,.warning,.source,.checkpoint{margin:17px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.checkpoint{background:var(--violetbg);border-color:var(--violet)}.flow{display:flex;align-items:stretch;gap:8px;margin:19px 0;overflow-x:auto;padding-bottom:4px}.flow div{flex:1 0 145px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:15px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .optional{border-style:dashed;background:#fffaf0}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}table{width:100%;margin:17px 0;border-collapse:collapse;font-size:15px}th,td{padding:11px 12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}.fact{color:#176044;background:#dff2e8}.infer{color:#795108;background:#fff0c9}.unknown{color:#8c3431;background:#fde3e1}.scope{color:#584091;background:#eae4fb}.question{margin:15px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.template{margin:15px 0;padding:17px 19px;border:1px dashed #8fa8bd;border-radius:7px;background:#fbfcfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;white-space:pre-wrap}.mini{font-size:14px;color:var(--muted)}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details>div{padding:0 14px 14px}code{padding:2px 5px;border-radius:4px;background:#eef2f5;color:#244b6e}.good{color:#176044;font-weight:700}.bad{color:#9e3d39;font-weight:700}ul,ol{padding-left:23px}.footer{margin-top:20px;color:var(--muted);font-size:13px}@media(max-width:820px){.grid3,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){main{padding:16px 11px 44px}.hero,.section{padding:23px 18px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3,.grid4{grid-template-columns:1fr}table{font-size:14px}th,td{padding:8px}.nav{display:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Week 03 · Day 2 · Cell Finishing 基础带教</p>
+    <h1>先看电芯发生了什么，<br>再看托盘为什么需要移动</h1>
+    <p>今天不背一串设备名称。你只需要抓住四个动词：formation改变什么，aging等待和观察什么，EoL测量什么，grading决定什么。物流任务必须从这些工艺功能中长出来。</p>
+    <nav class="nav"><a href="#goal">今日目标</a><a href="#map">工艺地图</a><a href="#formation">Formation</a><a href="#aging">Aging</a><a href="#eol">EoL</a><a href="#logistics">物流含义</a><a href="#review">学习复盘</a><a href="#test">自测</a></nav>
+  </header>
+
+  <section class="section" id="goal">
+    <h2>0. 今天学到什么就算完成？</h2>
+    <div class="grid4">
+      <div class="card blue"><h3>Formation</h3><p>能解释它为什么不是普通充电，而是首次充放电与界面形成过程。</p></div>
+      <div class="card amber"><h3>Aging</h3><p>能区分高温aging与常温aging，知道长期占用的资源是什么。</p></div>
+      <div class="card green"><h3>EoL</h3><p>能说出它测量和判定什么，而不是把它理解成“生产结束”。</p></div>
+      <div class="card violet"><h3>Logistics</h3><p>能判断某个工序变化为什么可能新增、删除或改变运输任务。</p></div>
+    </div>
+    <div class="teacher"><strong>今天的主线：</strong>工艺路线先决定产品要经过哪些设备；设备是否物理分离，再决定是否出现运输；最后才讨论AGV。</div>
+  </section>
+
+  <section class="section" id="map">
+    <h2>1. Cell finishing不是一条固定直线</h2>
+    <p>Kampker等将cell finishing分为三类：pre-treatment、formation procedure和quality testing。论文同时明确说明，工序顺序和时间会随制造商、cell format及产品/质量要求变化。</p>
+    <div class="grid3">
+      <div class="card teal"><h3>Pre-treatment</h3><p>为formation创造合适条件，核心是使电解液充分润湿电极和隔膜；可能包含热、机械或电预处理。</p></div>
+      <div class="card blue"><h3>Formation procedure</h3><p>包括首次充放电及帮助形成、稳定界面层的辅助过程，例如条件性的预充、排气、封口、二次注液或高温aging。</p></div>
+      <div class="card green"><h3>Quality testing</h3><p>从常温aging中的质量观察开始，经过EoL测试，并可能进行grading。</p></div>
+    </div>
+    <div class="source"><strong>直接证据：</strong>Kampker et al. (2023), Section 2, PDF pp. 2–3：三类划分、辅助工序与路线差异。论文指出不存在统一的cell-finishing顺序，不同格式与制造商可采用不同路线。</div>
+    <h3>一条用于学习的参考路线</h3>
+    <div class="flow"><div><b>First filling</b>首次注液</div><div class="arrow">→</div><div><b>Wetting</b>润湿/预处理</div><div class="arrow">→</div><div class="optional"><b>Pre-charge</b>条件性</div><div class="arrow">→</div><div><b>Formation</b>首次充放电</div><div class="arrow">→</div><div class="optional"><b>Auxiliary steps</b>排气/二次注液/封口/HT aging</div><div class="arrow">→</div><div><b>RT aging</b>质量观察</div><div class="arrow">→</div><div><b>EoL + grading</b>检测与分类</div></div>
+    <div class="warning"><strong>这不是唯一真实路线。</strong>虚线/浅色节点是条件性环节；它们是否存在、出现几次、是否集成在同一设备，都受cell format、材料和制造商方案影响。</div>
+  </section>
+
+  <section class="section">
+    <h2>2. Formation之前：为什么先要Wetting？</h2>
+    <p>注液后，电解液需要进入电极和隔膜的孔隙，建立离子传输通道。如果润湿不足，formation时的电流分布和电芯质量可能受到影响。</p>
+    <div class="grid">
+      <div class="card teal"><h3>工艺在等待什么？</h3><p>等待电解液在电芯内部充分、较均匀地分布。较大、较致密的电芯可能更难润湿。</p></div>
+      <div class="card amber"><h3>产品在哪里？</h3><p>Kampker等描述首次注液后电芯存放在rack中开始润湿；温度预处理可在climate chamber或climate room中的rack system进行。</p></div>
+    </div>
+    <div class="source"><strong>直接证据：</strong>Kampker et al. (2023), Section 2.1, PDF pp. 4–5。机械预处理是否适用具有格式边界，例如文中roll pressing针对pouch cell。</div>
+    <div class="thesis"><strong>对物流最有启发的直接案例：</strong>Plumeyer等指出，如果润湿程度的电阻测量不在soaking unit内完成，就会产生额外运输路线和物流挑战；非电测量还可能要求将电芯从tray取出。</div>
+    <div class="source"><strong>直接证据：</strong>Plumeyer et al. (2023), Section 3.1, PDF p. 3：测量位置会改变运输距离、测量步骤及物流负担。</div>
+  </section>
+
+  <section class="section" id="formation">
+    <h2>3. Formation：它到底改变了什么？</h2>
+    <p class="lead">最短解释：formation是电芯首次完整充放电循环，并通过受控条件形成和稳定电极—电解液界面层，尤其是负极侧SEI。</p>
+    <div class="grid3">
+      <div class="card blue"><h3>输入状态</h3><p>已经装配并完成相应注液/润湿准备、尚未完成首次完整电化学激活的电芯。</p></div>
+      <div class="card green"><h3>发生的变化</h3><p>首次充放电触发界面钝化层形成；formation参数会影响电芯性能、寿命与安全。</p></div>
+      <div class="card red"><h3>伴随现象</h3><p>界面反应会产生气体，因此某些格式和路线需要排气、封口或二次注液。</p></div>
+    </div>
+    <div class="source"><strong>直接证据：</strong>Kampker et al. (2023), Section 2.2.1, PDF pp. 6–7；Plumeyer et al. (2023), Section 3.2, PDF pp. 3–4。</div>
+    <h3>为什么不能把formation理解成普通充电？</h3>
+    <table><thead><tr><th>普通理解</th><th>更准确的制造理解</th></tr></thead><tbody>
+      <tr><td>“把电池第一次充满。”</td><td>按受控协议进行首次充放电，使关键界面层形成并让电芯获得预期的电化学状态。</td></tr>
+      <tr><td>程序所有工厂相同。</td><td>步骤、循环次数、持续时间和参数是制造商核心知识，精确协议通常不公开。</td></tr>
+      <tr><td>完成后一定直接去aging。</td><td>可能还存在排气、二次注液、封口或高温aging；部分过程也可能被集成。</td></tr>
+    </tbody></table>
+    <div class="question"><b>对托盘物流的第一层含义：</b>formation结束只有在设备安全释放、载具可以取出且下游能够接收时，才可能形成一项跨设备运输任务。论文支持工序存在，但没有替我们说明具体AGV接口。</div>
+  </section>
+
+  <section class="section">
+    <h2>4. Degassing、Second Filling、Sealing：为什么路线会分叉？</h2>
+    <p>formation产生的气体可能影响安全、寿命和性能。排气方式依cell type而异：</p>
+    <table><thead><tr><th>Cell format / condition</th><th>论文描述</th><th>物流含义</th></tr></thead><tbody>
+      <tr><td>Pouch</td><td>气体汇入gas pocket，随后在真空腔中抽出并进行最终封口。</td><td><span class="tag infer">若真空排气为独立工位，则可能新增跨设备运输；是否独立仍需确认。</span></td></tr>
+      <tr><td>Prismatic</td><td>可通过小孔抽气，再进行永久封口；大电芯可能需要预充后排气。</td><td><span class="tag infer">载具、环境和接口可能与封口/注液设备相关。</span></td></tr>
+      <tr><td>Smaller cylindrical / smaller cells</td><td>论文称较小电芯通常可能没有单独degassing步骤。</td><td><span class="tag fact">路线节点可能消失，因此相应运输任务也可能不存在。</span></td></tr>
+    </tbody></table>
+    <div class="source"><strong>直接证据：</strong>Kampker et al. (2023), Section 2.2.2, PDF pp. 7–8。适用性必须保留其cell-size与format边界。</div>
+    <h3>二次注液位置如何直接改变物流？</h3>
+    <p>Plumeyer等比较了不同second-filling安排。其中一种思路把两次注液都放在cell assembly；这样电芯需要从cell finishing返回assembly，再返回finishing，由此需要新增物流过程和plant interfaces。</p>
+    <div class="flow"><div><b>Cell assembly</b>首次注液</div><div class="arrow">→</div><div><b>Cell finishing</b>润湿/预充/formation</div><div class="arrow">→</div><div class="optional"><b>Return to assembly</b>二次注液方案之一</div><div class="arrow">→</div><div><b>Back to finishing</b>继续后处理</div></div>
+    <div class="source"><strong>直接证据：</strong>Plumeyer et al. (2023), Section 3.4, PDF p. 6：该方案需要定义新的物流过程和工厂接口，并涉及暂时封口、环境和buffer要求。</div>
+    <div class="teacher"><strong>这就是“工艺路线生成物流网络”的真实例子：</strong>不是AGV工程师先决定多跑一趟，而是工艺把二次注液放在哪里，决定了电芯是否需要跨区域往返。</div>
+  </section>
+
+  <section class="section" id="aging">
+    <h2>5. Aging：高温aging与常温aging不要混为一谈</h2>
+    <table><thead><tr><th></th><th>High-temperature aging</th><th>Room-temperature aging</th></tr></thead><tbody>
+      <tr><td>核心作用</td><td>可促进formation后剩余反应、SEI稳定和润湿过程；论文指出可集成进formation协议或放在formation之后。</td><td>主要用于质量保证，通过时间间隔内的OCV等测量观察自放电与稳定性。</td></tr>
+      <tr><td>是否改变电芯质量</td><td>仍可能涉及反应与稳定过程。</td><td>Kampker将其归入quality testing，强调其目的为质量保证。</td></tr>
+      <tr><td>典型物理状态</td><td>取决于具体设备与路线。</td><td>论文描述电芯在rack中存储；Plumeyer还直接提到电芯通常以tray承载，且不加压、不通电。</td></tr>
+      <tr><td>对物流的意义</td><td>若与formation集成，可能不产生独立运输；若是独立设备，则可能产生。</td><td>送入和取出是运输事件；长时间等待主要占用cell、tray和storage position，不持续占用AGV。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>直接证据：</strong>Kampker et al. (2023), Sections 2.2.3 and 2.3.1, PDF pp. 8–9；Plumeyer et al. (2023), Section 3.5, PDF p. 6。</div>
+    <div class="warning"><strong>容易犯的建模错误：</strong>“aging三周，所以AGV被占用三周。”不对。AGV只可能在送入和取出阶段被占用；三周主要形成大量WIP和库位占用。论文中的“最长三周”等数字只属于其综述描述，不应直接成为未来模型的通用参数。</div>
+    <h3>为什么要测两次或多次OCV？</h3>
+    <p>自放电关注的是电压随时间的变化，而不是只看某一时刻的电压。因此需要不同时间点的测量。至于测量是否在rack内部完成、需要移动整个tray还是单颗cell，目前仍是接口未知项。</p>
+  </section>
+
+  <section class="section" id="eol">
+    <h2>6. EoL Testing：它测量什么，又决定什么？</h2>
+    <p>EoL不是一个统一固定的单机。Kampker等指出测试技术、时长和顺序在文献中并未标准化，取决于制造商。</p>
+    <div class="grid3">
+      <div class="card blue"><h3>Electrical</h3><p>文献常见OCV、内阻、容量、pulse test；部分数据可能已经在formation或aging中获得。</p></div>
+      <div class="card green"><h3>Physical / visual</h3><p>还可能包括气密、重量、尺寸与外观检测。</p></div>
+      <div class="card violet"><h3>Decision</h3><p>依据质量参数，电芯可能进入grading/classification；不满足要求的电芯可能被剔除、报废或回收。</p></div>
+    </div>
+    <div class="source"><strong>直接证据：</strong>Kampker et al. (2023), Section 2.3.2, PDF pp. 9–10；Plumeyer et al. (2023), Section 3.5, PDF p. 6。</div>
+    <table><thead><tr><th>现在可作为Fact</th><th>现在仍是Inference / Unknown</th></tr></thead><tbody>
+      <tr><td>EoL测试范围依cell format、上游工艺和制造商变化；未在上游完成的测量可由独立EoL station实施；测试结果可用于分类。</td><td>是否一定存在re-test loop；不合格品隔离位置；整盘还是单颗分流；由AGV、输送线还是机器人执行分流。</td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>你需要形成的直觉：</strong>EoL不是只“测完结束”，而是一个决策点。决策产生分支，分支才可能产生不同的后续物流任务。</div>
+  </section>
+
+  <section class="section">
+    <h2>7. 用四个动词记住整个核心</h2>
+    <div class="grid4">
+      <div class="card blue"><h3>Formation 改变</h3><p>通过首次受控充放电形成关键界面状态并激活电芯。</p></div>
+      <div class="card amber"><h3>Aging 等待/观察</h3><p>让时间揭示自放电和稳定性信息，同时占用载具与存储位置。</p></div>
+      <div class="card green"><h3>EoL 测量</h3><p>测量电气、机械和外观等质量特征。</p></div>
+      <div class="card violet"><h3>Grading 决定</h3><p>根据结果分类、正常输出或剔除；具体分支因制造商而异。</p></div>
+    </div>
+    <div class="thesis"><strong>一句话：</strong>formation让电芯获得初始电化学状态，aging用时间观察它是否稳定，EoL取得末端质量证据，grading把证据转化为去向。</div>
+  </section>
+
+  <section class="section" id="logistics">
+    <h2>8. 从工艺事实推导物流含义</h2>
+    <table><thead><tr><th>工艺事实</th><th>可以作出的物流推断</th><th>还不能说什么</th></tr></thead><tbody>
+      <tr><td>常温aging中电芯可在tray/rack中长期存储。</td><td>需要送入、占用存储位置和到期取出的事件。</td><td>不能直接确定tray规格、库位数量、AGV数量或任务分布。</td></tr>
+      <tr><td>高温aging可以集成进formation或在其后进行。</td><td>集成方式可能消除一次独立运输；独立方式可能增加一次。</td><td>不能假定所有工厂都有独立HT-aging区。</td></tr>
+      <tr><td>某些润湿测量不在soaking unit内完成。</td><td>可能增加测量往返路线和接口。</td><td>不能推断这些路线必然由AGV承担。</td></tr>
+      <tr><td>二次注液位置可以跨assembly与finishing。</td><td>工艺配置可能产生跨区域往返、buffer和环境接口。</td><td>不能把这种创新方案当作主流标准路线。</td></tr>
+      <tr><td>EoL结果用于分类。</td><td>可能形成正常、等级和剔除等不同下游流。</td><td>不能确认re-test、quarantine与空托盘回流的具体结构。</td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>判断顺序再练一次：</strong>工序是否需要独立设备？→ 设备是否物理分离？→ 产品是否换位置？→ 用什么载具？→ 谁完成交接？→ 最后才判断AGV。</div>
+  </section>
+
+  <section class="section">
+    <h2>9. 第一版“已知—推断—未知”</h2>
+    <table><thead><tr><th>状态</th><th>Day 2内容</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">FACT</span></td><td>Cell-finishing路线随制造商、cell format和产品要求而变；formation包含首次充放电；RT aging用于质量观察并可在rack/tray中存储；EoL测试及grading依制造商而变。</td></tr>
+      <tr><td><span class="tag infer">INFERENCE</span></td><td>若formation、aging storage和EoL为物理分离节点，则其间会产生载具运输；工艺集成可减少运输，外置测量或跨区second filling可增加运输。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>参考场景采用什么cell format；载具是否贯穿流程；按cell、tray还是batch释放；AGV与设备如何交接；测量是否要求出库；异常与空载具怎样回流。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="review">
+    <h2>10. 学习复盘：这次问答暴露了哪些易错点？</h2>
+    <p class="lead">下面不是额外增加的知识点，而是根据本次师生问答，把“已经理解的部分”和“容易混淆的部分”固定下来。以后复习时，先看误区，再尝试用右侧表述重新解释。</p>
+    <table><thead><tr><th>问题</th><th>本次回答中已经抓住的部分</th><th>需要修正或补充的部分</th></tr></thead><tbody>
+      <tr><td>Formation改变什么？</td><td>认识到它是首次受控充放电，并且不同于日常充电。</td><td>不能说成“沉积储能”或“形成薄隔膜”。Formation主要形成、稳定电极—电解液界面的钝化层，尤其是负极侧SEI。</td></tr>
+      <tr><td>RT aging占用什么、观察什么？</td><td>认识到长期被占用的不是AGV，而是电芯和托盘等在制品资源。</td><td>还应明确包括rack/storage position和WIP空间；主要通过不同时点的OCV等信息观察自放电与稳定性。</td></tr>
+      <tr><td>EoL测什么、决定什么？</td><td>认识到不同测量结果会改变后续处理。</td><td>当前文献支持OCV、内阻、容量、pulse/rate、气密、重量、尺寸和外观等，不支持把“密度”列为本案例的典型指标；也不能先假定电芯通常返回formation或aging。</td></tr>
+      <tr><td>路线怎样产生物流任务？</td><td>认识到如果两个过程没有物理位置变化，就不一定存在工序间运输。</td><td>判断条件应更完整：是否使用独立设备、是否物理分离、载具或位置是否改变。即使产生运输任务，也不能直接认定由AGV执行。</td></tr>
+    </tbody></table>
+
+    <h3>易混概念一：隔膜不等于SEI</h3>
+    <div class="grid">
+      <div class="card amber"><h3>Separator 隔膜</h3><p>装配电芯时已经存在，位于正负极之间，防止两极直接接触，同时允许离子通过。它不是formation过程中才形成的。</p></div>
+      <div class="card blue"><h3>SEI 界面钝化层</h3><p>主要在首次充电等界面反应中形成于负极表面。它允许锂离子传输，同时限制电解液持续分解；formation要控制并稳定这类界面层。</p></div>
+    </div>
+    <div class="warning"><strong>一句纠错：</strong>不要说“formation形成一层隔开电解液和电极的薄隔膜”。更准确的是“formation在电极—电解液界面形成并稳定SEI等钝化层”。电解液仍需与电极体系进行离子传输。</div>
+
+    <h3>易混概念二：EoL结果不等于返回上游重做</h3>
+    <div class="flow"><div><b>EoL measurements</b>OCV、内阻、容量、气密、尺寸等</div><div class="arrow">→</div><div><b>Normal output</b>符合要求</div><div class="arrow">/</div><div><b>Grading</b>按性能分类</div><div class="arrow">/</div><div><b>Reject</b>剔除、报废或回收</div></div>
+    <p>“可疑结果后复测”可以保留为待验证的工厂分支，但本次文献没有证明它普遍存在；“返回formation”或“继续aging”也不能在没有工厂证据时写成标准路线。</p>
+
+    <h3>四个问题的可复用答案</h3>
+    <details open><summary>Q1. Formation到底改变了电芯的什么？为什么不是普通充电？</summary><div><p>Formation通过首次受控充放电，在电极—电解液界面形成和稳定SEI等关键界面层，使电芯获得初始电化学状态。普通充电主要补充可用能量；formation则重点控制最初的界面反应，因此会影响后续性能、寿命与安全。</p></div></details>
+    <details><summary>Q2. RT aging期间什么长期被占用？主要观察什么？</summary><div><p>长期占用的是电芯、tray、rack/storage position及相应WIP空间，而不是AGV。通过间隔时间内的OCV等测量，观察自放电和稳定性；AGV只可能在送入或取出时短暂参与。</p></div></details>
+    <details><summary>Q3. EoL测量什么，并可能怎样改变后续去向？</summary><div><p>EoL可测OCV、内阻、容量、pulse/rate、气密、重量、尺寸与外观等。结果可支持正常输出、grading/classification或剔除、报废、回收。复测、隔离方式和是否整盘分流仍需具体工厂证据。</p></div></details>
+    <details><summary>Q4. 举一个“工艺路线变化导致物流任务变化”的例子。</summary><div><p>若HT aging集成在formation设备或协议内，二者之间可能没有独立运输；若HT aging使用物理分离的设备，且托盘需要更换位置，则可能产生一项运输任务。但执行者仍可能是AGV、输送线、升降机或其他搬运系统。</p></div></details>
+    <div class="teacher"><strong>本轮真正学到的推理方法：</strong>先说明电芯发生了什么，再检查设备、位置和载具是否变化，之后才能定义运输任务；最后才判断运输是否由AGV承担。</div>
+  </section>
+
+  <section class="section" id="test">
+    <h2>11. 自测：先答，再展开</h2>
+    <details><summary>Q1. Formation、aging和EoL最核心的区别是什么？</summary><div><p>Formation通过首次受控充放电改变和建立电芯的初始界面状态；RT aging主要用时间观察质量与自放电；EoL通过一组末端测量获得质量证据，并可支持分类决策。</p></div></details>
+    <details><summary>Q2. 为什么“formation完成后必然由AGV送到aging”不合格？</summary><div><p>工序是否物理分离、使用什么载具、是否有固定输送/ASRS，以及AGV是否承担区域运输都未知。当前只能写成条件性运输推断。</p></div></details>
+    <details><summary>Q3. 为什么HT aging可能有运输，也可能没有？</summary><div><p>论文指出HT aging可集成到formation协议中，也可以设置在formation之后。集成方式可能不产生独立跨设备运输，独立设置则可能产生。</p></div></details>
+    <details><summary>Q4. 为什么aging时间长不等于AGV占用时间长？</summary><div><p>aging期间主要占用电芯、tray和rack/storage position。AGV只可能在送入和取出时执行短时运输任务。</p></div></details>
+    <details><summary>Q5. EoL为什么可能带来多条物流分支？</summary><div><p>测试结果可能用于分类或剔除。但具体是否复测、如何隔离、以单颗还是整盘分流仍需确认。</p></div></details>
+  </section>
+
+  <section class="section">
+    <h2>12. 你的Day 2复述任务</h2>
+    <p>今天只需要用自己的话回答四题：</p>
+    <div class="template">1. Formation到底改变了电芯的什么？为什么不是普通充电？
+2. Room-temperature aging期间，什么东西长期被占用？主要观察什么？
+3. EoL testing测量什么，并可能怎样改变电芯后续去向？
+4. 请举一个“工艺路线变化导致物流任务变化”的例子。</div>
+    <div class="checkpoint"><strong>进入Day 3的条件：</strong>你能把四个问题讲清，并能指出一句话中哪些是文献事实、哪些只是物流推断。无需记住温度、天数或C-rate等数字。</div>
+  </section>
+
+  <section class="section">
+    <h2>13. 核心来源与引用边界</h2>
+    <div class="source"><strong>Kampker et al. (2023)</strong>, “Optimizing the Cell Finishing Process: An Overview of Steps, Technologies, and Trends,” <i>World Electric Vehicle Journal</i> 14(4), 96. DOI: 10.3390/wevj14040096。重点：Sections 2–2.3.2，PDF pp. 2–10。<br><a href="https://publications.rwth-aachen.de/record/955832/files/955832.pdf">RWTH Open Access PDF</a></div>
+    <div class="source"><strong>Plumeyer et al. (2023)</strong>, “A Review of Process Innovations in the Cell Finishing of Lithium-Ion Batteries in Large-Scale Production,” CPSL 2023. DOI: 10.15488/13476。重点：Sections 3.1–3.5，PDF pp. 3–6。<br><a href="https://publications.rwth-aachen.de/record/956678/files/956678.pdf?version=1">RWTH Open Access PDF</a></div>
+    <p class="mini">文中时间、温度和工艺参数用于理解论文所述范围，不作为本研究未来模型的默认参数。物流含义均明确区分为论文直接陈述与条件性工程推断。</p>
+  </section>
+
+  <p class="footer">Week 03 Day 2 · Cell finishing process learning guide · Editable HTML source retained in the repository.</p>
+</main>
+</body>
+</html>
