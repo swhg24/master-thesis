@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 04 Day 3｜最强反例与 Problem-area 审计</title>
+  <style>
+    :root{--ink:#17212b;--muted:#536270;--paper:#f6f3ec;--card:#fffdf8;--navy:#173b57;--blue:#2d6f93;--green:#2f7256;--amber:#a96516;--red:#9a3f3f;--line:#d7d1c5;--softblue:#eaf3f7;--softgreen:#eaf4ee;--softamber:#fff2dd;--softred:#f9e9e7}
+    *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}
+    header{background:linear-gradient(130deg,#112f45,#255f79);color:#fff;padding:52px 7vw 42px} header p{max-width:920px;margin:12px 0 0;color:#e4eef3;font-size:1.05rem}.eyebrow{font-weight:700;letter-spacing:.09em;color:#b9dbe8}h1{font-size:clamp(2rem,4vw,3.35rem);line-height:1.15;margin:.25rem 0}
+    .nav{position:sticky;top:0;z-index:2;display:flex;gap:8px;overflow:auto;padding:10px 5vw;background:#fffdf8eF;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}.nav a{white-space:nowrap;text-decoration:none;color:var(--navy);font-size:.88rem;padding:5px 9px;border-radius:999px}.nav a:hover{background:var(--softblue)}
+    main{max-width:1080px;margin:auto;padding:30px 22px 70px}section{scroll-margin-top:64px;margin:0 0 40px}h2{color:var(--navy);font-size:1.65rem;border-bottom:2px solid #bdcdd5;padding-bottom:7px}h3{color:#24546f;margin-top:26px}h4{margin-bottom:5px}.lead{font-size:1.09rem}.muted{color:var(--muted)}
+    .card,.checkpoint,.warning,.teacher{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin:15px 0;box-shadow:0 3px 13px #1626360a}.checkpoint{border-left:6px solid var(--green);background:var(--softgreen)}.warning{border-left:6px solid var(--amber);background:var(--softamber)}.teacher{border-left:6px solid var(--blue);background:var(--softblue)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}.grid .card{margin:0}.tag{display:inline-block;font-size:.76rem;font-weight:800;letter-spacing:.03em;border-radius:999px;padding:3px 9px;margin:2px}.fact{background:var(--softgreen);color:var(--green)}.author{background:var(--softblue);color:var(--navy)}.inference{background:var(--softamber);color:#7b4b10}.unknown{background:var(--softred);color:var(--red)}
+    table{width:100%;border-collapse:collapse;background:var(--card);font-size:.94rem;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;vertical-align:top}th{background:#e8eef1;color:var(--navy);text-align:left}.scroll{overflow-x:auto}
+    .flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:18px 0}.node{flex:1 1 150px;min-width:140px;background:#fff;border:2px solid #91afbd;border-radius:10px;padding:12px;text-align:center}.arrow{align-self:center;font-size:1.4rem;color:var(--blue)}
+    .formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#182b38;color:#ecf5f8;border-radius:10px;padding:14px 18px;overflow:auto}.quote{border-left:4px solid #9db3be;padding:8px 15px;color:#394b56;background:#f1f4f4}.small{font-size:.88rem}details{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 14px;margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--navy)}a{color:#17658e}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.yes{color:var(--green);font-weight:700}.no{color:var(--red);font-weight:700}ol li,ul li{margin:6px 0}@media(max-width:720px){.two{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}header{padding:38px 22px}.nav{padding-left:12px}}
+    @media print{.nav{display:none}body{background:white}section{break-inside:avoid}.card{box-shadow:none}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">MASTER THESIS · WEEK 04 · DAY 3</div>
+  <h1>最强反例与 Problem-area 审计</h1>
+  <p>今天不是“找缺口”。我们用一篇最接近本课题的同行评审研究，检查已有研究究竟已经做到哪里；再把它没有报告的内容整理成待查问题，而不是直接宣布 research gap。</p>
+</header>
+<nav class="nav"><a href="#route">学习路线</a><a href="#bridge">接住Day 2</a><a href="#paper">核心论文</a><a href="#model">配置模型</a><a href="#counter">反例审计</a><a href="#difference">两种模型</a><a href="#areas">四类问题区</a><a href="#chain">证据链</a><a href="#test">自测</a><a href="#task">复述任务</a></nav>
+<main>
+
+<section id="route">
+  <h2>0. 今天只学会一件事</h2>
+  <div class="checkpoint"><strong>中心学习问题：</strong>当一篇强文献已经连接了 cell-finishing 的产品、工艺、设备、参数、物理接口和部分 intralogistics 时，我们还能诚实地说什么问题尚未被它回答？</div>
+  <p>这句话可能有点长。拆成白话就是：</p>
+  <div class="flow">
+    <div class="node"><strong>先看它做了什么</strong><br><span class="small">不带着“我要找gap”的预设</span></div><div class="arrow">→</div>
+    <div class="node"><strong>再看它推翻了什么</strong><br><span class="small">主动修正我们原来的猜测</span></div><div class="arrow">→</div>
+    <div class="node"><strong>最后记录没回答什么</strong><br><span class="small">只叫problem area / unknown</span></div>
+  </div>
+  <div class="teacher"><strong>建议学习顺序：</strong>第一次只读第0—6节。读完后先回答最后的复述任务1，不要一次回答全部问题。第7—10节可在口头检查后再回看。</div>
+</section>
+
+<section id="bridge">
+  <h2>1. 从 Day 2 接过来：我们已经知道什么</h2>
+  <div class="grid">
+    <div class="card"><span class="tag fact">已学会</span><h3>工艺流 ≠ 运输技术</h3><p>资料写了电芯经过 filling、formation、aging、testing，不代表它已经说明由 AGV、输送线还是人工搬运。</p></div>
+    <div class="card"><span class="tag fact">已学会</span><h3>Carrier 不只是箱子</h3><p>它可能承载、保持位置、施压、连接电极与通道，并进入工艺设备。因此运输对象本身可能是工艺接口。</p></div>
+    <div class="card"><span class="tag fact">已学会</span><h3>自动化有不同层</h3><p>运输自动化、formation接触自动化、数据采集自动化和整线自动化不能互相替代。</p></div>
+    <div class="card"><span class="tag unknown">仍未知</span><h3>研究是否已连接这些层</h3><p>Day 2资料披露不足，不等于整个研究领域都没有做过。Day 3必须找最强反例。</p></div>
+  </div>
+  <div class="warning"><strong>最重要的逻辑：</strong>“我读的这几份资料没写”只能得到“这些资料没有建立”，不能得到“系统不存在”，也不能得到“所有研究都没有”。</div>
+</section>
+
+<section id="paper">
+  <h2>2. 今天的最强反例：Deng et al. (2026)</h2>
+  <div class="card">
+    <p><strong>文献：</strong>Deng, S., Wieskamp, J., Born, H. C., Heimes, H. H., &amp; Kampker, A. (2026). <em>Modeling flexible configuration of cell finishing for future battery production research</em>. Robotics and Computer-Integrated Manufacturing, 98, 103119. DOI: 10.1016/j.rcim.2025.103119.</p>
+    <p><strong>来源类型：</strong><span class="tag fact">同行评审</span><span class="tag fact">cell finishing直接相关</span><span class="tag fact">真实规划案例</span><span class="tag author">配置设计研究</span></p>
+    <p><strong>官方入口：</strong><a href="https://publications.rwth-aachen.de/record/1017996">RWTH Publications记录与开放全文</a></p>
+  </div>
+  <p>它为什么是“最强反例”？因为它不只是提到 battery 和 logistics，而是用 FFB Fab 的方形电芯 cell-finishing 规划案例，把多个领域放进同一个配置方法：</p>
+  <div class="formula">配置 S = f(PM, CM, EM, AM, IM)
+
+PM = product model（产品/电芯设计）
+CM = process model（cell-finishing工艺）
+EM = equipment model（设备）
+AM = process-parameter model（工艺参数）
+IM = interrelation model（以上对象之间的关系）</div>
+  <p class="small muted">依据：摘要与第3节，尤其论文pp.1、3–4。这里的字母解释按作者模型转述。</p>
+
+  <h3>2.1 这篇论文解决的不是“AGV怎么调度”</h3>
+  <p>作者的目标是在早期工厂规划阶段，根据电芯设计、工艺要求、设备和参数之间的关系，形成并比较可行的 cell-finishing 配置。案例以方形电芯为对象，得到22个模块、42个独立子系统和8种配置方案。</p>
+  <div class="two">
+    <div class="checkpoint"><strong>它直接研究：</strong>模块怎么选、工艺与设备怎么关联、哪些物理接口必须匹配、不同工厂配置在能耗/空间/灵活性上如何比较。</div>
+    <div class="warning"><strong>它不等于直接研究：</strong>移动机器人路径、实时派单、车队规模、每次交接事件、堵塞传播或异常运输恢复。</div>
+  </div>
+  <p>所以它既与我们高度相关，又不等于我们的 Week 03 事件流模型。理解这种“相关但研究层级不同”，是今天的重点。</p>
+</section>
+
+<section id="model">
+  <h2>3. 论文究竟已经覆盖了什么</h2>
+
+  <h3>3.1 从电芯设计到设备配置</h3>
+  <div class="flow">
+    <div class="node"><strong>Product</strong><br>电芯格式、外部特征等</div><div class="arrow">→</div>
+    <div class="node"><strong>Process</strong><br>filling、formation、aging、testing等</div><div class="arrow">→</div>
+    <div class="node"><strong>Equipment</strong><br>完成工艺与测量的设备组件</div><div class="arrow">→</div>
+    <div class="node"><strong>Configuration</strong><br>选择与排列模块</div>
+  </div>
+  <p>作者用模块化与知识库设计，把“某种电芯需要什么工艺、工艺又需要什么设备”显式关联起来；再用 DSM（Design Structure Matrix）和 Simulink 展示配置。</p>
+  <p><span class="tag fact">文献事实</span>案例约束包括基本工艺、电芯设计和场地空间；模型输出8种可能的工厂配置。依据：第3–5节，pp.3–10。</p>
+
+  <h3>3.2 它确实写了 physical interface</h3>
+  <div class="card">
+    <p>论文第3.2节（p.3）明确指出：</p>
+    <ul>
+      <li>电芯极耳与充放电通道之间构成物理接口；</li>
+      <li>formation tray 是电芯夹具，并可对电芯施加受控压力；</li>
+      <li>托盘内部层与电芯壳体之间也是物理接口。</li>
+    </ul>
+  </div>
+  <p>这直接修正了一个过于简单的想法：<strong>formation tray不只是把若干电芯从A搬到B的物流容器</strong>。在这个案例模型里，它同时参与保持与施压，并与产品和设备形成接口。</p>
+
+  <h3>3.3 它确实纳入了 intralogistics transitions</h3>
+  <p>论文Fig. 11及其说明（p.6）把白色元素标为厂内物流转换。所列子系统包括：</p>
+  <ul>
+    <li>从 assembly 接收电芯并送入 clean &amp; dry room；</li>
+    <li>从 assembly 装载电芯到 warehouse；</li>
+    <li>工艺中的称重、注液、绝缘测试、临时封口、清洗和复称；</li>
+    <li>把电芯装入 formation tray。</li>
+  </ul>
+  <p>此外，论文讨论将独立特殊设备通过 <strong>stacker crane transport</strong> 接入产线（p.9）。所以“这篇研究完全不考虑物流”明显不成立。</p>
+  <div class="warning"><strong>边界：</strong>“存在intralogistics transition”和“论文完整规定了运输设备、路线、交接动作与运行控制”不是同一句话。前者有证据，后者没有被上述内容自动证明。</div>
+
+  <h3>3.4 它也考虑了质量与安全测量</h3>
+  <p>第3.2节说明，一些测量可以是可选或重复的，但部分安全相关测量可能要求100%检查。作者举例包括封口后的泄漏测试，以及 formation/aging 期间用于发现异常升温的温度测量（pp.3–4）。</p>
+  <p><span class="tag fact">直接支持</span> 配置设计需要考虑这些测量模块。<br><span class="tag unknown">没有自动支持</span> 发生泄漏、过热或不合格后，AGV如何隔离、把载具送往哪里、谁发出恢复指令。</p>
+</section>
+
+<section id="counter">
+  <h2>4. 强反例审计：哪些候选说法被推翻了</h2>
+  <p>反例不是来“阻碍我们找gap”的。它帮助我们避免写出Thomas一问就倒的宽泛结论。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>我们可能会说的话</th><th>Deng 2026带来的证据</th><th>审计结果</th><th>更诚实的改写</th></tr></thead>
+    <tbody>
+      <tr><td>Cell-finishing研究没有连接工艺与厂内物流。</td><td>模型含intralogistics transitions、装入formation tray和部分堆垛机运输。</td><td class="no">被反驳／太宽</td><td>至少已有配置研究把工艺模块与部分厂内物流转换放在同一规划模型中。</td></tr>
+      <tr><td>既有研究把carrier只当被动容器。</td><td>formation tray作为夹具施加受控压力，并形成多个物理接口。</td><td class="no">被反驳</td><td>直接配置研究已表达carrier的工艺与物理接口功能。</td></tr>
+      <tr><td>既有研究没有表达产品—设备物理接口。</td><td>作者明确建模极耳—充放电通道、tray—cell housing接口。</td><td class="no">被反驳</td><td>物理接口已被纳入配置知识；具体交接机制是否充分需继续查。</td></tr>
+      <tr><td>这篇论文已经完整解决mobile transport运行问题。</td><td>论文主要输出模块配置并比较能耗、空间、灵活性；未报告AGV实时运行模型。</td><td class="yes">同样不能成立</td><td>论文支持规划层配置，但从本文证据尚不能确认移动运输资源与事件层运行细节。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="checkpoint"><strong>你今天要掌握的研究动作：</strong>先把宽说法交给最强反例攻击。被反驳后，不是换词硬保留“gap”，而是缩小主张，并把剩余未知变成下一轮检索问题。</div>
+</section>
+
+<section id="difference">
+  <h2>5. 最容易混淆：配置模型与运行事件模型</h2>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>Deng的configuration model</th><th>Week 03的conditional event model</th></tr></thead>
+    <tbody>
+      <tr><th>核心问题</th><td>工厂应该由哪些工艺/测量/设备模块组成并怎样组合？</td><td>一盘载具何时提出运输请求、怎样被接走、交付、接收和等待？</td></tr>
+      <tr><th>典型时间尺度</th><td>规划与重配置阶段。</td><td>生产运行中的单次或连续事件。</td></tr>
+      <tr><th>主要对象</th><td>产品、工艺、设备、参数、关系与模块。</td><td>cell/tray、工位、buffer、transport resource与事件状态。</td></tr>
+      <tr><th>能回答</th><td>哪些模块可行；接口与约束怎样影响配置；方案如何比较。</td><td>何时移动；等在哪里；交接是否完成；延迟如何传播。</td></tr>
+      <tr><th>不能自动回答</th><td>每次运输的实时派单、等待、阻塞、异常恢复。</td><td>整厂模块选择为何合理；所有产品—设备技术关系。</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>两者不是竞争关系，而是上下层关系。</strong>配置模型告诉我们“系统有哪些模块和接口”；运行模型才可能进一步问“这些模块在时间中怎样协同”。但后者是否值得成为论文方法，要等Week 04完成证据审计后再决定。</p>
+</section>
+
+<section id="areas">
+  <h2>6. 从证据中提取四类 problem areas</h2>
+  <p>下面的“问题区”不是四个已经成立的research gaps，而是四组需要继续核验的问题。每组都先写论文直接支持的内容，再写它没有回答的内容。</p>
+
+  <h3>6.1 Flow / configuration：流程与运输怎样耦合</h3>
+  <div class="card">
+    <p><span class="tag fact">已知</span> 论文配置中包含厂内物流转换、入料/出料过程和装入formation tray；入料/出料次数会影响clean &amp; dry room相关能耗。案例还要求从assembly及时接收电芯。（pp.4–7）</p>
+    <p><span class="tag inference">含义</span> 物流位置并非完全独立于工艺配置；模块放在哪里、进出受控环境几次，可能影响系统评价。</p>
+    <p><span class="tag unknown">仍待查</span> 每次移动由何种资源完成？运输时间、buffer容量、队列、blocking/starvation和移动资源容量怎样进入运行评价？</p>
+  </div>
+
+  <h3>6.2 Carrier / interface：载具怎样参与工艺与交接</h3>
+  <div class="card">
+    <p><span class="tag fact">已知</span> formation tray是夹具，可施加受控压力；电芯极耳、充放电通道、tray内层和cell housing之间存在物理接口；配置包含把电芯装入formation tray。（p.3, p.6）</p>
+    <p><span class="tag inference">含义</span> 运输系统不能只知道“载荷重量”；它还可能要保持接口状态，送到兼容设备，并支持装载/卸载。</p>
+    <p><span class="tag unknown">仍待查</span> tray在设备间是否始终不换载？handover怎样对准、锁定和确认？允许的误差、接口时间、失败检测与恢复怎样定义？</p>
+  </div>
+
+  <h3>6.3 Information：配置知识不等于生产追溯</h3>
+  <div class="card">
+    <p><span class="tag fact">已知</span> 作者的知识库和DSM表达产品、工艺、设备、参数及相互关系，用于选择和组合配置。（第3节）</p>
+    <p><span class="tag inference">含义</span> 这是“设计时知道什么与什么兼容”的信息层。</p>
+    <p><span class="tag unknown">仍待查</span> 运行时cell ID、tray ID、slot、formation channel、质量状态和目的地是否绑定？状态在MES、设备控制和运输控制之间怎样同步？错料如何阻止？</p>
+  </div>
+  <div class="warning"><strong>不要混淆：</strong>论文有knowledge database，不等于工厂已有实时traceability database。两者服务的时间阶段和问题不同。</div>
+
+  <h3>6.4 Exception / safety：检测异常不等于运输异常处置</h3>
+  <div class="card">
+    <p><span class="tag fact">已知</span> 论文把泄漏检测和formation/aging温度测量列为安全相关测量，并讨论100%检查的必要性。（pp.3–4）</p>
+    <p><span class="tag inference">含义</span> 电芯状态会影响后续流程；检测结果可能形成正常流以外的分支。</p>
+    <p><span class="tag unknown">仍待查</span> reject、retest、quarantine怎样产生运输任务？过热电芯在运输途中如何处理？载具/机器人/消防或产线控制之间由谁负责？</p>
+  </div>
+  <p class="muted">Thomas提到thermal runaway，是导师给出的battery-specific problem示例。它值得检索，但目前不是已确定的论文主题，也不能仅靠这篇配置论文证明其运输处置方式。</p>
+</section>
+
+<section id="chain">
+  <h2>7. 怎样把 problem area 写成合格证据链</h2>
+  <p>以“carrier/handover”为例，严格写法如下：</p>
+  <div class="formula">问题陈述：carrier是工艺接口，因此交接可能不只是位置搬运。
+↓
+来源：Deng et al. (2026), Section 3.2, p.3；Fig.11相关说明, p.6。
+↓
+直接证据：formation tray可作为夹具施压；存在cell–tray–charging channel物理接口；配置包含loading onto formation tray。
+↓
+电池制造含义：carrier状态与formation设备的工艺连接有关。
+↓
+机器人含义（工程推断）：运输/交接设计可能要满足设备兼容、定位、锁定或状态确认。
+↓
+未知：本文是否规定具体handover机构、定位容差、确认信号和故障恢复？尚未建立。
+↓
+下一步：检索设备/专利/直接案例，而不是写“研究缺口已经成立”。</div>
+  <h3>四种标签必须分开</h3>
+  <div class="grid">
+    <div class="card"><span class="tag fact">文献事实</span><p>作者文本、图表或数据直接表达的内容，要给页码/章节。</p></div>
+    <div class="card"><span class="tag author">作者判断</span><p>例如作者对既有研究不足的总结；可以引用，但仍需独立反例审计。</p></div>
+    <div class="card"><span class="tag inference">我们的推断</span><p>从事实推出的工程含义，必须写“可能”“意味着需要检查”。</p></div>
+    <div class="card"><span class="tag unknown">未知</span><p>本文没有报告或我们尚未找到；未知不是系统不存在，也不是gap。</p></div>
+  </div>
+</section>
+
+<section id="limits">
+  <h2>8. 这篇论文自己报告了哪些局限</h2>
+  <ul>
+    <li>要识别“最优”配置，还需要更多约束与优先级。</li>
+    <li>数据库尚缺详细设备采购成本与能耗数据，作者计划后续补充。（p.10）</li>
+    <li>方形电芯案例因formation期间活化排气和中间注液而更复杂；方法迁移到圆柱/软包时，需要调整参考流程并更新数据库关系。（pp.9–10）</li>
+    <li>作者提出未来在近系列原型环境继续测试。</li>
+  </ul>
+  <div class="warning"><strong>谨慎：</strong>作者报告的局限是“这项研究下一步需要什么”，不一定就是“我们的硕士论文应该研究什么”。我们还要考虑Thomas的方向、公开数据、验证可行性和Master-Thesis工作量。</div>
+</section>
+
+<section id="test">
+  <h2>9. 自测：先判断，再展开答案</h2>
+  <details><summary>Q1. Deng论文出现intralogistics transition，能否证明cell finishing中使用AGV？</summary><p>不能。它证明配置模型纳入部分厂内物流转换；论文还在特定集成情形提到stacker crane。但若没有明确写AGV/AMR，不能把未指定的物流转换改写成AGV。</p></details>
+  <details><summary>Q2. formation tray能施压，是否说明它绝不是运输载具？</summary><p>不能。一个对象可以同时是运输载体和工艺夹具。正确问题是：它在哪些环节承担哪种功能，以及转运时哪些接口状态需要保持。</p></details>
+  <details><summary>Q3. 论文已有物理接口模型，是否说明handover问题已被完整解决？</summary><p>不能。知道哪些对象需要匹配，是配置层知识；具体如何对准、锁定、确认、失败和恢复，是更细的设备或运行层问题。</p></details>
+  <details><summary>Q4. 文中写到温度监测，是否证明已有thermal-runaway运输应急方案？</summary><p>不能。温度测量说明安全状态需要被检测；运输途中的隔离、停车、转移、灭火和责任分配仍需直接证据。</p></details>
+  <details><summary>Q5. 我们现在能否写“研究缺口是缺少AGV调度模型”？</summary><p>还不能。当前只能说这篇配置研究没有报告AGV运行与调度细节。还需查找AGV、物料流仿真、设备集成和相邻案例中的反例，并判断这一问题是否重要、可研究、可验证。</p></details>
+  <details><summary>Q6. 为什么最强反例是好事？</summary><p>它删除站不住的宽泛说法，显示已有研究真实达到的深度，也让剩余问题变得更具体。论文贡献靠清楚边界，而不是靠忽略反例。</p></details>
+</section>
+
+<section id="task">
+  <h2>10. 你的 Day 3 复述任务</h2>
+  <p>不要一口气回答全部。我们继续沿用前两天有效的节奏：<strong>一次只回答一个问题，我根据你的回答继续拆解。</strong></p>
+  <div class="teacher">
+    <h3>现在只回答任务1</h3>
+    <p><strong>有人说：“现有cell-finishing研究根本没有把工艺和厂内物流放在一起研究。”</strong></p>
+    <p>你认为 Deng 2026 能不能反驳这句话？请只用两句话回答：</p>
+    <ol>
+      <li>它具体把哪一种物流内容放进了cell-finishing配置？</li>
+      <li>但它仍不能证明哪一种更细的运输内容？</li>
+    </ol>
+  </div>
+  <h3>任务2（等任务1通过后再做）</h3>
+  <p>为什么“formation tray是物流载具”和“formation tray是工艺接口”可以同时成立？</p>
+  <h3>任务3（之后再做）</h3>
+  <p>从flow、carrier/interface、information、exception四类中选一类，用“已知—含义—未知”复述。</p>
+  <h3>任务4（最后再做）</h3>
+  <p>解释为什么“这篇论文没有写AGV handover”目前只是source boundary，而不是research gap。</p>
+  <div class="checkpoint"><strong>Day 3最低完成条件：</strong>你能说明Deng论文推翻了哪一个宽泛说法；能举出一个它已明确建模的接口；能指出一个它尚未报告的运行层问题；并能说清problem area为什么还不是research gap。</div>
+</section>
+
+<section id="boundary">
+  <h2>11. 今日结论卡</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>层级</th><th>今天可以说</th><th>今天不能说</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag fact">文献事实</span></td><td>Deng 2026已连接产品、cell-finishing工艺、设备、参数、物理接口和部分intralogistics transitions。</td><td>所有cell-finishing工厂都按该配置运行。</td></tr>
+      <tr><td><span class="tag inference">当前推断</span></td><td>运行层的运输、handover、信息同步和异常分支值得继续定向检索。</td><td>这些内容在整个文献中一定不存在。</td></tr>
+      <tr><td><span class="tag unknown">证据未知</span></td><td>本文没有为我们建立完整的mobile transport事件、资源和异常恢复逻辑。</td><td>因此AGV仿真或调度一定是最终课题。</td></tr>
+      <tr><td><span class="tag author">阶段决定</span></td><td>四类问题区先作为检索地图，并继续找反例。</td><td>今天宣布最终research gap或开始仿真。</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small muted">本讲义是项目学习材料，不是论文正文。事实性内容以Deng et al. (2026)原文为准；页码为期刊PDF页码。正式写作时仍需按最新、经导师确认的PEM引用规范录入文献管理系统。</p>
+</section>
+
+<section id="recap">
+  <h2>12. 本轮带教复盘（2026-08-07）</h2>
+  <p>本轮仍采用“一次一个判断”的口头检查。以下记录学习过程，不属于论文研究结果。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>检查点</th><th>学生形成的理解</th><th>带教修正</th></tr></thead>
+    <tbody>
+      <tr><td>最强反例</td><td>Deng能够反驳“研究完全没连接工艺与物流”；但不能确认运输设备是否为AGV。</td><td>formation tray作为夹具属于carrier/interface证据；更直接的物流证据是intralogistics transitions、入库/进入洁净干燥间及loading onto formation tray。</td></tr>
+      <tr><td>双重属性</td><td>formation tray既是具体carrier，也有夹具施压功能。</td><td>不是“工序后”施压，而是在进入并处于formation工序时作为夹具参与工艺。</td></tr>
+      <tr><td>已知—含义—未知</td><td>已知夹具施压；交接有接口含义；具体接触、交接和工序间流动未知。</td><td>承担工艺功能的是被运输的tray，不应把该功能归给AGV或运输系统。</td></tr>
+      <tr><td>Source boundary</td><td>单篇论文没写，不能证明工业界没做，也不能直接称为gap。</td><td>还需检查其他论文、专利、设备资料和工业案例，并评估重要性、方法与验证可行性。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="checkpoint"><strong>本轮判断：</strong>Day 3最低目标已达到。学生能够用强反例修正宽泛结论，区分carrier身份与接口功能，并区分source boundary与research gap。其余flow、information和exception问题区暂作检索地图，不要求一次背诵；可以进入Day 4技术边界检查。</div>
+</section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Week 04 Day 4｜Humanoid 与 AGV 的任务边界</title>
+  <style>
+    :root{--ink:#17212b;--muted:#566571;--paper:#f5f2ea;--card:#fffdf8;--navy:#153c59;--blue:#2d7095;--green:#2f7154;--amber:#a36316;--red:#963e3e;--line:#d6d0c5;--sb:#eaf3f7;--sg:#e9f4ed;--sa:#fff1db;--sr:#f9e8e6}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}header{padding:52px 7vw 42px;background:linear-gradient(130deg,#102d43,#28677e);color:white}header p{max-width:950px;color:#e4eef2;font-size:1.05rem}.eyebrow{color:#b9dce7;font-weight:800;letter-spacing:.09em}h1{font-size:clamp(2rem,4vw,3.35rem);line-height:1.14;margin:.3rem 0}.nav{position:sticky;top:0;z-index:2;display:flex;gap:7px;overflow:auto;padding:10px 5vw;background:#fffdf8ee;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}.nav a{white-space:nowrap;text-decoration:none;color:var(--navy);font-size:.87rem;padding:5px 9px;border-radius:999px}.nav a:hover{background:var(--sb)}main{max-width:1080px;margin:auto;padding:30px 22px 72px}section{scroll-margin-top:65px;margin-bottom:40px}h2{color:var(--navy);border-bottom:2px solid #b9ccd5;padding-bottom:7px;font-size:1.65rem}h3{color:#245670;margin-top:25px}.lead{font-size:1.08rem}.muted{color:var(--muted)}.small{font-size:.88rem}.card,.teacher,.warning,.checkpoint{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin:14px 0;box-shadow:0 3px 13px #1626360a}.teacher{border-left:6px solid var(--blue);background:var(--sb)}.warning{border-left:6px solid var(--amber);background:var(--sa)}.checkpoint{border-left:6px solid var(--green);background:var(--sg)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}.grid .card{margin:0}.tag{display:inline-block;font-size:.75rem;font-weight:800;padding:3px 9px;border-radius:999px;margin:2px}.direct{background:var(--sg);color:var(--green)}.adjacent{background:var(--sa);color:#7a4910}.vendor{background:var(--sb);color:var(--navy)}.unknown{background:var(--sr);color:var(--red)}table{border-collapse:collapse;width:100%;background:var(--card);font-size:.93rem;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;vertical-align:top}th{background:#e7eef1;color:var(--navy);text-align:left}.scroll{overflow-x:auto}.flow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin:18px 0}.node{flex:1 1 145px;min-width:135px;text-align:center;background:white;border:2px solid #91adbb;border-radius:10px;padding:12px}.arrow{align-self:center;font-size:1.4rem;color:var(--blue)}.formula{background:#182c39;color:#edf5f7;border-radius:10px;padding:15px 18px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}details{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 14px;margin:10px 0}summary{cursor:pointer;color:var(--navy);font-weight:700}a{color:#17658e}ul li,ol li{margin:6px 0}@media(max-width:720px){.two{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}header{padding:38px 22px}.nav{padding-left:12px}}@media print{.nav{display:none}body{background:white}.card{box-shadow:none}}
+  </style>
+</head>
+<body>
+<header><div class="eyebrow">MASTER THESIS · WEEK 04 · DAY 4</div><h1>Humanoid 与 AGV：先拆任务，再谈技术</h1><p>今天不做“谁更先进”的排名。我们只检查：对cell-finishing carrier flow而言，humanoid是已有直接方案、可借鉴的相邻方案，还是尚未建立的技术设想？</p></header>
+<nav class="nav"><a href="#goal">今日目标</a><a href="#bridge">接住Day 3</a><a href="#trap">比较陷阱</a><a href="#task">拆解任务</a><a href="#evidence">案例证据</a><a href="#compare">受控比较</a><a href="#battery">电池边界</a><a href="#decision">阶段判断</a><a href="#test">自测</a><a href="#oral">复述任务</a></nav>
+<main>
+
+<section id="goal"><h2>0. 今天只学会一个判断方法</h2>
+  <div class="checkpoint"><strong>中心问题：</strong>一项工业任务究竟需要“移动”、需要“操作”，还是同时需要二者？只有先回答这个问题，才能判断AGV/AMR、固定自动化、mobile manipulator或humanoid谁值得进入候选方案。</div>
+  <div class="teacher"><strong>学习节奏：</strong>第一次先读0—5节，然后只回答任务1。不要背机器人参数，也不要一次完成整张比较表。今天的能力目标是会拆任务和审计证据。</div>
+</section>
+
+<section id="bridge"><h2>1. 从 Day 3 接过来</h2>
+  <p>Day 3已经说明formation tray可同时是carrier和工艺接口，但具体handover仍未知。于是很容易产生一个想法：</p>
+  <div class="formula">既然既要运输又可能要操作接口
+→ humanoid有腿也有手
+→ humanoid是不是比AGV更适合？</div>
+  <p>这个推理跳得太快。<strong>“有手”不等于任务需要人形双臂，“会走”也不等于它适合标准化托盘运输。</strong>我们必须先把当前任务拆开。</p>
+</section>
+
+<section id="trap"><h2>2. 为什么不能直接做“AGV vs humanoid”</h2>
+  <div class="grid">
+    <div class="card"><h3>比较对象不对称</h3><p>AGV/AMR主要解决移动运输；humanoid通常同时追求移动、感知与操作。若任务只需搬运标准载具，比较整机“灵活性”没有意义。</p></div>
+    <div class="card"><h3>评价标准尚未定义</h3><p>更灵活、更自动或更像人，不等于在产能、可靠性、安全、成本、洁净兼容和可验证性上更好。</p></div>
+    <div class="card"><h3>证据阶段可能不同</h3><p>量产部署、生产试点、实验室演示和企业未来计划不能放在同一等级。</p></div>
+    <div class="card"><h3>工业场景可能不同</h3><p>汽车钣金上料或零件排序能证明工业操作潜力，但不能直接证明适合formation tray或异常电芯运输。</p></div>
+  </div>
+  <div class="warning"><strong>正确顺序：</strong>task requirement → interface requirement → environment → evidence maturity → candidate technology。不是先选热门机器人，再为它寻找应用。</div>
+</section>
+
+<section id="task"><h2>3. 把 current carrier-flow task 拆成五个动作</h2>
+  <div class="flow"><div class="node"><strong>1 取得任务</strong><br>知道取什么、从哪里取</div><div class="arrow">→</div><div class="node"><strong>2 接近载具</strong><br>到达pickup位置</div><div class="arrow">→</div><div class="node"><strong>3 接载/取放</strong><br>支承、抓取或接受tray</div><div class="arrow">→</div><div class="node"><strong>4 搬运</strong><br>保持载荷并移动</div><div class="arrow">→</div><div class="node"><strong>5 交付确认</strong><br>放置、对接、状态确认</div></div>
+  <p>现在问每一步是否真的需要人的身体形式：</p>
+  <div class="scroll"><table><thead><tr><th>动作</th><th>当前Week 03/04证据</th><th>是否已证明需要双足双臂</th><th>仍需知道</th></tr></thead><tbody>
+    <tr><td>导航移动</td><td>条件模型需要pickup—transport—delivery。</td><td><span class="tag unknown">没有</span></td><td>路线、地面、受控环境、流量与障碍。</td></tr>
+    <tr><td>承载tray</td><td>tray装载多个电芯并可能参与formation。</td><td><span class="tag unknown">没有</span></td><td>质量、尺寸、重心、方向、固定方式。</td></tr>
+    <tr><td>handover</td><td>需要交付，但具体机构未建立。</td><td><span class="tag unknown">没有</span></td><td>滚筒移载、叉取、顶升、抓取还是人工接口。</td></tr>
+    <tr><td>设备操作</td><td>tray是工艺接口；不等于移动设备要操作它。</td><td><span class="tag unknown">没有</span></td><td>定位/锁紧由工位、载具还是运输设备完成。</td></tr>
+    <tr><td>异常处置</td><td>异常、隔离与thermal event是problem area。</td><td><span class="tag unknown">没有</span></td><td>异常对象是否允许机器人靠近、怎样隔离和防护。</td></tr>
+  </tbody></table></div>
+  <p><strong>关键点：</strong>handover需要操作，不代表一定由运输机器人上的“手”完成。它也可能由固定工位、自动滚筒、叉齿、顶升台或专用接口完成。目前不能选定。</p>
+</section>
+
+<section id="evidence"><h2>4. Humanoid 工业证据：不是零，但必须分级</h2>
+
+  <h3>4.1 Figure 02 × BMW：真实生产条件下的相邻证据</h3>
+  <div class="card"><p><span class="tag adjacent">汽车制造相邻案例</span><span class="tag direct">生产部署</span><span class="tag vendor">企业/工厂一手资料</span></p>
+    <p>BMW在2026年官方材料中说明，Figure 02于2025年在Spartanburg车身车间参与实际生产，在焊接工序前插入钣金件；BMW称其支持超过30,000辆BMW X3的生产，并认为该协作显示humanoid可在真实生产条件下完成精确、重复的工作步骤。</p>
+    <p>Figure自己的部署总结还报告了运行时长、装载零件数和工作班次。数字可用于描述<strong>这个汽车案例</strong>的部署规模，但不能外推为cell-finishing性能。</p>
+    <p class="small"><a href="https://www.press.bmwgroup.com/global/article/detail/T0458778EN/bmw-group-advances-the-use-of-physical-ai-in-production-with-figure-03-project-in-spartanburg">BMW官方材料（2026）</a> · <a href="https://www.figure.ai/news/production-at-bmw">Figure部署总结（2025）</a></p>
+  </div>
+  <p><strong>它证明：</strong>humanoid工业应用不再全是实验室概念；至少有汽车生产条件下的重复取放/上料部署。<br><strong>它不证明：</strong>该机器人运输formation tray、进入battery cell finishing、处理异常电芯，或优于AGV。</p>
+
+  <h3>4.2 Boston Dynamics Atlas：part sequencing 的直接开发证据</h3>
+  <div class="card"><p><span class="tag adjacent">汽车物流相邻案例</span><span class="tag vendor">供应商一手资料</span><span class="tag unknown">开发/部署扩展中</span></p>
+    <p>Boston Dynamics说明，其2025年的首个重点工业应用是汽车制造part sequencing；任务涉及不同尺寸、形状和重量零件的pick、carry和place。公司还报告在Hyundai工厂测试/部署，并持续扩大客户试点。</p>
+    <p class="small"><a href="https://bostondynamics.com/blog/atlas-evolution-from-research-robot-to-industrial-humanoid/">Atlas演进与工业部署说明</a> · <a href="https://bostondynamics.com/blog/getting-real-with-humanoids/">Getting Real with Humanoids</a></p>
+  </div>
+  <p><strong>它证明：</strong>humanoid可被开发用于不规则零件的感知、抓取、搬运与排序；这一能力与“移动＋操作”组合任务相关。<br><strong>它不证明：</strong>已经形成cell-finishing carrier-flow方案，也未给出与AGV完成同一tray任务的可比KPI。</p>
+
+  <h3>4.3 Tesla Optimus：目标与生产准备证据，不是cell-finishing案例</h3>
+  <div class="card"><p><span class="tag vendor">企业一手资料</span><span class="tag unknown">目标/生产准备</span></p>
+    <p>Tesla把Optimus定义为用于危险、重复或乏味任务的通用双足自主机器人。Tesla 2025年度更新说明Gen 3是首个面向规模生产的设计，并在准备首条生产线；这些资料建立了产品方向和生产准备状态。</p>
+    <p class="small"><a href="https://www.tesla.com/AI">Tesla AI &amp; Robotics</a> · <a href="https://ir.tesla.com/_flysystem/s3/sec/000162828026003837/tsla-20260128-gen.pdf">Tesla 2025年度更新，p.9</a></p>
+  </div>
+  <p><strong>它证明：</strong>Tesla正在开发并准备生产humanoid。<br><strong>它不证明：</strong>公开的一手资料已经验证Optimus在cell-finishing中运输formation tray。生产机器人本身与让机器人参与电芯生产是两件事。</p>
+
+  <h3>4.4 电池相关搜索命中为什么仍可能不纳入</h3>
+  <p>能检索到humanoid或协作机器人用于<strong>废旧电池包拆解</strong>的研究。但它属于recycling / remanufacturing、pack-level manipulation，研究对象、风险、工序和任务均不同于新电芯cell finishing。它可以作为机器人操作能力的相邻证据，不能作为本课题的直接方案。</p>
+  <div class="warning"><strong>范围纪律：</strong>同时出现“humanoid”和“lithium-ion battery”仍不够。必须检查cell manufacturing还是recycling、cell还是pack、运输还是拆解。</div>
+</section>
+
+<section id="compare"><h2>5. 按任务比较，而不是按机器人形象比较</h2>
+  <div class="scroll"><table><thead><tr><th>任务条件</th><th>AGV/AMR类移动平台</th><th>Humanoid</th><th>当前能否决策</th></tr></thead><tbody>
+    <tr><td>标准tray、固定pickup/drop-off、主要需求是水平运输</td><td>功能边界直接对应运输任务；可配专用顶升/滚筒/叉取接口。</td><td>双臂与双足能力可能超出任务需求。</td><td>倾向先检查专用移动方案，但缺实际接口数据，不能定案。</td></tr>
+    <tr><td>环境为人设计、站点分散、必须操作多种既有人工接口</td><td>单纯移动平台可能需要额外机械臂或站点改造。</td><td>人形结构的移动和操作组合可能有价值。</td><td>humanoid成为候选，但要用实际任务和部署证据验证。</td></tr>
+    <tr><td>稳定重复、高精度设备对接</td><td>专用机械接口可能更容易定义和验证。</td><td>灵活操作不自动等于更稳定或更精确。</td><td>需要可靠性、容差和节拍证据；当前不能比较优劣。</td></tr>
+    <tr><td>异常电芯或thermal event</td><td>可通过专用防护载具/隔离路线设计，但当前证据未知。</td><td>远离人员可能是潜在价值，但机器人自身耐受与处置能力未知。</td><td>两者都缺本场景直接证据，不得宣称humanoid更安全。</td></tr>
+    <tr><td>clean/dry room或其他受控环境</td><td>需检查材料、颗粒、密封、维护和接口兼容。</td><td>关节与表面积更多可能增加验证问题，但这只是待查工程问题。</td><td>没有直接数据，保持未知。</td></tr>
+  </tbody></table></div>
+  <div class="checkpoint"><strong>一个重要候选：</strong>如果任务既需要移动又需要操作，真实候选不只有“AGV或humanoid”两个。还包括AMR＋机械臂、固定机械臂＋输送系统、专用移动机器人和站点侧自动handover。Day 4只画边界，不选赢家。</div>
+</section>
+
+<section id="battery"><h2>6. Battery-specific 检查：哪些要求会改变选择</h2>
+  <div class="grid">
+    <div class="card"><h3>载具兼具工艺功能</h3><p>formation tray可能施压并连接设备接口，因此不能把它视为普通纸箱。</p></div>
+    <div class="card"><h3>身份与状态绑定</h3><p>cell、slot、tray、channel和质量状态可能需要一致，但当前实时追溯证据未建立。</p></div>
+    <div class="card"><h3>异常流与隔离</h3><p>reject、retest、quarantine和异常温升可能产生非正常运输任务。</p></div>
+    <div class="card"><h3>受控环境与安全</h3><p>clean/dry room、颗粒、泄漏和热事件可能约束机器人形态与维护方式，需直接资料。</p></div>
+  </div>
+  <p>这些要求不会自动指向humanoid，也不会自动排除它们。它们的作用是形成下一步评价问题：</p>
+  <div class="formula">它能不能搬？ 只是第一问。
+它能否保持载具/电芯状态？
+它能否与设备可靠交接？
+它能否被追溯和控制？
+异常时系统怎样进入安全状态？
+这些能力是否有本场景证据？</div>
+</section>
+
+<section id="decision"><h2>7. Day 4 阶段判断</h2>
+  <div class="scroll"><table><thead><tr><th>判断</th><th>当前结论</th><th>证据边界</th></tr></thead><tbody>
+    <tr><td>humanoid是否已有工业应用？</td><td><span class="tag direct">是</span> 汽车生产中已有真实条件下的取放/上料部署，另有part-sequencing开发和工厂测试。</td><td>案例数据主要来自企业与工厂一手披露，并非同一套独立学术评价。</td></tr>
+    <tr><td>是否已有cell-finishing carrier-flow直接案例？</td><td><span class="tag unknown">Not established</span></td><td>本轮定向检索未找到，不等于全球不存在。</td></tr>
+    <tr><td>能否说humanoid比AGV更灵活？</td><td>只能按具体任务说其具备移动＋操作的潜在能力。</td><td>不能把一般能力直接转化为本场景产能、可靠性、成本或安全优势。</td></tr>
+    <tr><td>是否应把humanoid设为论文主线？</td><td><span class="tag adjacent">目前不应</span></td><td>保持为technology-boundary counterexample；除非后续出现直接证据或Thomas明确调整范围。</td></tr>
+    <tr><td>AGV是否已被选定？</td><td><span class="tag unknown">也没有</span></td><td>当前连实际handover architecture和transport equipment都尚未建立。</td></tr>
+  </tbody></table></div>
+  <div class="warning"><strong>这不是技术否定：</strong>“不把humanoid设为当前主线”只是证据与任务匹配判断，不是说humanoid没有工业价值或未来不会进入电池工厂。</div>
+</section>
+
+<section id="test"><h2>8. 自测</h2>
+  <details><summary>Q1. Figure 02在BMW真实生产线上工作，能否成为cell-finishing直接证据？</summary><p>不能。它是强工业部署证据，但工序是汽车车身钣金件上料，不是电芯制造或formation tray运输。因此属于adjacent industrial evidence。</p></details>
+  <details><summary>Q2. Atlas能pick、carry、place不规则零件，能否证明它比AGV更适合tray运输？</summary><p>不能。它证明移动与操作组合能力；标准tray运输是否需要这些能力、可靠性和代价如何，均需同任务比较。</p></details>
+  <details><summary>Q3. 为什么handover未知时不能直接选择humanoid？</summary><p>因为handover可能由固定设备或专用机构完成，未必需要机器人手臂。必须先知道托盘与工位实际怎样连接。</p></details>
+  <details><summary>Q4. 没找到cell-finishing humanoid案例，可以说存在research gap吗？</summary><p>不能。本轮检索边界、数据库覆盖和未公开工业实践都会影响结果。还要判断该技术问题是否重要、是否已有其他解决方案、是否可验证。</p></details>
+  <details><summary>Q5. AGV和humanoid谁更好？</summary><p>问题没有给定具体任务和评价标准，因此不可回答。对标准点到点载具运输与对多样化人工接口操作，答案可能不同。</p></details>
+</section>
+
+<section id="oral"><h2>9. 你的 Day 4 复述任务</h2>
+  <p>仍然一次只回答一个。</p>
+  <div class="teacher"><h3>现在只回答任务1</h3>
+    <p>有人说：</p><p><strong>“Figure 02已经在BMW生产线上工作，所以humanoid已经是cell-finishing carrier transport的成熟直接方案。”</strong></p>
+    <p>你同意吗？请只回答两点：</p>
+    <ol><li>BMW案例能够直接证明什么？</li><li>它为什么仍不是本课题的直接证据？</li></ol>
+  </div>
+  <h3>任务2（任务1通过后）</h3><p>为什么“handover需要操作”不等于“必须使用humanoid”？</p>
+  <h3>任务3（之后再做）</h3><p>说出一种更适合优先检查AGV/AMR的任务条件，以及一种值得把humanoid列为候选的任务条件。</p>
+  <h3>任务4（最后）</h3><p>解释为什么现在既没有选定humanoid，也没有选定AGV。</p>
+  <div class="checkpoint"><strong>Day 4最低完成条件：</strong>能区分humanoid工业部署证据与cell-finishing直接证据；能把任务拆成移动和操作；能说明未知handover为何阻止技术选型；能将humanoid保持为相邻技术边界而不是当前主线。</div>
+</section>
+
+<section id="sources"><h2>10. 证据登记与使用边界</h2>
+  <div class="scroll"><table><thead><tr><th>来源</th><th>证据类型</th><th>本讲义使用方式</th></tr></thead><tbody>
+    <tr><td>BMW Group, Figure 03 project / Figure 02回顾, 2026</td><td>工厂运营方一手新闻稿</td><td>支持汽车生产条件下的部署、任务和工厂方陈述。</td></tr>
+    <tr><td>Figure, BMW deployment results, 2025</td><td>机器人供应商一手案例</td><td>支持案例规模披露；数字仅限该案例，不作性能外推。</td></tr>
+    <tr><td>Boston Dynamics, Atlas industrial blogs, 2025–2026</td><td>供应商一手技术/部署说明</td><td>支持part sequencing、pick–carry–place与部署阶段；不替代独立验证。</td></tr>
+    <tr><td>Tesla AI与2025年度更新</td><td>企业产品页与官方财务更新</td><td>支持Optimus目标与生产准备，不支持cell-finishing应用。</td></tr>
+  </tbody></table></div>
+  <p class="small muted">资料核查日期：2026-08-07。本讲义为内部学习材料，不是论文正文。企业资料用于实现案例与成熟度边界，不能替代同行评审文献构建科学论证。正式引用前应使用经Thomas确认的最新PEM引用规范。</p>
+</section>
+
+<section id="recap"><h2>11. 本轮带教复盘（2026-08-07）</h2>
+  <p>本轮继续采用逐题口头检查。以下记录学生理解过程，不属于论文研究结论。</p>
+  <div class="scroll"><table><thead><tr><th>检查点</th><th>学生形成的理解</th><th>带教修正</th></tr></thead><tbody>
+    <tr><td>直接与相邻证据</td><td>BMW案例只能证明humanoid在汽车制造已有上下料部署；它不涉及电芯制造的cell finishing。</td><td>单一汽车任务的真实部署，也不能外推为humanoid对全部工业上下料任务普遍成熟。</td></tr>
+    <tr><td>Handover与机器人形态</td><td>托盘上下料未必需要humanoid的灵巧操作。</td><td>交接也可能由滚筒、顶升、叉取、固定机械臂或专用定位锁紧机构完成。</td></tr>
+    <tr><td>任务条件</td><td>标准对象、固定路线、无需复杂操作时优先检查AGV/AMR；对象多样、环境复杂且需移动与复杂操作时，humanoid才值得成为候选。</td><td>“优先检查/成为候选”不等于已经证明哪项技术最好。</td></tr>
+    <tr><td>尚不能选型</td><td>humanoid缺cell-finishing直接证据；实际运输系统与handover尚未确定。</td><td>不能把“缺AGV型号或调度算法”当作当前主要未知，因为我们甚至尚未确认应使用AGV；首先缺的是任务、设备类型和接口架构证据。</td></tr>
+  </tbody></table></div>
+  <div class="checkpoint"><strong>本轮判断：</strong>Day 4最低目标已达到。学生能够区分工业部署与cell-finishing直接证据，按移动/操作需求划分候选技术，并理解当前不能预设humanoid或AGV。下一步可在学生确认后进入Day 5综合、反例与周末决策。</div>
+</section>
+
+</main></body></html>

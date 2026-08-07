@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 04 Day 2 — 重建参考载具流配置</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6b7b;--paper:#f4f7f9;--line:#d7e1e8;--navy:#173b56;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff;--white:#fff;--graybg:#f0f3f6}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}main{max-width:1120px;margin:auto;padding:38px 22px 72px}.hero{padding:42px;border-radius:10px;background:linear-gradient(135deg,#173b56,#245e7d);color:#fff}.eyebrow{margin:0 0 10px;color:#bfe1f7;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-of-type{max-width:920px;margin:17px 0 0;color:#e3f0f7;font-size:17px}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}.nav a{padding:7px 11px;border:1px solid #bfd6e4;border-radius:999px;color:#eaf6fc;text-decoration:none;font-size:13px}.section{margin-top:22px;padding:28px 30px;background:var(--white);border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:20px 0 8px;font-size:18px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:17px 0}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card h3{margin:0 0 6px}.card p,.card ul{margin:7px 0 0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#efdca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.gray{background:var(--graybg);border-color:#d8e0e6}.teacher,.thesis,.warning,.source,.checkpoint{margin:17px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.checkpoint{background:var(--violetbg);border-color:var(--violet)}.legend{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.legend span{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700}.flow{display:flex;align-items:stretch;gap:8px;margin:19px 0;overflow-x:auto;padding-bottom:5px}.flow div{flex:1 0 145px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:15px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .factbox{background:#e7f5ed;border-color:#b9dcca}.flow .modelbox{background:#e8f2fb;border-color:#c8deef}.flow .inferbox{background:#fff4dc;border-color:#e8d49b;border-style:dashed}.flow .unknownbox{background:#fff0ef;border-color:#e4c4c1;border-style:dashed}.flow .interfacebox{background:#f1edff;border-color:#d8cdf2}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}.flow .dash{color:#a07119}table{width:100%;margin:17px 0;border-collapse:collapse;font-size:15px}th,td{padding:11px 12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}.fact{color:#176044;background:#dff2e8}.model{color:#174e7a;background:#dcecf8}.infer{color:#795108;background:#fff0c9}.unknown{color:#8c3431;background:#fde3e1}.boundary{color:#584091;background:#eae4fb}.question{margin:15px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.template{margin:15px 0;padding:17px 19px;border:1px dashed #8fa8bd;border-radius:7px;background:#fbfcfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;white-space:pre-wrap}.mini{font-size:14px;color:var(--muted)}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details>div{padding:0 14px 14px}code{padding:2px 5px;border-radius:4px;background:#eef2f5;color:#244b6e}.good{color:#176044;font-weight:700}.bad{color:#9e3d39;font-weight:700}ul,ol{padding-left:23px}.footer{margin-top:20px;color:var(--muted);font-size:13px}a{color:#1a5f91}@media(max-width:840px){.grid3,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){main{padding:16px 11px 44px}.hero,.section{padding:23px 18px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3,.grid4{grid-template-columns:1fr}table{font-size:14px}th,td{padding:8px}.nav{display:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Week 04 · Day 2 · 师兄带教导学笔记</p>
+    <h1>从零散证据到参考配置：<br>一条箭头怎样才有资格画出来？</h1>
+    <p>Day 1学会判断来源。Day 2开始重建cell-finishing carrier flow，但我们不会把不同论文拼成一座虚构工厂。今天分别学习生产流模型、载具—设备接口、人工配置和全自动配置，并把事实、模型表示、推断和未知画在不同层级。</p>
+    <nav class="nav"><a href="#goal">今日目标</a><a href="#bridge">接住Day 1</a><a href="#configuration">什么是配置</a><a href="#wanner">Wanner模型</a><a href="#carrier">Carrier接口</a><a href="#prefab">FFB PreFab</a><a href="#fab">FFB Fab</a><a href="#cards">配置卡</a><a href="#compare">对照</a><a href="#test">自测</a><a href="#task">复述任务</a></nav>
+  </header>
+
+  <section class="section" id="goal">
+    <h2>0. 今天学到什么就算完成？</h2>
+    <p class="lead">今天不是背设备参数。你需要学会从原始来源中重建“有边界的参考配置”，并知道哪条箭头不能画。</p>
+    <div class="grid4">
+      <div class="card blue"><h3>读懂对象</h3><p>分清cell、tray/product carrier、storage position和equipment channel。</p></div>
+      <div class="card green"><h3>读懂配置</h3><p>能解释至少一种人工配置和一种全自动配置的已知部分。</p></div>
+      <div class="card amber"><h3>读懂接口</h3><p>理解carrier可能不仅搬运，还承担存储、定位和设备接触。</p></div>
+      <div class="card violet"><h3>守住箭头</h3><p>能指出“全自动”为什么仍不能自动画成“AGV运输”。</p></div>
+    </div>
+    <div class="teacher"><strong>今天的学习顺序：</strong>先看一个来源内部能画出什么，再比较多个来源。绝不先画完整流程，然后到文献里寻找能够装饰箭头的句子。</div>
+  </section>
+
+  <section class="section" id="bridge">
+    <h2>1. 先接住Day 1：四个锚点今天怎样使用？</h2>
+    <table><thead><tr><th>Day 1锚点</th><th>Day 2把它变成什么</th><th>没有证据时怎么处理</th></tr></thead><tbody>
+      <tr><td><strong>Where</strong>：什么工序？</td><td>配置中的工序节点：soaking、formation、aging、testing等。</td><td>不补造顺序；标注process boundary unknown。</td></tr>
+      <tr><td><strong>What</strong>：什么在流动？</td><td>配置中的flow object：cell、tray、product carrier、rack。</td><td>不把tray、carrier、fixture默认当成同一个东西。</td></tr>
+      <tr><td><strong>How</strong>：怎样移动/等待？</td><td>人工搬运、自动化但未说明设备、柜体存储、高架仓库、设备接触等。</td><td>不把“fully automated”翻译成“AGV”。</td></tr>
+      <tr><td><strong>Evidence</strong>：来源是什么？</td><td>同行评审模型、综述、研究设施规划海报，以及各自的验证阶段。</td><td>规划、模型和现场运行必须分开写。</td></tr>
+    </tbody></table>
+    <div class="checkpoint"><strong>Day 1已掌握：</strong>没有写AGV不等于来源没用；没有写empty return不等于系统不存在空盘回流；direct证据只对某个具体主张负责。</div>
+  </section>
+
+  <section class="section" id="configuration">
+    <h2>2. 我们所说的“参考配置”到底是什么？</h2>
+    <p>参考配置不是某家工厂的完整数字孪生，也不是行业标准答案。它是根据一个明确来源，整理出的最小系统描述：</p>
+    <div class="flow"><div class="factbox"><b>Process</b>产品经历什么工序</div><div class="arrow">+</div><div class="factbox"><b>Flow object</b>什么对象被成组处理</div><div class="arrow">+</div><div class="factbox"><b>Equipment/storage</b>进入什么设备或存储</div><div class="arrow">+</div><div class="factbox"><b>Transfer/interface</b>怎样搬运与交接</div><div class="arrow">+</div><div class="factbox"><b>Evidence stage</b>模型、规划还是运行</div></div>
+
+    <h3>五个容易混淆的词</h3>
+    <table><thead><tr><th>词</th><th>在本项目中的意思</th><th>不能自动等同于</th></tr></thead><tbody>
+      <tr><td>Process flow</td><td>tray按模型或工艺顺序经过多个步骤。</td><td>物理路线、AGV路线或真实控制逻辑。</td></tr>
+      <tr><td>Carrier flow</td><td>载具在设备、存储与交接位置之间的状态和位置变化。</td><td>一定由移动机器人完成。</td></tr>
+      <tr><td>Fully automated</td><td>来源声称整个流程自动执行。</td><td>自动化设备类型、AGV使用或每个handover细节已经公开。</td></tr>
+      <tr><td>High-bay warehouse</td><td>高架存储系统或区域。</td><td>一定是哪一种AS/RS、堆垛机或穿梭车方案。</td></tr>
+      <tr><td>Reference configuration</td><td>有来源边界的学习与比较对象。</td><td>行业标准架构、目标工厂布局或最终仿真场景。</td></tr>
+    </tbody></table>
+
+    <div class="legend"><span class="fact">SOURCE FACT</span><span class="model">MODEL REPRESENTATION</span><span class="infer">OUR INFERENCE</span><span class="unknown">NOT REPORTED</span></div>
+    <div class="teacher"><strong>画图规则：</strong>实线只能连接同一来源明确给出的工序或关系；虚线表示我们为了学习而提出的条件连接；问号表示来源没有公开。不同颜色不是美化，而是防止证据串线。</div>
+  </section>
+
+  <section class="section" id="wanner">
+    <h2>3. Reference A：Wanner 2022的tray-based production-flow model</h2>
+    <p class="lead">先只读这一篇，不借用其他来源补图。</p>
+
+    <h3>3.1 论文研究的系统边界</h3>
+    <table><thead><tr><th>项目</th><th>Wanner论文给出的内容</th><th>证据性质</th></tr></thead><tbody>
+      <tr><td>Cell format</td><td>21700 cylindrical lithium-ion cell，论文参考情景容量为5 Ah。</td><td><span class="tag model">MODEL SCOPE</span></td></tr>
+      <tr><td>Production context</td><td>参考assembly line为15 parts/min；所考虑的cell-finishing line在mass production中fully automated并按三班运行。</td><td><span class="tag model">MODEL ASSUMPTION</span></td></tr>
+      <tr><td>Flow object</td><td>为便于cell finishing处理，256个电芯组成一个tray；模型只考虑tray production flow。</td><td><span class="tag model">MODEL ASSUMPTION</span></td></tr>
+      <tr><td>Process division</td><td>Soaking、formation、aging、testing。</td><td><span class="tag model">MODEL STRUCTURE</span></td></tr>
+      <tr><td>Method</td><td>Tecnomatix Plant Simulation离散事件仿真，用于比较生产、设备和能耗情景。</td><td><span class="tag fact">REPORTED METHOD</span></td></tr>
+    </tbody></table>
+
+    <h3>3.2 一盘tray在模型中经历什么？</h3>
+    <div class="flow"><div class="modelbox"><b>Soaking</b>tray存入温度柜<br>高温促进润湿</div><div class="arrow">→</div><div class="modelbox"><b>Formation</b>tray进入温度柜<br>并连接power electronics</div><div class="arrow">→</div><div class="modelbox"><b>Aging</b>room-temperature<br>high-bay warehouse</div><div class="arrow">→</div><div class="modelbox"><b>Testing</b>温度柜与测试/功率设备<br>进行OCV和短时内阻测试</div></div>
+    <p>这条顺序是论文模型明确给出的process flow。它足以告诉我们：tray不仅“被搬运”，还会进入不同类型的处理与存储资源。</p>
+
+    <table><thead><tr><th>步骤</th><th>tray与资源的关系</th><th>对物流理解的意义</th><th>不能推出</th></tr></thead><tbody>
+      <tr><td>Soaking</td><td>温度柜存放tray；基础情景中柜体可容纳多盘。</td><td>需要tray进入、占位、在工艺完成后离开。</td><td>谁把tray送入柜体；柜门、滚筒或升降接口。</td></tr>
+      <tr><td>Formation</td><td>tray位于温度柜中，电芯与power electronics建立工作关系。</td><td>这不是普通“放进货架”；需要工艺接触和状态确认。</td><td>接触结构、自动插接、定位精度及AGV是否直达。</td></tr>
+      <tr><td>Aging</td><td>tray进入室温高架仓库存储，停留可达数天至数周。</td><td>长期占用的是tray和storage position，而不是运输车辆。</td><td>高架仓库采用何种自动存取设备，出入库怎样触发。</td></tr>
+      <tr><td>Testing</td><td>模型中存在温度柜与测试/功率设备，用于OCV与短时内阻检查。</td><td>aging完成后需要再次进入测试资源。</td><td>是否逐cell卸盘、是否原tray测试以及正常/异常分流。</td></tr>
+    </tbody></table>
+
+    <h3>3.3 这篇论文最容易被画错的箭头</h3>
+    <div class="flow"><div class="modelbox"><b>Formation complete</b>模型工序结束</div><div class="arrow dash">⇢</div><div class="unknownbox"><b>Transport technology?</b>AGV / conveyor / lift / other<br>未报告</div><div class="arrow dash">⇢</div><div class="modelbox"><b>Aging warehouse</b>模型下一资源</div></div>
+    <div class="warning"><strong>不能画成：</strong><code>Formation → AGV → Aging</code>。论文说明line fully automated，却没有公开工序之间使用什么自动运输设备。“全自动”只支持自动化程度，不支持AGV类型。</div>
+    <div class="source"><strong>直接来源：</strong>Wanner et al. (2022), Section 2.1 “Model scope and limitations,” pp. 508–509；基础情景设备描述见p. 509。DOI: <a href="https://doi.org/10.1016/j.procir.2022.09.056">10.1016/j.procir.2022.09.056</a>。</div>
+  </section>
+
+  <section class="section" id="carrier">
+    <h2>4. Reference B：Schomburg 2024告诉我们carrier不只是“盒子”</h2>
+    <p>Formation综述没有给出完整物流路线，但在“Required equipment”中提供了一个非常关键的局部接口事实：</p>
+    <div class="thesis"><strong>来源事实：</strong>formation区域包含带独立cell channel的formation towers、racks或chamber systems；电芯以自动化批组由product carriers运输，这些carriers还承担与formation equipment建立接触的功能。</div>
+
+    <h3>4.1 先把四个对象分开</h3>
+    <div class="flow"><div class="factbox"><b>Cell</b>具有电化学与质量状态的产品</div><div class="arrow">装入</div><div class="factbox"><b>Carrier</b>成组承载、定位或提供接口</div><div class="arrow">对接</div><div class="interfacebox"><b>Formation equipment</b>rack / chamber / tower</div><div class="arrow">内部对应</div><div class="interfacebox"><b>Channel</b>每个cell的受控电气通道</div></div>
+    <p>这说明形成设备不是只接收“一个tray编号”。最终必须让carrier中的电芯与相应设备通道形成正确关系。</p>
+
+    <h3>4.2 Carrier可能同时承担哪些角色？</h3>
+    <div class="grid4">
+      <div class="card blue"><h3>Transport</h3><p>把一组电芯作为一个物流单元处理。</p></div>
+      <div class="card green"><h3>Positioning</h3><p>保持cell在相对固定的位置；本项是合理工程解释，具体结构未披露。</p></div>
+      <div class="card violet"><h3>Contact</h3><p>承担或支持与formation equipment接触，这是综述明确给出的功能。</p></div>
+      <div class="card amber"><h3>Environment</h3><p>未封口形成时，特殊carrier还可能带suction device，这是特定条件下的来源事实。</p></div>
+    </div>
+
+    <h3>4.3 对AGV设计意味着什么？</h3>
+    <p>如果未来某个AGV搬运这种carrier，AGV只负责“移动”还不够。整个系统还可能需要：</p>
+    <ul>
+      <li>把carrier送到正确设备与正确port；</li>
+      <li>保证carrier朝向和位置适合后续接触；</li>
+      <li>等待固定handover装置完成取放、插入或定位；</li>
+      <li>确认机械到位、电气接触和设备接收状态；</li>
+      <li>在接触失败或设备不可接收时，不把运输任务误报为完成。</li>
+    </ul>
+    <div class="warning"><strong>这些是系统设计问题，不是综述已经证明的具体解决方案。</strong>综述证明carrier具有接口作用；AGV如何满足这些接口，仍是我们的后续问题。</div>
+
+    <h3>4.4 不能跨来源偷换概念</h3>
+    <table><thead><tr><th>错误拼接</th><th>为什么错误</th><th>正确保留方式</th></tr></thead><tbody>
+      <tr><td>Wanner的256-cell tray就是Schomburg的contact carrier。</td><td>两篇来源没有证明两个载具是同一设计。</td><td>分别记录：Wanner支持tray flow；Schomburg支持product-carrier contact function。</td></tr>
+      <tr><td>Product carrier由AGV运输。</td><td>综述只写fully automated bundles，没有说明移动设备。</td><td>Transport technology = not reported。</td></tr>
+      <tr><td>所有formation carrier都带suction。</td><td>特殊suction carrier只与未封口formation条件相关。</td><td>写成conditional configuration。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>直接来源：</strong>Schomburg et al. (2024), “Required equipment,” p. 2690。程序差异见pp. 2689–2690；原文强调工艺随cell format和制造商变化。DOI: <a href="https://doi.org/10.1039/D3EE03559J">10.1039/D3EE03559J</a>。</div>
+  </section>
+
+  <section class="section" id="prefab">
+    <h2>5. Reference C：FFB PreFab的计划型人工tray配置</h2>
+    <p class="lead">这是一张Fraunhofer FFB在2023年发布的研究设施规划海报。它比学术模型更具体，但证据阶段是planned layout，不是长期量产运行报告。</p>
+
+    <h3>5.1 海报明确给出的配置元素</h3>
+    <table><thead><tr><th>层</th><th>公开内容</th><th>证据边界</th></tr></thead><tbody>
+      <tr><td>Product</td><td>Pouch cells。</td><td>属于PreFab配置，不能转移到21700配置。</td></tr>
+      <tr><td>Loading</td><td>手工将pouch cells装入tray并进行夹紧/预紧。</td><td>证明存在人工装载与载具固定步骤。</td></tr>
+      <tr><td>Transport</td><td>使用Hubwagen手工运输trays。</td><td>可理解为手动搬运车/托盘搬运装置；海报未给型号与行驶路线。</td></tr>
+      <tr><td>Formation contact</td><td>接触方式可为人工或自动，取决于制造商。</td><td>Transport automation与contact automation是两个不同维度。</td></tr>
+      <tr><td>High-temperature storage</td><td>柜式系统，单个tray插入。</td><td>说明存在tray-level cabinet interface；插入动作细节未说明。</td></tr>
+      <tr><td>Aging</td><td>在约20–22°C的温控房间中开放式存储。</td><td>“开放式”描述存储形态，不等于没有位置管理。</td></tr>
+      <tr><td>Testing</td><td>公开列出OCV、ACIR、DCIR、capacity、尺寸、重量与泄漏等测试。</td><td>未逐项公开cell/tray怎样进入各测试站。</td></tr>
+      <tr><td>Control</td><td>所有stations有上层控制。</td><td>没有公开具体MES、请求消息和状态机。</td></tr>
+    </tbody></table>
+
+    <h3>5.2 可以怎样画一张“保守的配置图”？</h3>
+    <div class="flow"><div class="factbox"><b>Manual loading</b>Pouch cells装入并夹紧在tray</div><div class="arrow">→</div><div class="factbox"><b>Manual tray transport</b>Hubwagen</div><div class="arrow">→</div><div class="interfacebox"><b>Process/storage stations</b>formation、HT、RT aging、measurement</div><div class="arrow dash">⇢</div><div class="unknownbox"><b>Detailed sequence</b>各次运输、换载与返回未完整公开</div></div>
+    <p>这里把多个process/storage stations放在一个框内，是为了避免根据海报版面擅自确定每一次先后关系。海报另有cell-finishing timeline，但不同cell format的具体路线仍可能变化。</p>
+
+    <h3>5.3 这个配置教会我们什么？</h3>
+    <ol>
+      <li>Cell finishing并不天然意味着全自动物流；研究/试制规模可以采用人工tray transport。</li>
+      <li>“运输方式”和“设备接触方式”可以独立选择：人工运输后仍可能自动接触，反之亦然。</li>
+      <li>即使是人工配置，也需要上层控制、位置管理、tray识别和工序状态协调；海报只证明上层控制存在，不披露其实现。</li>
+      <li>Cell format会改变carrier、夹紧、degassing和接触要求，因此不能用pouch配置代表21700。</li>
+    </ol>
+    <div class="source"><strong>直接来源：</strong>Kokozinski et al., Fraunhofer FFB, “Anlagenkonzept zur Zellfinalisierung in der FFB Fab und FFB PreFab,” 2023, single-page poster，左侧PreFab布局与“General/Formation/High-temperature storage/Aging &amp; EOL tests”说明。<a href="https://www.ffb.fraunhofer.de/content/dam/ipt/forschungsfertigung-batteriezelle/Dokumente/industrietag-2023/230830_Poster%20Industrietag_Zellfinalisierung_final.pdf">机构原始PDF</a>。</div>
+  </section>
+
+  <section class="section" id="fab">
+    <h2>6. Reference D：FFB Fab的计划型全自动tray配置</h2>
+    <p>同一张FFB海报还公开了面向21700圆柱电芯的Fab规格：</p>
+    <div class="grid4">
+      <div class="card blue"><h3>21700</h3><p>明确的cylindrical cell format。</p></div>
+      <div class="card green"><h3>256 cells/tray</h3><p>明确的tray handling unit。</p></div>
+      <div class="card violet"><h3>Fully automated</h3><p>流程规划为全自动，直至包装。</p></div>
+      <div class="card amber"><h3>Traceability</h3><p>海报声称continuous traceability。</p></div>
+    </div>
+    <p>海报还给出这一规划的名义production capacity和formation channels等规格。这些数值只属于该规划，不应被复制为我们的工厂参数。</p>
+
+    <h3>6.1 能画到哪一步？</h3>
+    <div class="flow"><div class="factbox"><b>21700 cells</b>以256-cell tray为handling unit</div><div class="arrow">→</div><div class="modelbox"><b>Fully automated process</b>贯穿cell finishing直到packaging</div><div class="arrow">+</div><div class="interfacebox"><b>Continuous traceability</b>产品/载具状态需要持续关联</div></div>
+    <div class="flow"><div class="unknownbox"><b>Transport mechanism?</b>AGV / conveyor / lift / other</div><div class="arrow">?</div><div class="unknownbox"><b>Handover?</b>ports、transfer devices、contacting</div><div class="arrow">?</div><div class="unknownbox"><b>Exception flow?</b>reject、re-test、quarantine、empty return</div></div>
+
+    <h3>6.2 “全自动”为什么仍不是一张完整carrier-flow architecture？</h3>
+    <table><thead><tr><th>海报已经说明</th><th>海报没有说明</th></tr></thead><tbody>
+      <tr><td>21700 cells以256 cells/tray处理。</td><td>tray是否从头到尾不更换。</td></tr>
+      <tr><td>流程自动化到包装。</td><td>工序间是conveyor、AGV、AS/RS还是组合。</td></tr>
+      <tr><td>存在continuous traceability。</td><td>cell ID、slot ID、tray ID和equipment channel如何映射。</td></tr>
+      <tr><td>公开了planned layout和formation规模。</td><td>每一个handover、release condition、buffer和异常状态。</td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>重要：</strong>FFB Fab不是“AGV方案证据”，而是“全自动tray-based cell-finishing配置证据”。这两个命题看似接近，科学上却完全不同。</div>
+    <div class="source"><strong>直接来源：</strong>同一Fraunhofer FFB 2023海报，右侧“Specifications Cell Finishing 21700”：30 cells/min、256 cells/tray、fully automated through packaging、high process flexibility和continuous traceability；formation部分列出&gt;16,000 channels。所有数值均为该规划的case-specific evidence。</div>
+  </section>
+
+  <section class="section" id="cards">
+    <h2>7. Day 2形成的三张reference-configuration cards</h2>
+
+    <h3>Card A — Peer-reviewed tray production-flow model</h3>
+    <table><tbody>
+      <tr><th>Source</th><td>Wanner et al. 2022</td><th>Evidence stage</th><td>DES model / planning study</td></tr>
+      <tr><th>Object</th><td>21700 cells，256 cells/tray</td><th>Process</th><td>Soaking → Formation → Aging → Testing</td></tr>
+      <tr><th>Storage/equipment</th><td colspan="3">Temperature cabinets；formation power electronics；room-temperature high-bay warehouse；testing equipment。</td></tr>
+      <tr><th>Transport</th><td colspan="3">Fully automated line，但具体transport technology未报告。</td></tr>
+      <tr><th>Use</th><td colspan="3">支持tray-level process flow和设备/存储关系；不能支持AGV或handover架构。</td></tr>
+    </tbody></table>
+
+    <h3>Card B — Planned manual tray-handling configuration</h3>
+    <table><tbody>
+      <tr><th>Source</th><td>FFB PreFab poster 2023</td><th>Evidence stage</th><td>Planned research-facility layout</td></tr>
+      <tr><th>Object</th><td>Pouch cells in trays</td><th>Process</th><td>Formation、HT storage、RT aging、measurements等</td></tr>
+      <tr><th>Handling</th><td colspan="3">Manual loading and clamping；manual tray transport by Hubwagen；formation contact manual or automated depending on supplier。</td></tr>
+      <tr><th>Use</th><td colspan="3">证明低产能/研究环境存在人工tray配置；不能代表mass production或21700。</td></tr>
+    </tbody></table>
+
+    <h3>Card C — Planned fully automated tray configuration</h3>
+    <table><tbody>
+      <tr><th>Source</th><td>FFB Fab poster 2023</td><th>Evidence stage</th><td>Planned large-scale/research-factory configuration</td></tr>
+      <tr><th>Object</th><td>21700 cells，256 cells/tray</td><th>Process</th><td>Fully automated through packaging</td></tr>
+      <tr><th>Information</th><td colspan="3">Continuous traceability is specified。</td></tr>
+      <tr><th>Transport</th><td colspan="3">具体自动运输设备、handover和异常流未报告。</td></tr>
+      <tr><th>Use</th><td colspan="3">支持自动化程度和tray unit；不能证明AGV/AMR是实施方案。</td></tr>
+    </tbody></table>
+
+    <div class="warning"><strong>Carrier-interface overlay：</strong>Schomburg 2024不是第四张完整配置卡。它是一层跨配置约束证据：某些product carriers兼作formation contact，特定未封口场景还可能需要suction carrier。不能把它自动粘到A、B或C的具体tray上。</div>
+  </section>
+
+  <section class="section" id="compare">
+    <h2>8. 三种配置怎样比较，才不会比较错？</h2>
+    <table><thead><tr><th>比较维度</th><th>Wanner model</th><th>FFB PreFab</th><th>FFB Fab</th></tr></thead><tbody>
+      <tr><td>主要作用</td><td>生产规划与DES分析</td><td>研究设施计划型人工配置</td><td>计划型全自动配置</td></tr>
+      <tr><td>Cell format</td><td>21700</td><td>Pouch</td><td>21700</td></tr>
+      <tr><td>Flow object</td><td>256 cells/tray</td><td>Pouch cells in tray</td><td>256 cells/tray</td></tr>
+      <tr><td>Transport</td><td>Fully automated，技术未说明</td><td>Manual Hubwagen</td><td>Fully automated，技术未说明</td></tr>
+      <tr><td>Formation interface</td><td>Tray connected to power electronics，结构未说明</td><td>Manual or automated contact，supplier-dependent</td><td>未在规格段完整公开</td></tr>
+      <tr><td>Aging/storage</td><td>Room-temperature high-bay warehouse</td><td>Open storage in controlled-temperature room</td><td>海报布局显示相关区域，详细存取机制未说明</td></tr>
+      <tr><td>Validation</td><td>Simulation/model study</td><td>Planned layout</td><td>Planned layout/specification</td></tr>
+    </tbody></table>
+
+    <h3>不能做的三种横向比较</h3>
+    <ol>
+      <li><strong>不能直接比较产能优劣：</strong>PreFab与Fab的cell format、研究目的、自动化程度和规模不同。</li>
+      <li><strong>不能说全自动一定优于人工：</strong>“优于”必须先定义产能、灵活性、成本、安全、数据或其他评价目标。</li>
+      <li><strong>不能说Wanner与FFB Fab是同一生产线：</strong>相同的21700与256 cells/tray是相似点，不足以证明所有设备、布局和控制相同。</li>
+    </ol>
+
+    <div class="thesis"><strong>Day 2可以成立的结论：</strong>公开证据至少记录了人工tray transport和fully automated tray-based flow两类cell-finishing配置；同时，formation carrier可能兼具工艺接触功能。公开资料仍不足以确定全自动配置的移动运输技术和完整handover architecture。</div>
+  </section>
+
+  <section class="section">
+    <h2>9. 这对Week 03条件模型修正了什么？</h2>
+    <table><thead><tr><th>Week 03工作假设</th><th>Day 2后的状态</th><th>原因</th></tr></thead><tbody>
+      <tr><td>Cell finishing中存在tray-level flow。</td><td><span class="tag fact">SUPPORTED IN SPECIFIC SOURCES</span></td><td>Wanner模型和FFB Fab均明确256 cells/tray；PreFab也明确pouch cells in tray。</td></tr>
+      <tr><td>Formation、aging、testing之间可能需要物理运输。</td><td><span class="tag fact">SUPPORTED CONDITIONALLY</span></td><td>不同设备/存储资源被明确描述，PreFab明确手工tray transport；但每次具体任务链未全部公开。</td></tr>
+      <tr><td>AGV承担formation→aging运输。</td><td><span class="tag unknown">STILL UNKNOWN</span></td><td>这些直接来源没有确认AGV承担该路线。</td></tr>
+      <tr><td>同一tray贯穿全过程。</td><td><span class="tag unknown">STILL UNKNOWN</span></td><td>“tray flow”与“fully automated”不等于无换载。</td></tr>
+      <tr><td>Carrier只负责运输。</td><td><span class="tag fact">CHALLENGED</span></td><td>Formation综述说明product carrier还可承担设备接触；特殊场景可能带suction。</td></tr>
+      <tr><td>Handover只是AGV到站后的放货。</td><td><span class="tag infer">TOO SIMPLE</span></td><td>Carrier与formation equipment可能需要定位、接触和状态确认。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section">
+    <h2>10. 第一版known–inferred–unknown</h2>
+    <table><thead><tr><th>状态</th><th>Day 2内容</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">KNOWN FROM SOURCES</span></td><td>多个公开来源采用tray/product carrier作为cell-finishing成组处理对象；公开规划中同时存在人工tray transport与fully automated tray-based process；formation carrier可兼具设备接触功能。</td></tr>
+      <tr><td><span class="tag infer">OUR INTERPRETATION</span></td><td>Carrier design和handover可能是连接工艺要求与移动运输系统设计的关键层；移动机器人只可能是更大接口链的一部分。</td></tr>
+      <tr><td><span class="tag unknown">NOT YET KNOWN</span></td><td>全自动配置具体采用何种运输设备；tray是否贯穿；formation、storage和testing ports的机械结构；release/acceptance信号；empty return与异常流。</td></tr>
+      <tr><td><span class="tag boundary">NOT A FINAL GAP</span></td><td>公开披露不完整目前只是evidence boundary。Day 3需要用Deng等更强配置研究主动寻找反例。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="test">
+    <h2>11. 自测：先自己判断，再展开</h2>
+    <details><summary>Q1. Wanner写明cell-finishing line fully automated，是否可以把流程图画成AGV运输？</summary><div><p>不可以。Fully automated只说明自动化程度，没有说明transport technology。可画工序和tray flow，但运输设备必须标not reported。</p></div></details>
+    <details><summary>Q2. 为什么一盘tray进入formation与进入普通仓库不是同一种接口？</summary><div><p>Formation不仅需要占据一个位置，还要让其中的cells与相应的受控channels/power electronics建立正确工艺关系。Carrier可能承担接触功能，因此handover可能包含定位、接触和状态确认。</p></div></details>
+    <details><summary>Q3. PreFab人工运输是否说明整个系统都是人工的？</summary><div><p>不说明。海报写的是tray由Hubwagen人工运输，但formation contact可以人工或自动，且所有stations存在上层控制。Transport、contact和control是不同自动化维度。</p></div></details>
+    <details><summary>Q4. FFB Fab能否证明AGV是21700 cell finishing的state of the art？</summary><div><p>不能。它证明planned fully automated tray-based process和continuous traceability，但没有披露AGV、conveyor或其他具体运输设备。</p></div></details>
+    <details><summary>Q5. 能否把Schomburg的product carrier直接当作Wanner的256-cell tray？</summary><div><p>不能。两篇来源分别支持carrier interface功能和tray production flow，没有证明载具设计相同。</p></div></details>
+    <details><summary>Q6. Day 2是否已经发现了“公开文献没有handover研究”的research gap？</summary><div><p>没有。我们只观察到当前来源披露不足。Day 3还要阅读更直接的配置研究并寻找反例，之后才能判断是否存在可辩护的问题。</p></div></details>
+  </section>
+
+  <section class="section" id="task">
+    <h2>12. 你的Day 2复述任务</h2>
+    <p>仍按Day 1的方式进行：你不需要一次性答完。读完后回到聊天，我们从第1题开始，我会一题一题带你拆。</p>
+    <div class="template">1. Wanner论文里的tray依次进入哪些工序/资源？它为什么仍不能证明AGV运输？
+
+2. Product carrier除了搬运，还可能承担什么功能？这会怎样改变我们对handover的理解？
+
+3. FFB PreFab和FFB Fab最核心的配置差别是什么？为什么不能直接比较谁“更好”？
+
+4. 现在我们能够确认哪两类cell-finishing tray配置？关于全自动配置，我们最重要的未知是什么？</div>
+    <div class="checkpoint"><strong>Day 2最低完成条件：</strong>你能用自己的话解释一条有来源的tray process flow、一种人工tray configuration和一种fully automated但transport technology未公开的configuration；并能说明carrier为什么可能是工艺接口，而不仅是物流容器。达到后才进入Day 3 problem-area audit。</div>
+  </section>
+
+  <section class="section">
+    <h2>13. 本轮带教复盘（2026-08-07）</h2>
+    <p>学生第一次阅读后反馈无法复述Day 2任务，因此本轮暂停整组问题，将内容拆为四个单点判断。以下记录用于保留真实学习过程，不是论文研究结果。</p>
+    <table><thead><tr><th>带教问题</th><th>学生形成的理解</th><th>需要长期保留的精确表达</th></tr></thead><tbody>
+      <tr><td>Wanner说明tray从formation进入aging，但没有描述运输设备，能否写成AGV运输？</td><td>不能，因为没有描述运输设备。</td><td>Wanner直接支持tray production flow；transport technology仍为not reported。</td></tr>
+      <tr><td>Formation carrier为什么可能不只是普通运输托盘？</td><td>它承担多种功能，需要保持电芯位置、支持对准等。</td><td>来源明确支持carrier还承担formation equipment contact；定位/对准是合理工程解释，具体结构与精度仍未知。注意是“电芯”，不是“芯片”。</td></tr>
+      <tr><td>PreFab使用Hubwagen人工运输，是否说明formation contact也一定是人工？</td><td>不一定；运输与formation接触是两回事。</td><td>Loading、transport、contact和control是不同自动化维度；人工运输可以与自动接触和上层控制共存。</td></tr>
+      <tr><td>为什么不能仅凭Fab全自动、PreFab人工运输就断言Fab一定更好？</td><td>评价标准不确定；全自动不自动意味着成本等指标更好。</td><td>海报确实报告不同名义产能，但cell format、规模、设备和目标同时变化，不能把差异单独归因于运输自动化，也不能推出成本、安全或灵活性全面更优。</td></tr>
+      <tr><td>FFB Fab已经告诉我们什么，还没有告诉我们什么？</td><td>已知具体cell形式、全自动流程和配置；未知具体运输设备和handover方式。</td><td>已知21700圆柱电芯、256 cells/tray、全自动直到包装和continuous traceability；未知transport technology、handover、tray continuity、empty return和exception flow。</td></tr>
+    </tbody></table>
+    <div class="checkpoint"><strong>本轮判断：</strong>Day 2最低理解目标已达到。学生能够区分process flow与transport technology，理解carrier的工艺接口作用，区分transport/contact/control自动化层，并能说明人工与全自动参考配置的证据边界。Day 3仍需学生确认后开始，不自动推进。</div>
+  </section>
+
+  <section class="section">
+    <h2>核心来源与使用边界</h2>
+    <ol>
+      <li>Wanner, J., Weeber, M., Birke, K. P., &amp; Sauer, A. (2022). Production planning and process optimization of a cell finishing process in battery cell manufacturing. <em>Procedia CIRP, 112</em>, 507–512. <a href="https://doi.org/10.1016/j.procir.2022.09.056">DOI</a>. 用于production-flow model、tray unit、设备与存储关系；不是AGV实施证据。</li>
+      <li>Schomburg, F. et al. (2024). Lithium-ion battery cell formation: status and future directions towards a knowledge-based process design. <em>Energy &amp; Environmental Science, 17</em>, 2686–2733. <a href="https://doi.org/10.1039/D3EE03559J">DOI</a>. 用于formation equipment与product-carrier interface；不是完整物流路线。</li>
+      <li>Kokozinski, L., Niggestich, M., Wieskamp, J., Drees, R., &amp; Krüger, G. (2023). Anlagenkonzept zur Zellfinalisierung in der FFB Fab und FFB PreFab. Fraunhofer FFB institutional poster. <a href="https://www.ffb.fraunhofer.de/content/dam/ipt/forschungsfertigung-batteriezelle/Dokumente/industrietag-2023/230830_Poster%20Industrietag_Zellfinalisierung_final.pdf">Original PDF</a>. 用于planned manual/automated configurations；不是同行评审或长期量产验证。</li>
+    </ol>
+    <p class="mini">本讲义是内部学习材料，不是论文正文。图示为对原文的保守重建；不同来源没有被合并成同一真实工厂。进入正式引用前应继续保存原始PDF并复核页码、图例和当前PEM引用格式。</p>
+  </section>
+
+  <p class="footer">Week 04 Day 2 · Evidence-bounded reference carrier-flow configurations · Generated for the thesis learning workflow</p>
+</main>
+</body>
+</html>

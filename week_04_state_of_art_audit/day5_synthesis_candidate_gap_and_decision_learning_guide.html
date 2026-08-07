@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Week 04 Day 5｜State of the Art综合、候选问题与阶段决策</title>
+  <style>
+    :root{--ink:#172431;--muted:#576674;--paper:#f5f2ea;--card:#fffdf8;--navy:#153c59;--blue:#286b92;--green:#2c7052;--amber:#9d6115;--red:#963e3d;--violet:#674c9e;--line:#d5cfc3;--sb:#e8f2f7;--sg:#e8f4ec;--sa:#fff1dc;--sr:#f9e7e5;--sv:#f0ebfa}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.73}header{padding:54px 7vw 44px;background:linear-gradient(132deg,#102d43,#28677e);color:#fff}header p{max-width:970px;color:#e5eef2;font-size:1.06rem}.eyebrow{color:#b8dce8;font-weight:800;letter-spacing:.09em}h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.14;margin:.3rem 0}.nav{position:sticky;top:0;z-index:3;display:flex;gap:7px;overflow:auto;padding:10px 5vw;background:#fffdf8ee;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}.nav a{white-space:nowrap;text-decoration:none;color:var(--navy);font-size:.86rem;padding:5px 9px;border-radius:999px}.nav a:hover{background:var(--sb)}main{max-width:1120px;margin:auto;padding:30px 22px 76px}section{scroll-margin-top:65px;margin-bottom:42px}h2{color:var(--navy);border-bottom:2px solid #b9cbd4;padding-bottom:7px;font-size:1.67rem}h3{color:#24566f;margin-top:26px}h4{margin-bottom:5px}.lead{font-size:1.09rem}.small{font-size:.88rem}.muted{color:var(--muted)}.card,.teacher,.warning,.checkpoint,.decision{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin:15px 0;box-shadow:0 3px 13px #1726370a}.teacher{border-left:6px solid var(--blue);background:var(--sb)}.warning{border-left:6px solid var(--amber);background:var(--sa)}.checkpoint{border-left:6px solid var(--green);background:var(--sg)}.decision{border-left:6px solid var(--violet);background:var(--sv)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}.grid .card{margin:0}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.tag{display:inline-block;font-size:.75rem;font-weight:800;padding:3px 9px;border-radius:999px;margin:2px}.fact{background:var(--sg);color:var(--green)}.infer{background:var(--sa);color:#77480f}.unknown{background:var(--sr);color:var(--red)}.counter{background:var(--sv);color:var(--violet)}.direct{background:var(--sg);color:var(--green)}.adjacent{background:var(--sa);color:#77480f}.weak{background:var(--sr);color:var(--red)}table{border-collapse:collapse;width:100%;background:var(--card);font-size:.92rem;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;vertical-align:top}th{background:#e7eef1;color:var(--navy);text-align:left}.scroll{overflow-x:auto}.flow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin:18px 0}.node{flex:1 1 145px;min-width:135px;text-align:center;background:white;border:2px solid #92adba;border-radius:10px;padding:12px}.arrow{align-self:center;font-size:1.4rem;color:var(--blue)}.formula{background:#182c39;color:#edf5f7;border-radius:10px;padding:15px 18px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap}.score{display:inline-block;min-width:76px;text-align:center;border-radius:6px;padding:2px 6px;font-weight:800}.s1{background:var(--sr);color:var(--red)}.s2{background:var(--sa);color:#77480f}.s3{background:var(--sg);color:var(--green)}details{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 14px;margin:10px 0}summary{cursor:pointer;color:var(--navy);font-weight:700}a{color:#17658e}ul li,ol li{margin:6px 0}@media(max-width:740px){.two{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}header{padding:38px 22px}.nav{padding-left:12px}}@media print{.nav{display:none}body{background:#fff}.card{box-shadow:none}}
+  </style>
+</head>
+<body>
+<header><div class="eyebrow">MASTER THESIS · WEEK 04 · DAY 5</div><h1>把证据收拢：现状、候选问题与下一步</h1><p>今天不再增加技术复杂度。我们把Day 1–4的证据放到同一张地图中，区分已经建立、合理推断、尚未建立和被反例推翻的内容，然后决定本项目下一步应该继续什么、暂缓什么。</p></header>
+<nav class="nav"><a href="#goal">今日目标</a><a href="#loop">本周闭环</a><a href="#sota">现状总表</a><a href="#levels">研究层级</a><a href="#knowledge">已知未知</a><a href="#areas">问题筛选</a><a href="#gaps">候选gap</a><a href="#validation">验证问题</a><a href="#decision">阶段决策</a><a href="#test">自测</a><a href="#oral">复述任务</a></nav>
+<main>
+
+<section id="goal"><h2>0. 今天学到什么算完成</h2>
+  <div class="checkpoint"><strong>中心问题：</strong>现有证据已经解释了cell-finishing carrier flow的哪些层级；剩余问题中，哪一个最值得继续验证，又为什么现在还不能开始仿真？</div>
+  <div class="grid">
+    <div class="card"><h3>能讲现状</h3><p>不用背论文，能说明公开证据至少展示了哪些配置形态。</p></div>
+    <div class="card"><h3>能守边界</h3><p>知道哪些内容只是来源未披露，而不是整个领域不存在。</p></div>
+    <div class="card"><h3>能选问题</h3><p>按证据、相关性和可验证性筛选，而不是按话题热门程度。</p></div>
+    <div class="card"><h3>能做决定</h3><p>明确为什么当前是continue learning，不是自动进入simulation。</p></div>
+  </div>
+  <div class="teacher"><strong>学习方式：</strong>第一次先读第0—5节；然后只回答任务1。第6—10节会在我们逐题检查时继续使用。今天不要求一次复述整周。</div>
+</section>
+
+<section id="loop"><h2>1. Week 04的闭环走到了哪里</h2>
+  <div class="flow"><div class="node"><strong>Day 1</strong><br>Where / What / How / Evidence<br>直接、相邻、误命中</div><div class="arrow">→</div><div class="node"><strong>Day 2</strong><br>重建人工与全自动<br>tray reference configurations</div><div class="arrow">→</div><div class="node"><strong>Day 3</strong><br>Deng最强反例<br>配置、接口、intralogistics</div><div class="arrow">→</div><div class="node"><strong>Day 4</strong><br>按任务检查<br>AGV与humanoid边界</div><div class="arrow">→</div><div class="node"><strong>Day 5</strong><br>综合、反例、验证<br>阶段决策</div></div>
+  <p>这条路线对应Thomas给出的顺序：</p>
+  <div class="formula">找实例 → 写清state of the art → 识别problem areas
+→ 检查反例 → 再判断是否存在candidate gap</div>
+  <p>因此Day 5的成功不是“必须找到gap”，而是<strong>不让一个证据不足的gap混进论文主线</strong>。</p>
+</section>
+
+<section id="sota"><h2>2. Week 04 state-of-the-art总表</h2>
+  <p class="lead">下面每一行都是独立的source–claim pair。它们共同构成现状地图，但不能拼成一座虚构的标准工厂。</p>
+  <div class="scroll"><table><thead><tr><th>来源</th><th>Where / What</th><th>已经建立的How</th><th>证据阶段</th><th>关键未知或限制</th></tr></thead><tbody>
+    <tr><td><strong>Wanner et al. 2022</strong><br>同行评审</td><td>21700 cell finishing；256 cells/tray；soaking、formation、aging、testing。</td><td>Tray进入温度柜、formation资源、室温高架仓库和测试资源；用DES表示production flow。</td><td><span class="tag direct">DIRECT—PROCESS/FLOW</span><br>模型/规划研究</td><td>具体transport technology、handover、empty return和异常分流未报告。不能画成AGV。</td></tr>
+    <tr><td><strong>Schomburg et al. 2024</strong><br>同行评审综述</td><td>工业cell formation；成组电芯与product carrier。</td><td>Carrier可支持与formation equipment接触；设备可为tower、rack或chamber。</td><td><span class="tag direct">DIRECT—INTERFACE</span><br>综述中的局部强证据</td><td>不是完整路线；carrier容量、移动主体和handover结构未建立。</td></tr>
+    <tr><td><strong>FFB PreFab 2023</strong><br>机构规划海报</td><td>Pouch cells装入并夹紧在tray；formation、HT storage、aging和测试。</td><td>人工Hubwagen运输tray；formation contact可人工或自动；stations有上层控制。</td><td><span class="tag direct">DIRECT—CONFIGURATION</span><br>计划型研究设施配置</td><td>不是长期量产验证；详细路线、接口、消息和异常流未披露。</td></tr>
+    <tr><td><strong>FFB Fab 2023</strong><br>机构规划海报</td><td>21700；256 cells/tray；cell finishing直至包装。</td><td>规划为fully automated并声明continuous traceability。</td><td><span class="tag direct">DIRECT—CONFIGURATION</span><br>计划型全自动配置</td><td>没有说明AGV/conveyor/ASRS；tray continuity、handover和实时身份映射未知。</td></tr>
+    <tr><td><strong>Deng et al. 2026</strong><br>同行评审</td><td>FFB Fab方形电芯cell-finishing配置；产品、工艺、设备、参数和关系。</td><td>明确physical interfaces、formation tray夹具/受控施压、intralogistics transitions、loading onto tray及特定stacker-crane integration。</td><td><span class="tag direct">STRONG DIRECT COUNTEREXAMPLE</span><br>真实规划案例/配置模型</td><td>重点是模块配置；没有完整报告移动资源、事件级handover、队列、实时状态和异常恢复。</td></tr>
+    <tr><td><strong>Lee et al. 2024</strong><br>WSC案例</td><td>充电电池生产设施，多AGV真实任务记录。</td><td>用Factory Emulator比较idle-vehicle parking策略。</td><td><span class="tag adjacent">ADJACENT—AGV OPERATION</span></td><td>没有披露cell/module层级、cell-finishing工序、运输对象或handover；不能证明formation tray由AGV运输。</td></tr>
+    <tr><td><strong>Figure/BMW；Atlas；Optimus</strong></td><td>汽车制造上下料/零件排序，或humanoid产品开发。</td><td>已存在真实汽车生产部署和工业pick–carry–place开发证据。</td><td><span class="tag adjacent">ADJACENT—TECH BOUNDARY</span></td><td>不是cell-finishing carrier flow；没有同任务AGV比较证据。</td></tr>
+  </tbody></table></div>
+  <div class="warning"><strong>不要把证据强度只按“学术/工业”排一条线：</strong>同行评审论文适合支持模型和科学论证；工厂一手资料可能更接近实施，但披露和独立验证有限。必须始终问“它对哪个主张负责”。</div>
+</section>
+
+<section id="levels"><h2>3. State of the art不是一个方案，而是四个研究层级</h2>
+  <div class="scroll"><table><thead><tr><th>层级</th><th>核心问题</th><th>当前证据</th><th>当前状态</th></tr></thead><tbody>
+    <tr><td><strong>L1 Process</strong></td><td>有哪些cell-finishing工序和资源？</td><td>Wanner、Schomburg、Deng及FFB均有直接证据。</td><td><span class="score s3">较强</span></td></tr>
+    <tr><td><strong>L2 Configuration</strong></td><td>产品、工艺、设备、carrier和intralogistics模块如何组合？</td><td>Deng直接建模；FFB展示人工/全自动规划配置。</td><td><span class="score s3">已有研究</span></td></tr>
+    <tr><td><strong>L3 Interface</strong></td><td>Carrier怎样参与接触、施压和设备匹配？</td><td>Schomburg与Deng明确支持接口功能；部分配置说明装载/夹紧。</td><td><span class="score s2">功能已知<br>实现不完整</span></td></tr>
+    <tr><td><strong>L4 Operation</strong></td><td>运输请求、pickup、handover、acceptance、buffer、异常与恢复怎样随时间发生？</td><td>Week 03有条件模型；Lee有相邻AGV运行研究；直接案例披露有限。</td><td><span class="score s1">尚未建立</span></td></tr>
+  </tbody></table></div>
+  <p>这张表给出本周最重要的收敛：</p>
+  <div class="checkpoint"><strong>不能再说：</strong>研究没有连接cell-finishing与物流。<br><strong>可以谨慎说：</strong>已审计研究已经覆盖配置与部分物理接口，但具体carrier-flow运行事件、handover状态和异常恢复在当前直接证据中仍未被完整建立。</div>
+  <p>注意主语是“已审计研究/当前直接证据”，不是“全世界所有研究”。</p>
+</section>
+
+<section id="knowledge"><h2>4. 整周known–inferred–unknown–refuted</h2>
+  <div class="scroll"><table><thead><tr><th>类别</th><th>Week 04结束时可以保留的内容</th></tr></thead><tbody>
+    <tr><td><span class="tag fact">KNOWN</span></td><td>
+      <ul><li>特定直接来源明确使用tray/product carrier处理cell-finishing中的成组电芯。</li><li>公开配置至少包括人工tray transport和fully automated tray-based process。</li><li>Formation carrier可能兼具工艺接触、夹具和受控施压功能。</li><li>已有配置研究把部分intralogistics transitions和物理接口纳入cell-finishing规划。</li><li>电池生产中存在多AGV运行案例，但其具体工序和运输对象未必公开。</li></ul></td></tr>
+    <tr><td><span class="tag infer">INFERRED</span></td><td>
+      <ul><li>Carrier/handover可能是连接工艺配置与移动运输系统的关键中间层。</li><li>运输任务完成可能需要区分“到达位置”和“设备已安全接收”。</li><li>质量状态、追溯与异常检测可能产生正常流之外的运输分支。</li></ul>这些是工程推断，尚不是已验证系统事实。</td></tr>
+    <tr><td><span class="tag unknown">UNKNOWN</span></td><td>
+      <ul><li>目标工厂实际采用何种transport technology。</li><li>Tray是否跨formation、aging、testing持续使用，何处换载。</li><li>具体pickup/drop-off、机械接口、定位/锁紧、acceptance信号和失败恢复。</li><li>Cell–slot–tray–channel实时身份映射。</li><li>Reject、retest、quarantine、empty return和thermal-event transport response。</li></ul></td></tr>
+    <tr><td><span class="tag counter">REFUTED / TOO BROAD</span></td><td>
+      <ul><li>“Cell-finishing研究完全没有考虑intralogistics。”</li><li>“Carrier只是被动物流容器。”</li><li>“Fully automated等于AGV运输。”</li><li>“Handover需要操作，所以必须使用humanoid。”</li><li>“一篇论文没写，所以形成research gap。”</li></ul></td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="areas"><h2>5. 四类problem areas怎样筛选</h2>
+  <p>筛选不是给问题“打一个神秘总分”。我们只问四个透明问题：</p>
+  <ol><li><strong>Evidence：</strong>是否有直接事实说明它与cell finishing有关？</li><li><strong>Counterexample：</strong>最强反例已经解决到什么程度？</li><li><strong>Importance：</strong>它是否会改变运输任务、接口或系统表现？</li><li><strong>Feasibility：</strong>硕士论文是否可能获得数据或专家验证？</li></ol>
+  <div class="scroll"><table><thead><tr><th>Problem area</th><th>直接证据基础</th><th>最强反例/已有覆盖</th><th>当前可验证性</th><th>Day 5处理</th></tr></thead><tbody>
+    <tr><td><strong>Flow / configuration</strong><br>运输、buffer与工艺流耦合</td><td>Tray flow、storage resources、intralogistics transitions已有来源。</td><td>Deng已连接配置；Wanner已有DES，不可声称“没有模型”。</td><td>缺实际资源、时间和buffer数据；过早建模会靠假设填空。</td><td><span class="tag adjacent">保留背景</span><br>不是当前独立gap。</td></tr>
+    <tr><td><strong>Carrier / handover interface</strong></td><td>Carrier接触功能、夹具施压和物理接口有直接证据。</td><td>Deng与Schomburg已覆盖“接口存在/功能”；反驳了接口完全被忽视。</td><td>可通过设备资料、专利、接口图和专家访谈进一步确认。</td><td><span class="tag direct">优先候选</span><br>必须窄化到运行实现。</td></tr>
+    <tr><td><strong>Information / traceability</strong></td><td>FFB Fab声明continuous traceability；Deng有配置知识库。</td><td>二者并不等于实时MES mapping，但已有信息层证据。</td><td>详细数据架构可能保密；需先确认是否影响具体handover。</td><td><span class="tag adjacent">嵌入接口问题</span><br>暂不单独扩题。</td></tr>
+    <tr><td><strong>Exception / safety</strong></td><td>泄漏与温度检测有直接工艺证据；Thomas明确要求检查battery-specific problem。</td><td>检测模块已被Deng考虑；但检测后运输处置尚未建立。</td><td>安全资料、异常数据与验证权限可能难获得。</td><td><span class="tag weak">第二候选</span><br>先查可验证性。</td></tr>
+  </tbody></table></div>
+  <div class="teacher"><strong>为什么information不单独立题？</strong>因为目前我们还不知道实时身份映射是否是handover失败的核心原因。先把它作为handover acceptance的一部分，可避免同时开展机械接口、控制架构和MES三篇论文规模的工作。</div>
+</section>
+
+<section id="gaps"><h2>6. 最多保留两个candidate gaps</h2>
+  <p>下面不是最终gap声明，而是下一阶段允许继续验证的窄化候选。</p>
+
+  <h3>Candidate A — Process-aware carrier handover at operation level</h3>
+  <div class="card">
+    <p><strong>谨慎表述：</strong>在已审计的cell-finishing直接来源中，carrier的工艺接口功能与部分intralogistics transitions已有建模；但将这些接口要求转化为运行层pickup、mechanical handover、acceptance、failure与recovery状态的公开描述仍不完整。</p>
+    <p><strong>潜在研究问题草案：</strong>How can the operational handover states of a process-relevant carrier be represented and validated for one specified cell-finishing configuration?</p>
+    <p><strong>最强反例：</strong>Deng已经建模physical interfaces和intralogistics transitions；Schomburg明确carrier contact功能。因此不能把贡献写成“首次连接工艺与接口”。</p>
+    <p><strong>必须验证：</strong>是否确有一个具体carrier和equipment port可访问；能否得到工程师确认或设备资料；问题是否只是未公开的成熟工程常识。</p>
+    <p><span class="tag direct">当前优先级：1</span> <span class="tag unknown">状态：candidate—not established gap</span></p>
+  </div>
+
+  <h3>Candidate B — Exception-triggered carrier flow</h3>
+  <div class="card">
+    <p><strong>谨慎表述：</strong>直接配置研究包含泄漏和温度等安全相关测量，但当前来源没有建立测量异常怎样触发retest、quarantine、isolation或安全运输任务。</p>
+    <p><strong>潜在研究问题草案：</strong>Which quality or safety states require deviations from the normal carrier flow in a specified cell-finishing configuration, and how should those deviations be represented?</p>
+    <p><strong>最强反例：</strong>设备安全逻辑、企业SOP、消防规范或专利可能已经规定异常处置，只是学术论文未公开；Deng也已覆盖安全测量，不能声称安全被完全忽略。</p>
+    <p><strong>主要风险：</strong>thermal runaway是高风险专题，可能需要超出本论文权限的安全工程数据与验证；不能靠想象设计处置方案。</p>
+    <p><span class="tag weak">当前优先级：2</span> <span class="tag unknown">状态：先验证可访问性</span></p>
+  </div>
+
+  <div class="warning"><strong>现在不保留“AGV fleet sizing/dispatching gap”：</strong>没有确认transport technology、任务定义、handover时间和现场数据之前，调度问题缺少工艺落点。Lee等相邻研究还说明AGV运行策略本身已有成熟研究传统，不能把“会做仿真”当成课题理由。</div>
+</section>
+
+<section id="validation"><h2>7. 把未知改写成可问Thomas/工程师的问题</h2>
+  <p>好的专家问题不问“你觉得AGV好不好”，而是索取能够确认系统边界的事实。以下八问按优先顺序排列：</p>
+  <div class="scroll"><table><thead><tr><th>#</th><th>问题</th><th>回答会决定什么</th></tr></thead><tbody>
+    <tr><td>1</td><td>目标案例的cell format是什么？被运输的是单体cell、tray、rack还是其他carrier？</td><td>锁定flow object，避免继续混合pouch、cylindrical和prismatic配置。</td></tr>
+    <tr><td>2</td><td>同一carrier是否贯穿formation、aging和testing？在哪些位置装盘、卸盘或换载？</td><td>确定carrier continuity和真实路线边界。</td></tr>
+    <tr><td>3</td><td>每一段实际由人工、conveyor、lift、AS/RS、AGV/AMR还是组合系统完成？</td><td>确认transport technology；在此之前不做AGV选型。</td></tr>
+    <tr><td>4</td><td>Pickup/drop-off port采用什么机械交接：滚筒、叉取、顶升、抓取、推入还是其他？</td><td>确定handover architecture和是否需要mobile manipulation。</td></tr>
+    <tr><td>5</td><td>系统凭什么确认“运输完成”：仅到达位置，还是还需定位、锁紧、电气接触和设备acceptance？</td><td>定义运行状态与任务完成条件。</td></tr>
+    <tr><td>6</td><td>工序完成、buffer可用和下游可接收分别由谁发出信号？如果下游拒收，carrier在哪里等待？</td><td>定义release、blocking、buffer与恢复逻辑。</td></tr>
+    <tr><td>7</td><td>Cell ID、slot、tray、formation channel和质量状态怎样关联并在交接时校验？</td><td>判断information问题是否必须进入研究模型。</td></tr>
+    <tr><td>8</td><td>不合格、需复测、泄漏或异常温升的cell/tray如何标识、隔离和转运？是否有可共享SOP或匿名事件流程？</td><td>判断exception candidate是否有直接证据与可验证路径。</td></tr>
+  </tbody></table></div>
+  <p>这些问题的回答可能让Candidate A成立、缩小或消失。<strong>问题消失也是有效研究结果</strong>：它说明公开资料缺口不等于工业问题。</p>
+</section>
+
+<section id="decision"><h2>8. Week 04周末决策：Continue learning</h2>
+  <div class="decision"><h3>阶段结论：保持cell-finishing carrier flow方向，但不进入simulation</h3>
+    <p><strong>选择：</strong><code>CONTINUE LEARNING</code></p>
+    <p><strong>理由：</strong>工艺、tray flow、carrier interface和配置层已有足够基础；但实际transport technology、handover architecture、运行数据和验证入口仍未确定。现在建模会把最关键输入变成我们自己编的假设。</p>
+  </div>
+  <div class="scroll"><table><thead><tr><th>推进门槛</th><th>当前状态</th><th>含义</th></tr></thead><tbody>
+    <tr><td>工艺范围理解</td><td><span class="score s3">达到</span></td><td>已理解formation–aging–testing及carrier的条件性作用。</td></tr>
+    <tr><td>文献与反例</td><td><span class="score s3">初步达到</span></td><td>已有直接来源和Deng强反例，但不是系统综述终点。</td></tr>
+    <tr><td>具体flow object</td><td><span class="score s2">部分</span></td><td>文献中有tray/product carrier；目标案例尚未锁定。</td></tr>
+    <tr><td>Transport/handover architecture</td><td><span class="score s1">未达到</span></td><td>不能选定AGV、humanoid或其他方案。</td></tr>
+    <tr><td>运行数据</td><td><span class="score s1">未达到</span></td><td>不能填造距离、节拍、buffer、故障率和任务量。</td></tr>
+    <tr><td>验证路径</td><td><span class="score s2">待建立</span></td><td>需要Thomas、FFB/设备专家、手册、专利或可匿名资料。</td></tr>
+  </tbody></table></div>
+
+  <h3>下一步允许做</h3>
+  <ul><li>围绕一个具体carrier/equipment interface检索设备资料、专利和直接案例；</li><li>把上述八个问题交给Thomas审查并确认可能的专家/资料入口；</li><li>继续找能够推翻Candidate A和B的直接反例；</li><li>若得到具体配置，再画一张有来源的handover state diagram。</li></ul>
+  <h3>下一步暂不做</h3>
+  <ul><li>不写SimPy或优化算法；</li><li>不计算AGV数量、dispatching、ROI或所谓最佳技术；</li><li>不虚构托盘容量、节拍、距离、故障率和热事件响应；</li><li>不把humanoid或thermal runaway扩成新的主课题；</li><li>不把candidate gap写成最终research gap。</li></ul>
+</section>
+
+<section id="thesis"><h2>9. 如果Thomas问“你这周到底发现了什么”</h2>
+  <div class="formula">公开证据表明，cell finishing中存在tray/product-carrier层级的处理，
+并至少公开了人工tray运输和全自动tray-based流程两类配置。
+
+已有研究并非完全忽略物流：Deng等已经把部分intralogistics transitions、
+产品—设备物理接口以及formation tray的夹具/施压功能纳入配置模型。
+
+但在我们审计的直接来源中，具体移动设备、carrier handover、
+运行时acceptance、异常分流和恢复仍未被完整建立。
+
+因此本周没有宣布最终gap，也没有选择AGV或humanoid。
+下一步优先验证一个具体carrier—equipment handover是否具有
+可获得的资料、工业重要性和硕士论文可行性。</div>
+  <p class="small muted">这是一段组会口头汇报模板，不是可直接粘贴进论文的最终文字。正式论文需要按主张逐条引用，并继续扩展检索覆盖。</p>
+</section>
+
+<section id="test"><h2>10. 自测</h2>
+  <details><summary>Q1. Week 04能否得出“cell-finishing物流没有被研究”？</summary><p>不能。Deng已纳入部分intralogistics transitions和物理接口，Wanner已有tray production-flow DES，FFB也公开了不同配置。</p></details>
+  <details><summary>Q2. 为什么“handover未完整公开”仍可以成为优先问题区？</summary><p>因为carrier的工艺接口功能有直接证据，具体handover会影响运输任务完成条件，而且存在设备资料/专家验证的可能。但它目前仍是candidate，不是final gap。</p></details>
+  <details><summary>Q3. 为什么exception/safety暂列第二候选？</summary><p>它与电池状态直接相关，也回应Thomas的示例；但异常处置资料可能保密，安全验证要求高，容易超出硕士论文可行范围。</p></details>
+  <details><summary>Q4. 为什么不能现在仿真AGV？</summary><p>尚未确认使用AGV，也不知道实际任务、handover、距离、时间、buffer和验证数据。此时仿真主要反映自设假设，不能回答一个已证实的问题。</p></details>
+  <details><summary>Q5. Candidate A的最强反例是什么？</summary><p>Deng已经建模物理接口和intralogistics transitions，Schomburg也明确carrier contact功能。因此候选只能聚焦运行层handover状态，不能声称接口从未被研究。</p></details>
+  <details><summary>Q6. 如果专家说实际handover已有成熟标准接口，论文方向是否失败？</summary><p>不一定。首先应接受反例并修正方向；可能转向接口在不同配置中的适用条件，也可能放弃该候选。这正是验证在建模前发生的价值。</p></details>
+</section>
+
+<section id="oral"><h2>11. 你的 Day 5 复述任务</h2>
+  <p>我们还是一次做一个，师兄会根据你的回答继续拆。</p>
+  <div class="teacher"><h3>现在只回答任务1：说清state of the art</h3>
+    <p>请不要列论文名字，只用三句话回答：</p>
+    <ol><li>公开证据已经确认了哪两种不同自动化程度的cell-finishing tray配置？</li><li>Carrier除了运输，还已经确认具有什么工艺相关功能？</li><li>关于全自动配置，最关键的运输未知是什么？</li></ol>
+  </div>
+  <h3>任务2（任务1通过后）</h3><p>为什么不能说“研究没有连接cell finishing和intralogistics”？Deng这个反例具体做了什么？</p>
+  <h3>任务3（之后）</h3><p>用“已有覆盖—剩余未知—最强反例”解释Candidate A。</p>
+  <h3>任务4（最后）</h3><p>为什么Week 04的周末决策是continue learning，而不是simulation？</p>
+  <div class="checkpoint"><strong>Day 5最低完成条件：</strong>能够用自己的话说出本周state of the art；能解释candidate problem与final gap的区别；能说出优先候选及其最强反例；能说明继续学习所缺的具体证据。</div>
+</section>
+
+<section id="sources"><h2>12. 核心来源与边界</h2>
+  <ol>
+    <li>Wanner, J. et al. (2022). <em>Production planning and process optimization of a cell finishing process in battery cell manufacturing</em>. Procedia CIRP 112, 507–512. <a href="https://doi.org/10.1016/j.procir.2022.09.056">DOI</a>. 用于tray production flow与DES；不支持AGV实施。</li>
+    <li>Schomburg, F. et al. (2024). <em>Lithium-ion battery cell formation: status and future directions towards a knowledge-based process design</em>. Energy &amp; Environmental Science 17, 2686–2733. <a href="https://doi.org/10.1039/D3EE03559J">DOI</a>. 用于formation carrier contact功能；不是完整物流路线。</li>
+    <li>Kokozinski et al./Fraunhofer FFB (2023). <em>Anlagenkonzept zur Zellfinalisierung in der FFB Fab und FFB PreFab</em>. <a href="https://www.ffb.fraunhofer.de/content/dam/ipt/forschungsfertigung-batteriezelle/Dokumente/industrietag-2023/230830_Poster%20Industrietag_Zellfinalisierung_final.pdf">机构PDF</a>. 用于计划型人工与全自动配置；不是长期量产验证。</li>
+    <li>Deng, S. et al. (2026). <em>Modeling flexible configuration of cell finishing for future battery production research</em>. Robotics and Computer-Integrated Manufacturing 98, 103119. <a href="https://publications.rwth-aachen.de/record/1017996">RWTH记录与全文</a>. 用于配置模型、物理接口与intralogistics反例。</li>
+    <li>Lee, Park &amp; Jang (2024). <em>Idle Vehicle Parking Strategy for AGV Systems in Rechargeable Battery Production</em>. Winter Simulation Conference. 用于电池生产AGV运行的相邻证据；未披露cell-finishing语义。</li>
+  </ol>
+  <p class="small muted">本讲义为项目内部学习材料，不是正式论文正文。页码与证据边界沿用Day 1–4的全文核查记录。正式写作前需再次核对原始全文，并按Thomas确认的最新PEM引用规范处理。</p>
+</section>
+
+<section id="recap"><h2>13. 本轮带教复盘（2026-08-07）</h2>
+  <p>本轮继续采用一次一个判断的口头检查。以下记录真实学习过程，不属于论文研究结果。</p>
+  <div class="scroll"><table><thead><tr><th>检查点</th><th>学生形成的理解</th><th>带教修正</th></tr></thead><tbody>
+    <tr><td>两类reference configuration</td><td>在提示后能够区分人工tray运输与全自动tray-based配置。</td><td>Pouch/21700描述cell format；人工/全自动才描述本题比较的配置维度。不能用产品形式代替运输配置。</td></tr>
+    <tr><td>Carrier工艺功能</td><td>Formation tray具有夹具和施压功能。</td><td>来源支持“作为夹具并施加受控压力”；“使位置绝对不变”等更强表述不能自行添加。</td></tr>
+    <tr><td>全自动配置未知</td><td>未公开具体运输方式；能够识别handover。</td><td>首先未知的是transport technology及handover architecture，尚未进入AGV型号层。</td></tr>
+    <tr><td>Deng强反例</td><td>能够指出intralogistics transitions、loading onto formation tray和产品—载具—设备physical interfaces。</td><td>这些证据反驳“研究完全未连接cell finishing与物流/接口”。</td></tr>
+    <tr><td>Candidate A</td><td>能够识别剩余问题是运行层handover，并指出Deng为最强反例。</td><td>候选不能声称接口从未被研究；应聚焦移载、对准、锁定、acceptance、失败与恢复状态。</td></tr>
+    <tr><td>阶段决策</td><td>真实系统未确认使用AGV，实际任务、handover、时间和buffer数据也未具备。</td><td>因此当前仿真只会放大自设假设，决策应为continue learning。</td></tr>
+  </tbody></table></div>
+  <div class="checkpoint"><strong>本轮判断：</strong>Day 5最低目标达到，Week 04学习闭环完成。学生能够概述已有配置、理解Deng反例、识别运行层handover候选，并解释为什么暂不选择AGV或开始仿真。Candidate A和B仍是待验证问题，不是最终research gaps。</div>
+</section>
+
+</main></body></html>

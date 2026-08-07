@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 04 Day 1 — 证据边界与来源分类</title>
+  <style>
+    :root{--ink:#172535;--muted:#5b6b7b;--paper:#f4f7f9;--line:#d7e1e8;--navy:#173b56;--blue:#1d639d;--bluebg:#e8f2fb;--green:#216d55;--greenbg:#e7f5ed;--amber:#865809;--amberbg:#fff4dc;--red:#9e3d39;--redbg:#fff0ef;--violet:#6345a4;--violetbg:#f1edff;--white:#fff;--graybg:#f0f3f6}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}main{max-width:1100px;margin:auto;padding:38px 22px 72px}.hero{padding:42px;border-radius:10px;background:linear-gradient(135deg,#173b56,#245e7d);color:#fff}.eyebrow{margin:0 0 10px;color:#bfe1f7;font-size:14px;font-weight:700}.hero h1{margin:0;font-size:34px;line-height:1.3}.hero p:last-of-type{max-width:900px;margin:17px 0 0;color:#e3f0f7;font-size:17px}.nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}.nav a{padding:7px 11px;border:1px solid #bfd6e4;border-radius:999px;color:#eaf6fc;text-decoration:none;font-size:13px}.section{margin-top:22px;padding:28px 30px;background:var(--white);border:1px solid var(--line);border-radius:9px}h2{margin:0 0 14px;color:var(--navy);font-size:25px;line-height:1.4}h3{margin:19px 0 8px;font-size:18px;line-height:1.45}p{margin:10px 0}.lead{font-size:17px;color:#30465c}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:17px 0}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0}.card{padding:17px;border:1px solid transparent;border-radius:8px;min-width:0}.card h3{margin:0 0 6px}.card p,.card ul{margin:7px 0 0;font-size:15px}.blue{background:var(--bluebg);border-color:#c8deef}.green{background:var(--greenbg);border-color:#c8e5d4}.amber{background:var(--amberbg);border-color:#efdca9}.red{background:var(--redbg);border-color:#efd0cd}.violet{background:var(--violetbg);border-color:#ddd1f4}.gray{background:var(--graybg);border-color:#d8e0e6}.teacher,.thesis,.warning,.source,.checkpoint{margin:17px 0 4px;padding:16px 18px;border-left:5px solid}.teacher{background:var(--bluebg);border-color:var(--blue)}.thesis{background:var(--greenbg);border-color:var(--green)}.warning{background:var(--amberbg);border-color:var(--amber)}.source{background:#f0f3f7;border-color:#77899b;color:#435264;font-size:15px}.checkpoint{background:var(--violetbg);border-color:var(--violet)}.flow{display:flex;align-items:stretch;gap:8px;margin:19px 0;overflow-x:auto;padding-bottom:5px}.flow div{flex:1 0 145px;padding:14px 12px;border:1px solid #d7e4ef;border-radius:7px;background:#f4f8fc;text-align:center;font-size:15px}.flow b{display:block;color:#174e7a;margin-bottom:4px}.flow .event{background:#e7f5ed;border-color:#b9dcca}.flow .control{background:#f1edff;border-color:#d8cdf2}.flow .wait{background:#fff4dc;border-color:#e8d49b}.flow .stop{background:#fff0ef;border-color:#e4c4c1}.flow .arrow{align-self:center;flex:0 0 auto;padding:0;border:0;background:transparent;color:#6c7e90;font-size:22px}table{width:100%;margin:17px 0;border-collapse:collapse;font-size:15px}th,td{padding:11px 12px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{background:#edf4fa;color:#244b6e}.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}.direct{color:#176044;background:#dff2e8}.adjacent{color:#795108;background:#fff0c9}.false{color:#8c3431;background:#fde3e1}.fact{color:#176044;background:#dff2e8}.infer{color:#795108;background:#fff0c9}.unknown{color:#8c3431;background:#fde3e1}.boundary{color:#584091;background:#eae4fb}.question{margin:15px 0;padding:16px 18px;border:1px solid #cfe0ed;border-radius:7px;background:#f6fafd}.question b{color:#174e7a}.template{margin:15px 0;padding:17px 19px;border:1px dashed #8fa8bd;border-radius:7px;background:#fbfcfd;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;white-space:pre-wrap}.mini{font-size:14px;color:var(--muted)}details{margin:10px 0;border:1px solid var(--line);border-radius:7px;background:#fff}summary{padding:12px 14px;cursor:pointer;color:#244b6e;font-weight:700}details>div{padding:0 14px 14px}code{padding:2px 5px;border-radius:4px;background:#eef2f5;color:#244b6e}.good{color:#176044;font-weight:700}.bad{color:#9e3d39;font-weight:700}ul,ol{padding-left:23px}.footer{margin-top:20px;color:var(--muted);font-size:13px}a{color:#1a5f91}@media(max-width:820px){.grid3,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){main{padding:16px 11px 44px}.hero,.section{padding:23px 18px}.hero h1{font-size:27px}h2{font-size:22px}.grid,.grid3,.grid4{grid-template-columns:1fr}table{font-size:14px}th,td{padding:8px}.nav{display:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Week 04 · Day 1 · 师兄带教导学笔记</p>
+    <h1>看到 battery、AGV 和 tray，<br>仍然不能说它是直接案例</h1>
+    <p>今天不急着画“行业标准架构”。我们先建立文献审计的尺子：一份资料要交代到什么程度，才足以支持一种 cell-finishing carrier-flow 现状；哪些只是相邻证据；哪些只是关键词假命中。</p>
+    <nav class="nav"><a href="#goal">今日目标</a><a href="#position">研究位置</a><a href="#sota">什么是现状</a><a href="#anchors">四个锚点</a><a href="#classes">三类来源</a><a href="#examples">真实例子</a><a href="#extract">提取模板</a><a href="#test">自测</a><a href="#task">复述任务</a></nav>
+  </header>
+
+  <section class="section" id="goal">
+    <h2>0. 今天学到什么就算完成？</h2>
+    <p class="lead">今天的完成标准不是“搜到很多论文”，而是你能看着一篇摘要、一张设备图或一段案例描述，判断它究竟能为我们的研究证明什么。</p>
+    <div class="grid4">
+      <div class="card blue"><h3>看连接</h3><p>不只找关键词，而是找工序、对象、载具与物流方案之间的明确连接。</p></div>
+      <div class="card green"><h3>会分类</h3><p>能区分 <code>direct</code>、<code>adjacent</code> 和 <code>false match</code>。</p></div>
+      <div class="card amber"><h3>会降级</h3><p>资料只支持一部分时，把它写成部分证据，不擅自补成完整架构。</p></div>
+      <div class="card violet"><h3>会提取</h3><p>用统一模板记录原文、页码、直接支持边界和仍未知项。</p></div>
+    </div>
+    <div class="teacher"><strong>师兄提醒：</strong>Day 1 是“磨尺子”。尺子没有磨好，Day 2 画出来的架构越漂亮，越可能把不同来源的碎片误拼成一座不存在的工厂。</div>
+  </section>
+
+  <section class="section" id="position">
+    <h2>1. Week 04 接住了 Week 03 的哪个问题？</h2>
+    <div class="flow"><div><b>Week 03 Fact</b>工序功能、任务事件和AGV控制层已有基础</div><div class="arrow">→</div><div class="wait"><b>Week 03 Unknown</b>真实载具、布局、接口和是否使用AGV仍未知</div><div class="arrow">→</div><div class="control"><b>Week 04 Audit</b>用直接文献和反例检查这些未知</div><div class="arrow">→</div><div class="event"><b>Later decision</b>再决定继续学习、收敛问题或调整方向</div></div>
+    <table><thead><tr><th>Week 03 已经建立</th><th>Week 04 需要查证</th></tr></thead><tbody>
+      <tr><td>工艺完成、请求创建、车辆分配、pickup、delivery、acceptance 是不同事件。</td><td>公开案例中是否真的存在这些事件；由谁触发；资料描述到哪一步。</td></tr>
+      <tr><td>只有物理位置分离且载具需要移动时，才产生候选运输任务。</td><td>实际参考配置中 formation、aging、EoL 如何布置，载具是否换载。</td></tr>
+      <tr><td>AGV 只可能承担运输链的一部分，handover 可能由固定设备完成。</td><td>AGV、conveyor、lift、AS/RS、机器人或人工怎样组合，接口在哪里。</td></tr>
+      <tr><td>异常品、复测、隔离和空载具回流是可能的条件分支。</td><td>哪些资料直接记录这些分支，哪些只是我们的工程推断。</td></tr>
+    </tbody></table>
+    <div class="thesis"><strong>今天的核心问题：</strong>一份资料需要交代哪些信息，才足以描述 cell-finishing carrier flow 的一种“有证据的现状”？</div>
+  </section>
+
+  <section class="section" id="sota">
+    <h2>2. State of the art 不是“最先进技术排行榜”</h2>
+    <p>在我们当前的研究中，<em>state of the art</em> 不是简单列出 AGV、AMR、conveyor、AS/RS 和 humanoid，然后比较谁更高级。它至少包含三层：</p>
+    <div class="grid3">
+      <div class="card blue"><h3>研究层</h3><p>同行评审研究怎样表示 cell-finishing 工序、生产流、设备配置和载具。</p></div>
+      <div class="card green"><h3>实施/规划层</h3><p>研究机构或工业资料公开了怎样的人工、自动化、存储和交接配置。</p></div>
+      <div class="card amber"><h3>证据边界层</h3><p>它是现场运行、规划设计、仿真、实验、供应商方案，还是作者概念判断。</p></div>
+    </div>
+    <p>所以我们真正想写出的不是：</p>
+    <div class="warning"><span class="bad">错误：</span>“当前 cell finishing 普遍使用 AGV 搬运托盘。”</div>
+    <p>而应该逐步逼近这种表达：</p>
+    <div class="thesis"><span class="good">更准确：</span>“公开来源 A 描述某种 tray-based production flow；来源 B 说明 product carrier 兼作 formation equipment contact；来源 C 展示特定研究设施的人工或全自动规划配置。各来源的实施阶段和接口披露程度不同，尚不能据此概括所有工厂。”</div>
+  </section>
+
+  <section class="section" id="anchors">
+    <h2>3. 判断直接证据前，先找四个锚点</h2>
+    <p class="lead">不要先问“有没有 AGV”。先把下面四个锚点在原文中找出来。</p>
+    <div class="grid4">
+      <div class="card blue"><h3>Where</h3><p><strong>在哪里？</strong><br>是否明确属于锂离子电池<strong>电芯制造</strong>，以及 formation、aging、EoL、grading 等哪个边界。</p></div>
+      <div class="card green"><h3>What</h3><p><strong>什么在流动？</strong><br>单体 cell、tray、product carrier、rack、pallet，还是未披露的“material”。</p></div>
+      <div class="card amber"><h3>How</h3><p><strong>怎样流动/等待？</strong><br>人工、托盘车、conveyor、AS/RS、AGV/AMR或组合；在哪里存储与交接。</p></div>
+      <div class="card violet"><h3>Evidence</h3><p><strong>凭什么相信？</strong><br>现场运行、规划、仿真、实验、学术综述、机构海报、供应商主张或我们的推断。</p></div>
+    </div>
+    <div class="teacher"><strong>一条实用规则：</strong>Where、What、How 中只有一个被明确写出，通常还不足以重建 carrier-flow 配置；但它仍可能为某个局部接口提供有价值的 direct partial evidence。</div>
+
+    <h3>“完整度”与“可信度”不要混为一谈</h3>
+    <table><thead><tr><th>情况</th><th>完整度</th><th>可信度判断</th><th>适合支持什么</th></tr></thead><tbody>
+      <tr><td>同行评审论文，只说明 tray flow 和工序，没说明运输设备。</td><td>对物流架构不完整</td><td>学术来源可靠，但只可靠到其披露边界</td><td>工序范围、flow object、模型抽象</td></tr>
+      <tr><td>研究机构海报，画出具体设备和人工/自动运输。</td><td>配置可能更具体</td><td>机构规划证据，不等于同行评审或稳定量产</td><td>实施示例、设备形态、验证问题</td></tr>
+      <tr><td>供应商网页，展示完整动画但无客户、参数和验证。</td><td>视觉上很完整</td><td>营销证据，独立验证弱</td><td>方案存在性与检索词，不能承担核心科学结论</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="classes">
+    <h2>4. Direct、Adjacent、False Match 怎么分？</h2>
+    <div class="grid3">
+      <div class="card green"><h3><span class="tag direct">DIRECT</span></h3><p>来源明确连接 cell manufacturing、cell finishing 工序、flow object，并至少描述一种流动、存储或设备接口信息。</p><p class="mini">Direct 仍可分为完整配置证据与局部接口证据。</p></div>
+      <div class="card amber"><h3><span class="tag adjacent">ADJACENT</span></h3><p>缺少一个核心连接，但能回答我们的一个具体子问题，例如一般 AGV 控制、相邻工序载具接口或电池异常安全。</p><p class="mini">必须写明它帮助解释什么，不能直接移植参数。</p></div>
+      <div class="card red"><h3><span class="tag false">FALSE MATCH</span></h3><p>关键词相同但研究对象不同，对当前证据链没有实际贡献，例如“AGV 使用锂电池”或“EV 电池公路运输”。</p><p class="mini">记录排除原因，避免以后重复筛查。</p></div>
+    </div>
+
+    <h3>一个来源可以“整体 adjacent、局部 direct”吗？</h3>
+    <p>可以。分类的最小单位最好是 <strong>source–claim pair（来源—主张对）</strong>，而不是给整篇论文贴一个永不变化的标签。</p>
+    <table><thead><tr><th>来源</th><th>对哪个主张是直接证据</th><th>对哪个主张只是相邻或无证据</th></tr></thead><tbody>
+      <tr><td>形成工艺综述</td><td>product carrier 可兼作 formation equipment contact。</td><td>不能据此说明载具由 AGV 运输，也不能重建完整工厂路线。</td></tr>
+      <tr><td>电池工厂 AGV 停车案例</td><td>充电电池生产设施中存在真实记录驱动的多AGV案例。</td><td>对 formation–aging tray flow 只是 adjacent，因为工序和物料未公开。</td></tr>
+      <tr><td>cell-finishing DES论文</td><td>以 tray 为生产流对象研究 soaking–formation–aging–testing。</td><td>若未说明 AGV/交接，就不能直接支持移动运输系统配置。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section">
+    <h2>5. 三个“不等于”必须形成条件反射</h2>
+    <div class="grid3">
+      <div class="card red"><h3>关键词命中 ≠ 直接案例</h3><p>标题同时出现 battery 和 AGV，可能只是 AGV 的动力电池、pack 仓库或回收物流。</p></div>
+      <div class="card amber"><h3>未披露 ≠ 不存在</h3><p>论文没写 handover，只能写“本文未说明”，不能断言真实系统没有 handover。</p></div>
+      <div class="card violet"><h3>我们没找到 ≠ research gap</h3><p>可能是检索式、语言、保密、工业知识未发表或全文不可得。Research gap 需要系统检索、反例和可回答问题。</p></div>
+    </div>
+    <div class="template">允许写：The reviewed source does not specify the handover mechanism.
+不允许写：There is no handover mechanism in current cell-finishing systems.
+
+允许写：No direct evidence was identified in the current search set.
+不允许写：No research exists on this topic.</div>
+  </section>
+
+  <section class="section" id="examples">
+    <h2>6. 用四个真实来源练习分类</h2>
+
+    <h3>例子 A — Wanner et al. (2022)</h3>
+    <p>该论文研究 21700 电芯的 cell finishing，把256个电芯组成一个 tray，只考虑 tray 的生产流，并将工序分为 soaking、formation、aging 和 testing；方法是离散事件仿真。</p>
+    <table><thead><tr><th>锚点</th><th>原文能够支持</th><th>仍不能支持</th></tr></thead><tbody>
+      <tr><td>Where</td><td>Cell finishing；soaking、formation、aging、testing。</td><td>不能自动代表所有厂商的工艺路线。</td></tr>
+      <tr><td>What</td><td>256 cells 被组合为一个 tray；模型考虑 tray production flow。</td><td>tray是否兼作工艺夹具、是否全程不换载。</td></tr>
+      <tr><td>How</td><td>soaking 使用温度柜，aging 使用高架仓库；生产流由DES表示。</td><td>摘要/相关段落未明确移动运输设备、handover和empty-tray return。</td></tr>
+      <tr><td>分类</td><td><span class="tag direct">DIRECT — PROCESS/FLOW</span></td><td>不是完整的 AGV carrier-flow architecture 证据。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>来源边界：</strong>Wanner et al., “Production planning and process optimization of a cell finishing process in battery cell manufacturing,” <em>Procedia CIRP</em> 112 (2022), Section 2.1, pp. 508–509, DOI: <a href="https://doi.org/10.1016/j.procir.2022.09.056">10.1016/j.procir.2022.09.056</a>。</div>
+
+    <h3>例子 B — Schomburg et al. (2024) formation review</h3>
+    <p>综述在 required equipment 部分说明，formation 区域可由 formation towers、racks 或 chamber systems 构成；电芯以自动化批组由 product carrier 搬运，carrier 还可承担与 formation equipment 接触的功能。</p>
+    <table><thead><tr><th>锚点</th><th>原文能够支持</th><th>仍不能支持</th></tr></thead><tbody>
+      <tr><td>Where</td><td>工业电池电芯 formation area。</td><td>formation前后完整路线和具体工厂布局。</td></tr>
+      <tr><td>What</td><td>成组电芯与 product carrier。</td><td>每个carrier容量、标准尺寸和是否等同于Wanner的tray。</td></tr>
+      <tr><td>How</td><td>自动化批组运输；carrier兼具formation接触功能。</td><td>移动主体是conveyor、AGV还是其他设备；最终handover结构。</td></tr>
+      <tr><td>分类</td><td><span class="tag direct">DIRECT — INTERFACE</span></td><td>是强局部证据，不是完整物流路线。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>来源边界：</strong>Schomburg et al., “Lithium-ion battery cell formation: status and future directions towards a knowledge-based process design,” <em>Energy &amp; Environmental Science</em> 17 (2024), “Required equipment,” p. 2690, DOI: <a href="https://doi.org/10.1039/D3EE03559J">10.1039/D3EE03559J</a>。</div>
+
+    <h3>例子 C — Lee, Park &amp; Jang (2024)</h3>
+    <p>该案例使用充电电池生产设施的真实任务记录和现场配置，在Factory Emulator中比较空闲AGV停车策略；但没有公开物料、cell/module层级、formation/aging/EoL或handover。</p>
+    <table><thead><tr><th>对当前研究的作用</th><th>分类</th><th>理由</th></tr></thead><tbody>
+      <tr><td>说明真实电池生产设施存在多AGV系统，并展示任务记录驱动的策略验证方法。</td><td><span class="tag adjacent">ADJACENT</span></td><td>电池生产场景直接，但缺少 cell-finishing process semantics 与 carrier 信息。</td></tr>
+      <tr><td>证明 formation tray 使用9台AGV。</td><td><span class="tag false">NOT SUPPORTED</span></td><td>9台车属于该匿名案例，工序与运输对象未披露。</td></tr>
+    </tbody></table>
+    <div class="source"><strong>来源边界：</strong>Lee, Park &amp; Jang, “Idle Vehicle Parking Strategy for AGV Systems in Rechargeable Battery Production,” <em>Winter Simulation Conference</em> (2024), pp. 1–2。全文保存在项目 <code>literatures/week_03_cell_finishing_agv/</code>。</div>
+
+    <h3>例子 D — Fraunhofer FFB cell-finishing poster</h3>
+    <p>机构海报公开了两种规划/研究设施形态：PreFab 包含手工将pouch cells装入并压紧在tray中、用托盘车人工运输；Fab 面向21700电芯，使用256-cell trays并规划全自动流程。</p>
+    <table><thead><tr><th>价值</th><th>限制</th><th>分类</th></tr></thead><tbody>
+      <tr><td>能直接证明至少两种不同自动化程度的 cell-finishing 载具处理配置被公开规划。</td><td>海报不是同行评审论文；PreFab/Fab对象和规模不同；“规划”不等于长期量产验证。</td><td><span class="tag direct">DIRECT — INSTITUTIONAL CONFIGURATION</span></td></tr>
+    </tbody></table>
+    <div class="source"><strong>来源边界：</strong>Fraunhofer FFB, “Anlagenkonzept zur Zellfinalisierung in der FFB Fab und FFB PreFab,” Industrietag 2023 poster。<a href="https://www.ffb.fraunhofer.de/content/dam/ipt/forschungsfertigung-batteriezelle/Dokumente/industrietag-2023/230830_Poster%20Industrietag_Zellfinalisierung_final.pdf">机构原始PDF</a>。</div>
+
+    <div class="teacher"><strong>四个来源拼在一起时仍要克制：</strong>它们共同提高了我们对 carrier flow 的理解，但不能直接合并成“一条标准生产线”。来源可能涉及不同 cell format、工厂规模、研究目的和实施阶段。</div>
+  </section>
+
+  <section class="section">
+    <h2>7. False match 最常见的六种样子</h2>
+    <table><thead><tr><th>搜索结果</th><th>为什么容易误收</th><th>Day 1处理</th></tr></thead><tbody>
+      <tr><td>AGV battery management / charging optimization</td><td>同时出现 AGV 和 battery</td><td>若 battery 指AGV自身动力电池，排除；可在未来研究充电策略时另行纳入。</td></tr>
+      <tr><td>EV battery road transportation safety</td><td>出现 lithium-ion battery transport</td><td>厂外法规/公路运输不是 cell-finishing intralogistics；仅在明确支持某个安全机理时作 adjacent。</td></tr>
+      <tr><td>Module/pack assembly logistics</td><td>同属电池制造且常使用AGV</td><td>当前核心范围是cell manufacturing；除非用于特定接口反例，否则排除或adjacent。</td></tr>
+      <tr><td>Battery recycling logistics</td><td>关键词和机器人案例很多</td><td>生命周期阶段不同，排除。</td></tr>
+      <tr><td>Generic flexible manufacturing AGV scheduling</td><td>方法看起来可以直接套用</td><td>可以支持通用方法，但不能支持battery-specific problem；标adjacent。</td></tr>
+      <tr><td>Humanoid宣传视频</td><td>热门、视觉具体、看似“更灵活”</td><td>若无具体cell-finishing任务与证据，只作为technology-boundary线索，不进入Day 1 direct池。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section" id="extract">
+    <h2>8. Day 1 统一提取模板</h2>
+    <p>之后每读一个来源，不需要写长篇摘要。先填下面这张“最小证据卡”。</p>
+    <div class="template">Source ID / DOI:
+Source type: peer-reviewed / institutional / industrial / vendor / standard
+Manufacturing scope: cell / module / pack / unspecified
+Process boundary: formation / aging / EoL / grading / other / unspecified
+Flow object: cell / tray / product carrier / rack / pallet / unspecified
+Movement or storage solution:
+Carrier function: transport / storage / positioning / contact / safety / unspecified
+Handover or interface:
+Evidence stage: live / planned / simulation / lab / review / claim
+Exact evidence: page / section / figure
+Directly supports:
+Does NOT establish:
+Classification: direct / adjacent / false match
+Reason for classification:</div>
+
+    <h3>主表不要塞入整段原文</h3>
+    <p>Week 04 后续可以使用两层结构：</p>
+    <div class="grid">
+      <div class="card blue"><h3>Comparison table</h3><p>每篇来源一行，只保留比较所需的短字段，便于看模式和缺口。</p></div>
+      <div class="card gray"><h3>Evidence appendix</h3><p>保存准确页码、图号、短摘录、证据边界和阅读备注，保证可追溯。</p></div>
+    </div>
+    <div class="warning"><strong>不要为了填表补答案：</strong>原文没有写就填 <code>not reported</code>；对象被匿名化就填 <code>unspecified</code>；只有我们推导出来的，就填 <code>inference</code>。</div>
+  </section>
+
+  <section class="section">
+    <h2>9. 从来源到论文表述：证据链怎样走？</h2>
+    <div class="flow"><div><b>Source statement</b>原文到底写了什么</div><div class="arrow">→</div><div class="event"><b>Bounded claim</b>我们能说到哪一层</div><div class="arrow">→</div><div class="control"><b>Battery implication</b>对cell finishing意味着什么</div><div class="arrow">→</div><div class="wait"><b>Robotics implication</b>对运输/机器人提出什么问题</div><div class="arrow">→</div><div class="stop"><b>Unknown</b>还缺什么证据</div></div>
+    <table><thead><tr><th>层级</th><th>以product carrier为例</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">SOURCE FACT</span></td><td>形成综述说明电芯以自动化批组由product carrier运输，carrier也承担设备接触。</td></tr>
+      <tr><td><span class="tag boundary">BOUNDED CLAIM</span></td><td>至少某些formation架构中的carrier同时具有物流与工艺接口功能。</td></tr>
+      <tr><td><span class="tag infer">BATTERY IMPLICATION</span></td><td>载具设计可能受到cell format、接触方式和是否封口等工艺要求约束。</td></tr>
+      <tr><td><span class="tag infer">ROBOTICS IMPLICATION</span></td><td>移动运输方案不能只看载荷，还可能需要满足定位、交接和接口兼容。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>移动主体、定位精度、接口公差、交接顺序、异常解锁和实际停机后果。</td></tr>
+    </tbody></table>
+    <div class="teacher"><strong>注意：</strong>最后两层是合理推导，不是综述作者已经替我们证明的工业结论。以后向Thomas汇报时要把“文献说的”和“我们由此提出的问题”分开。</div>
+  </section>
+
+  <section class="section">
+    <h2>10. Day 1 的搜索与筛选记录怎么留？</h2>
+    <p>本周不追求完整系统综述，但要留下可复查的轻量检索轨迹。</p>
+    <table><thead><tr><th>需要记录</th><th>为什么</th></tr></thead><tbody>
+      <tr><td>数据库/搜索引擎与检索日期</td><td>检索结果会变化；后续需要说明证据池从哪里来。</td></tr>
+      <tr><td>完整检索式</td><td>避免只凭记忆说“我搜过了”。</td></tr>
+      <tr><td>纳入/排除理由</td><td>让direct、adjacent、false match的判断可复核。</td></tr>
+      <tr><td>全文是否获得</td><td>只有摘要时不能声称已核对接口、方法和局限。</td></tr>
+      <tr><td>向前/向后追踪线索</td><td>关键设备或carrier信息可能来自论文引用的行业路线图和早期来源。</td></tr>
+    </tbody></table>
+    <div class="template">Search date: YYYY-MM-DD
+Database / engine:
+Query:
+Result screened:
+Included as direct:
+Included as adjacent:
+Excluded false matches:
+Reason / notes:
+Full text status:</div>
+    <div class="warning"><strong>本周不是正式systematic review：</strong>我们做的是定向的nearest-neighbor and counterexample audit。方法要透明，但不需要在第四周伪装成已完成PRISMA级系统综述。</div>
+  </section>
+
+  <section class="section" id="test">
+    <h2>11. 自测：先判断，再展开答案</h2>
+    <details><summary>Q1. 一篇论文研究“锂电池供电AGV的充电调度”，属于direct吗？</summary><div><p>不是。这里的battery是AGV自身能源系统，不是被生产和运输的电芯，也没有cell finishing、carrier flow或设备接口。对当前Day 1证据池是false match；以后若研究AGV charging，它才可能成为方法来源。</p></div></details>
+    <details><summary>Q2. 一篇cell-finishing论文明确写256 cells/tray和soaking–formation–aging–testing，但没写AGV，应怎样分类？</summary><div><p>它对process boundary、flow object和tray production flow是direct；对“使用AGV”没有证据。不能因为没写AGV就排除整篇，也不能擅自把tray flow画成AGV flow。</p></div></details>
+    <details><summary>Q3. 形成综述说product carrier兼作设备接触，是否证明AGV直接把tray插入formation rack？</summary><div><p>不证明。它支持carrier具有物流与工艺接口双重作用，但没有说明移动设备和最终handover机制。AGV直插只是若干可能架构之一。</p></div></details>
+    <details><summary>Q4. 一篇匿名电池工厂AGV案例没有公开物料，能否说真实系统不存在tray？</summary><div><p>不能。只能说论文未披露运输对象和carrier。Not reported不是不存在。</p></div></details>
+    <details><summary>Q5. Fraunhofer海报画出了手工与自动化配置，能否替代同行评审文献？</summary><div><p>不能替代，但可以补充。它适合证明某个机构规划/建设的具体配置形态；科学论证仍需同行评审文献、原始设备资料或其他独立证据支撑，并标明planned/research-facility边界。</p></div></details>
+    <details><summary>Q6. 当前检索没有找到thermal-runaway运输处置论文，是否已经形成research gap？</summary><div><p>还没有。这只是当前搜索集中的证据缺口。需要扩大同义词、追踪安全/存储/设备文献、找反例，并判断是否能形成具体、可验证的研究问题。</p></div></details>
+  </section>
+
+  <section class="section" id="task">
+    <h2>12. 你的 Day 1 复述任务</h2>
+    <p>请先不要看回答案，用自己的话回答下面四题。可以简短，但每题都要说明“为什么”。</p>
+    <div class="template">1. 为什么“标题同时出现 battery、AGV 和 manufacturing”仍不一定是direct case？你会检查哪四个锚点？
+
+2. Wanner 2022、formation review 2024和Lee 2024分别能直接证明什么？各自不能证明什么？
+
+3. “原文没有描述handover”与“现有系统没有handover”有什么本质区别？
+
+4. 假设你找到一张供应商动画：AGV把tray送到formation设备。你会怎样记录它，下一步还要找什么证据？</div>
+    <div class="checkpoint"><strong>Day 1最低完成条件：</strong>你能独立判断至少四个来源/陈述属于direct、adjacent还是false match；能明确说出“直接支持什么、不能推出什么”；并能使用最小证据卡记录一个来源。达到后再进入Day 2的reference configuration重建，不因文件已经生成而自动推进。</div>
+  </section>
+
+  <section class="section">
+    <h2>13. Day 1 结束时的已知—推断—未知</h2>
+    <table><thead><tr><th>状态</th><th>当前内容</th></tr></thead><tbody>
+      <tr><td><span class="tag fact">LITERATURE-SUPPORTED</span></td><td>已有研究以tray表示cell-finishing生产流；formation中的product carrier可兼作设备接触；公开研究设施资料显示人工和全自动载具处理配置都存在。</td></tr>
+      <tr><td><span class="tag infer">WORKING INTERPRETATION</span></td><td>carrier/handover可能是连接cell-finishing工艺与移动运输设计的关键观察层，但仍需Day 2–3通过具体配置和强反例检查。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>行业中各配置的普及程度、移动运输主体、tray是否贯穿、换载结构、empty-carrier loop、异常流、实际接口参数及生产验证情况。</td></tr>
+      <tr><td><span class="tag boundary">NOT YET A GAP</span></td><td>公开论文对接口或异常披露不足，目前只能视为evidence observation；尚不能宣布为最终research gap。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section class="section">
+    <h2>14. 本轮带教复盘（2026-08-06）</h2>
+    <p>学生第一次阅读后反馈四道复述题均未理解，因此本轮没有继续要求一次性作答，而是把Day 1拆成四个逐步判断场景。以下记录用于保留真实学习过程，不是论文研究结果。</p>
+    <table><thead><tr><th>带教场景</th><th>学生形成的判断</th><th>需要长期保留的精确表达</th></tr></thead><tbody>
+      <tr><td>研究AGV自身锂电池寿命，但没有cell-finishing工序与被运输对象。</td><td>不是直接案例，因为没有具体工艺和工序。</td><td>属于false match；其中battery指车辆能源系统，不是被生产和运输的电芯。</td></tr>
+      <tr><td>Wanner论文写明cell-finishing工序和tray flow，但没有写AGV。</td><td>论文仍有用，因为它提供了具体工序和运输对象。</td><td>它是process/flow层的direct evidence；运输系统可能是AGV、conveyor、人工或组合，不能预设存在“小车”。</td></tr>
+      <tr><td>论文没有写空托盘如何返回。</td><td>没写不代表系统没有。</td><td>应写“该来源未报告empty-carrier return”，不能写“系统不存在empty-carrier return”。</td></tr>
+      <tr><td>Lee案例写明电池生产和9台AGV，但没有公开具体工序与运输对象。</td><td>因为缺少具体工序和运输对象，只属于adjacent case。</td><td>它直接支持真实电池生产AGV案例及其研究方法，但不直接支持cell-finishing tray flow。</td></tr>
+      <tr><td>供应商动画展示AGV把formation tray送往aging。</td><td>能证明有这种AGV托盘运输方案，不能证明该方案能成熟运行在工厂中。</td><td>更严格地写：它直接证明供应商展示/提出过该方案；不能证明已经在真实工厂部署并经过稳定运行验证。“成熟”还需要单独定义评价标准。</td></tr>
+    </tbody></table>
+    <div class="checkpoint"><strong>本轮判断：</strong>Day 1最低理解目标已达到。学生已经能够识别false match、direct partial evidence和adjacent case，并能区分“来源未报告”与“现实中不存在”。供应商证据的source–claim边界经过提示后能够正确复述。Day 2仍需由学生确认后开始，不自动推进。</div>
+  </section>
+
+  <section class="section">
+    <h2>核心来源</h2>
+    <ol>
+      <li>Wanner, J., Weeber, M., Birke, K. P., &amp; Sauer, A. (2022). Production planning and process optimization of a cell finishing process in battery cell manufacturing. <em>Procedia CIRP, 112</em>, 507–512. <a href="https://doi.org/10.1016/j.procir.2022.09.056">DOI</a>.</li>
+      <li>Schomburg, F. et al. (2024). Lithium-ion battery cell formation: status and future directions towards a knowledge-based process design. <em>Energy &amp; Environmental Science, 17</em>, 2686–2733. <a href="https://doi.org/10.1039/D3EE03559J">DOI</a>.</li>
+      <li>Lee, J., Park, S., &amp; Jang, Y. J. (2024). Idle Vehicle Parking Strategy for AGV Systems in Rechargeable Battery Production. <em>Winter Simulation Conference</em>. Local PDF in the Week 03 literature folder.</li>
+      <li>Fraunhofer FFB (2023). Anlagenkonzept zur Zellfinalisierung in der FFB Fab und FFB PreFab. <a href="https://www.ffb.fraunhofer.de/content/dam/ipt/forschungsfertigung-batteriezelle/Dokumente/industrietag-2023/230830_Poster%20Industrietag_Zellfinalisierung_final.pdf">Institutional poster</a>.</li>
+    </ol>
+    <p class="mini">说明：本讲义是项目内部学习材料，不是正式论文正文。来源事实、项目解释和未确认问题已分层标注；进入论文写作前仍需用本地全文再次核对稳定页码、图号和引用格式。</p>
+  </section>
+
+  <p class="footer">Week 04 Day 1 · Cell-finishing carrier-flow state-of-the-art audit · Generated for the thesis learning workflow</p>
+</main>
+</body>
+</html>
