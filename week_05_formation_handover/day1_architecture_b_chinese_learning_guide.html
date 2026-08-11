@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 05 Day 1｜Architecture B 二次化成托盘交接中文讲义</title>
+  <style>
+    :root{--ink:#17212b;--muted:#536270;--paper:#f5f1e8;--card:#fffdf8;--navy:#173b57;--blue:#2d6f93;--green:#2f7256;--amber:#a96516;--red:#963e3e;--violet:#66558f;--line:#d7d1c5;--softblue:#eaf3f7;--softgreen:#eaf4ee;--softamber:#fff2dd;--softred:#f9e9e7;--softviolet:#f0edf8}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}
+    header{background:linear-gradient(130deg,#102f45,#28677c);color:#fff;padding:50px 7vw 42px}header p{max-width:930px;color:#e1edf2;font-size:1.04rem}.eyebrow{font-weight:800;letter-spacing:.09em;color:#b8dce8}h1{font-size:clamp(2rem,4vw,3.25rem);line-height:1.15;margin:.3rem 0}
+    .nav{position:sticky;top:0;z-index:3;display:flex;gap:7px;overflow:auto;padding:10px 5vw;background:#fffdf8ef;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}.nav a{white-space:nowrap;text-decoration:none;color:var(--navy);font-size:.86rem;padding:5px 9px;border-radius:999px}.nav a:hover{background:var(--softblue)}
+    main{max-width:1120px;margin:auto;padding:30px 22px 74px}section{scroll-margin-top:65px;margin:0 0 42px}h2{color:var(--navy);font-size:1.62rem;border-bottom:2px solid #bdcdd5;padding-bottom:7px}h3{color:#24546f;margin-top:25px}.lead{font-size:1.08rem}.small{font-size:.88rem}.muted{color:var(--muted)}
+    .card,.checkpoint,.warning,.teacher,.sourcebox{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin:15px 0;box-shadow:0 3px 13px #1626360a}.checkpoint{border-left:6px solid var(--green);background:var(--softgreen)}.warning{border-left:6px solid var(--amber);background:var(--softamber)}.teacher{border-left:6px solid var(--blue);background:var(--softblue)}.sourcebox{border-left:6px solid var(--violet);background:var(--softviolet)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}.grid .card{margin:0}.tag{display:inline-block;font-size:.75rem;font-weight:800;letter-spacing:.03em;border-radius:999px;padding:3px 9px;margin:2px}.explicit{background:var(--softgreen);color:var(--green)}.claim{background:var(--softviolet);color:var(--violet)}.infer{background:var(--softamber);color:#7b4b10}.unknown{background:var(--softred);color:var(--red)}
+    table{width:100%;border-collapse:collapse;background:var(--card);font-size:.93rem;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;vertical-align:top}th{background:#e8eef1;color:var(--navy);text-align:left}.scroll{overflow-x:auto}
+    .flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:18px 0}.node{flex:1 1 155px;min-width:145px;background:#fff;border:2px solid #91afbd;border-radius:11px;padding:12px;text-align:center}.node.interface{border-color:#b98235;background:#fff9ed}.node.process{border-color:#4f866b;background:#f1f8f3}.node.unknownnode{border-style:dashed;border-color:#b85a5a;background:#fff5f4}.arrow{align-self:center;font-size:1.35rem;color:var(--blue)}
+    .formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#182b38;color:#ecf5f8;border-radius:10px;padding:14px 18px;overflow:auto;white-space:pre-wrap}.terms b{color:var(--navy)}details{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 14px;margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--navy)}a{color:#17658e}.answer{min-height:88px;border:2px dashed #9cb2bd;border-radius:10px;padding:12px;background:#fbfdfe}.yes{color:var(--green);font-weight:800}.pending{color:var(--amber);font-weight:800}.no{color:var(--red);font-weight:800}
+    @media(max-width:720px){header{padding:38px 22px}.nav{padding-left:12px}.arrow{transform:rotate(90deg)}}@media print{.nav{display:none}body{background:#fff}.card{box-shadow:none}section{break-inside:avoid}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">MASTER THESIS · WEEK 05 · DAY 1</div>
+  <h1>读懂一个真实公开的二次化成托盘交接架构</h1>
+  <p>本讲义带你逐步阅读CN118970237A。今天不背专利、不设计设备，也不急着找gap；只重建一个battery tray怎样从主输送系统进入formation equipment，并区分专利明确披露、工程解释和仍未知的内容。</p>
+</header>
+<nav class="nav">
+  <a href="#goal">学习目标</a><a href="#source">专利身份</a><a href="#words">术语翻译</a><a href="#whole">整套系统</a><a href="#boundary">今日边界</a><a href="#path">进入路径</a><a href="#states">状态审计</a><a href="#gate">准入门</a><a href="#limits">证据边界</a><a href="#task">学习任务</a><a href="#recap">带教复盘</a>
+</nav>
+<main>
+
+<section id="goal">
+  <h2>0. 今天只学会一件事</h2>
+  <div class="checkpoint"><strong>中心问题：</strong>一盘电池从主输送线到formation设备内部，专利明确给出了哪些设备和动作；position、contact与equipment acceptance又有哪些仍未完整建立？</div>
+  <p>学完后，你应该能用自己的话讲清：</p>
+  <div class="grid">
+    <div class="card"><h3>What</h3><p>被运输的不是AGV，而是一只承载若干电池的battery tray。</p></div>
+    <div class="card"><h3>Where</h3><p>今天只看主输送机构与formation device之间的入口边界。</p></div>
+    <div class="card"><h3>How</h3><p>挡停、移载、短输送、入库、堆垛转移组成一条设备链。</p></div>
+    <div class="card"><h3>Evidence</h3><p>每句话都区分专利权利要求、实施例、我们的解释和未知。</p></div>
+  </div>
+  <div class="teacher"><strong>学习方式：</strong>第一次只读第0—5节，然后回答第10节任务1。不要一次完成全部问题。我们会像Week 04一样，一次检查一个判断。</div>
+</section>
+
+<section id="source">
+  <h2>1. 先认识来源：它是什么证据</h2>
+  <div class="scroll"><table>
+    <tbody>
+      <tr><th>名称</th><td>一种电池二次化成系统以及电池二次化成方法</td></tr>
+      <tr><th>公开文本</th><td>CN118970237A；申请日2024-07-30；公开日2024-11-15</td></tr>
+      <tr><th>申请人</th><td>上海轩邑新能源发展有限公司</td></tr>
+      <tr><th>PCT family</th><td>WO2026026868A1，2026-02-05公开</td></tr>
+      <tr><th>本地原文</th><td><a href="../literatures/week_05_formation_handover/CN118970237A_secondary_formation_system.pdf">12页中文专利PDF</a></td></tr>
+      <tr><th>在线入口</th><td><a href="https://patents.google.com/patent/CN118970237A/zh">Google Patents中文页面</a></td></tr>
+    </tbody>
+  </table></div>
+  <div class="warning"><strong>证据阶段：</strong>它是公开的专利申请，能证明一种技术架构和实施例已经被披露；不能单独证明该系统已经在工厂长期稳定运行、代表行业标准或性能主张已被独立验证。</div>
+  <p><span class="tag claim">PATENT CLAIM</span> 权利要求界定申请人寻求保护的技术组合。<br><span class="tag explicit">PATENT EMBODIMENT</span> 说明书和附图解释一种优选实现。<br><span class="tag infer">ENGINEERING INTERPRETATION</span> 我们为理解handover所做的保守拆解。<br><span class="tag unknown">UNKNOWN</span> 原文尚未明确建立。</p>
+</section>
+
+<section id="words">
+  <h2>2. 先翻译六个核心词</h2>
+  <div class="scroll"><table class="terms">
+    <thead><tr><th>专利用词</th><th>本项目英文</th><th>人话解释</th><th>不要误解为</th></tr></thead>
+    <tbody>
+      <tr><td><b>承载装置</b></td><td>carrier device</td><td>承载一组电池并随物流系统移动的载具；优选实施例明确为电池托盘。</td><td>AGV，或化成设备本身。</td></tr>
+      <tr><td><b>输送机构</b></td><td>conveying mechanism</td><td>让托盘沿整条路线移动的主输送系统。</td><td>formation设备内部的工艺接口。</td></tr>
+      <tr><td><b>转移／移载</b></td><td>transfer</td><td>让托盘从一个设备或输送段进入另一个设备或输送段。</td><td>已经完成电气接触或开始化成。</td></tr>
+      <tr><td><b>入库机</b></td><td>inbound machine</td><td>位于进入高温库或化成设备路径上的入库设备节点。</td><td>完整的equipment acceptance逻辑。</td></tr>
+      <tr><td><b>堆垛机</b></td><td>stacker crane</td><td>在入库机与高温库/化成装置之间转移托盘。</td><td>AGV或humanoid。</td></tr>
+      <tr><td><b>可启用状态</b></td><td>enableable state</td><td>专利方法中，进入设备的电池数量满足预设要求后，化成装置具备被启用的条件。</td><td>工艺已经实际开始，或所有接触均已验证。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="sourcebox"><strong>用词边界：</strong>中文原文主要写“电池”。结合化成、一次/二次注液、托盘安装位和批次处理，本项目将其作为电芯制造对象理解；正式论文中仍应保留原文用词并说明解释，不把它自动外推到所有cell format。</div>
+</section>
+
+<section id="whole">
+  <h2>3. 先看整套系统，但今天不研究整条线</h2>
+  <p>权利要求1和说明书[0036]给出的主结构可保守重绘为：</p>
+  <div class="flow">
+    <div class="node">上料机构<br><span class="small">注液后电池装入tray</span></div><div class="arrow">→</div>
+    <div class="node">主输送机构<br><span class="small">tray沿路线移动</span></div><div class="arrow">→</div>
+    <div class="node">高温库<br><span class="small">可选预处理</span></div><div class="arrow">→</div>
+    <div class="node process">Formation device<br><span class="small">一次/二次化成</span></div><div class="arrow">→</div>
+    <div class="node">分拣机构<br><span class="small">不合格电池换到另一tray</span></div><div class="arrow">→</div>
+    <div class="node">下料/二次注液<br><span class="small">合格电池进入后续工序</span></div>
+  </div>
+  <p>专利还公开了三条不同的flow：</p>
+  <ul>
+    <li><strong>Figure 2：</strong>一次化成路径；</li>
+    <li><strong>Figure 3：</strong>不合格电池重新成批后的二次化成路径；</li>
+    <li><strong>Figure 4：</strong>卸空后的carrier return path。</li>
+  </ul>
+  <div class="warning"><strong>防止范围扩张：</strong>Week 05不是研究整个二次化成循环，也不是研究分拣、假电池和空盘回流。它们说明专利的系统背景；今天只切出formation入口handover。</div>
+</section>
+
+<section id="boundary">
+  <h2>4. 把今天的边界切出来</h2>
+  <div class="formula">OUT OF SCOPE TODAY                 IN SCOPE TODAY                         OUT OF SCOPE TODAY
+upstream process → main conveyor → [stop / transfer / inbound / stacker] → formation device → formation protocol</div>
+  <p>今天研究的责任边界是：</p>
+  <div class="flow">
+    <div class="node">主输送机构仍负责tray</div><div class="arrow">→</div>
+    <div class="node interface">第一转移机构开始接管</div><div class="arrow">→</div>
+    <div class="node process">Formation device接收tray</div>
+  </div>
+  <p>这不是AGV handover。这个专利的primary architecture明确使用输送、入库和堆垛设备。它对我们最重要的价值，是提供一个<strong>具体的carrier–equipment handover反例</strong>。</p>
+</section>
+
+<section id="path">
+  <h2>5. 一盘tray怎样进入formation设备</h2>
+  <p>依据说明书[0059]–[0062]和[0073]，可以把入口路径拆成以下设备链：</p>
+  <div class="flow">
+    <div class="node"><strong>① 挡停</strong><br>挡停装置45<br><span class="small">在衔接位置让tray停止</span></div><div class="arrow">→</div>
+    <div class="node interface"><strong>② 横向移载</strong><br>第五移载装置25<br><span class="small">主线 ↔ 第三输送部</span></div><div class="arrow">→</div>
+    <div class="node"><strong>③ 接近入口</strong><br>第三输送部26<br><span class="small">向设备方向输送</span></div><div class="arrow">→</div>
+    <div class="node"><strong>④ 入库节点</strong><br>入库机27<br><span class="small">入口附近可识别carrier</span></div><div class="arrow">→</div>
+    <div class="node interface"><strong>⑤ 设备内转移</strong><br>堆垛机28<br><span class="small">入库机 ↔ formation device</span></div><div class="arrow">→</div>
+    <div class="node process"><strong>⑥ 进入设备</strong><br>化成装置3<br><span class="small">tray进入并接受化成</span></div>
+  </div>
+  <div class="sourcebox"><strong>可追溯证据：</strong>权利要求1（PDF p.2）支持“输送机构—第一转移机构—化成装置”；说明书[0059]–[0062]（PDF p.8）支持入口/出口、移载装置、第三输送部、入库机和堆垛机；[0073]（PDF p.9）支持衔接处挡停；[0078]（PDF p.10）支持tray通过第一转移组件进入formation device。</div>
+  <h3>扫码和识别在哪里？</h3>
+  <p>说明书[0069]–[0072]披露：每个carrier可设置识别码；靠近formation device的入库机处设置第三识别组件，并在设备进口和出口布置扫码装置。</p>
+  <div class="warning"><strong>扫码能支持什么：</strong>它支持carrier identification和process-location tracking。<strong>它不能单独证明：</strong>电芯—slot—formation channel全部映射正确，也不能单独证明机械/电气接口已经建立。</div>
+</section>
+
+<section id="states">
+  <h2>6. Transfer、position、contact、acceptance不要混在一起</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>分析层</th><th>Architecture B已经披露什么</th><th>证据状态</th><th>仍需核验什么</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Arrival / stop</strong></td><td>主输送线在与第一转移机构的衔接位置可设置挡停装置。</td><td><span class="tag explicit">EMBODIMENT</span></td><td>具体到站传感器、release条件和等待规则。</td></tr>
+      <tr><td><strong>Identity</strong></td><td>carrier可带识别码；formation进口和出口附近设置扫码装置。</td><td><span class="tag explicit">EMBODIMENT</span></td><td>扫描失败处理；cell–slot–channel映射。</td></tr>
+      <tr><td><strong>Transfer</strong></td><td>第一转移机构在主输送机构与formation device之间转移carrier；实施例给出25→26→27→28设备链。</td><td><span class="tag claim">CLAIM + EMBODIMENT</span></td><td>各动作触发信号、互锁和转移时间。</td></tr>
+      <tr><td><strong>Position</strong></td><td>入库机、堆垛机及设备进口构成有组织的进入路径。</td><td><span class="tag infer">PARTIAL / INFERENCE</span></td><td>设备内最终位置、定位精度、基准和position-confirmed信号。</td></tr>
+      <tr><td><strong>Mechanical contact</strong></td><td>当前审读段落没有明确建立formation接口处的锁紧、夹持或压力动作。</td><td><span class="tag unknown">UNKNOWN</span></td><td>由tray、cabinet还是独立机构完成。</td></tr>
+      <tr><td><strong>Electrical contact</strong></td><td>当前审读段落没有明确说明cell/tray怎样连接充放电通道。</td><td><span class="tag unknown">UNKNOWN</span></td><td>contact主体、顺序、检测和失败状态。</td></tr>
+      <tr><td><strong>Equipment acceptance</strong></td><td>权利要求9给出一个process-readiness条件：进入设备的电池数量满足预设要求后，设备处于可启用状态。</td><td><span class="tag claim">PARTIAL CLAIM</span></td><td>是否还有identity、door、position、contact、安全状态；统一acceptance信号未披露。</td></tr>
+      <tr><td><strong>Process start</strong></td><td>专利说明设备对该组电池执行formation。</td><td><span class="tag explicit">SOURCE-EXPLICIT</span></td><td>具体formation protocol不是本周handover研究内容。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="checkpoint"><strong>最重要的学习结论：</strong>这项专利已经把transfer和部分identity/readiness描述得相当具体。因此Candidate A不能再笼统地说“运行层handover没有被描述”；它只能继续追问position/contact/acceptance的哪些必要状态仍未建立，以及这些未知是否真的重要且可验证。</div>
+</section>
+
+<section id="gate">
+  <h2>7. Primary architecture准入门</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>准入条件</th><th>判断</th><th>直接证据</th><th>边界</th></tr></thead>
+    <tbody>
+      <tr><td>属于cell manufacturing / formation</td><td class="yes">YES</td><td>技术领域与背景明确为锂电池生产中的一次/二次化成和注液衔接；说明书[0001]–[0003]，PDF p.4。</td><td>只代表该二次化成架构，不代表所有formation路线。</td></tr>
+      <tr><td>Flow object可辨识</td><td class="yes">YES</td><td>carrier承载若干电池；优选实施例明确为带标准安装位的battery tray；[0038]，PDF p.6。</td><td>具体cell format、tray尺寸和容量未在本讲义中外推。</td></tr>
+      <tr><td>明确进入formation equipment</td><td class="yes">YES</td><td>权利要求1规定carrier在输送机构与formation device之间转移；[0078]明确通过第一转移组件进入设备。</td><td>进入不等于所有position/contact/acceptance状态已完成。</td></tr>
+      <tr><td>关键结构可追溯</td><td class="yes">YES</td><td>Claim 1；[0059]–[0062]；[0069]–[0073]；Figures 1–4。</td><td>是专利披露，不是部署验证。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="checkpoint"><strong>Day 1阶段决定：</strong>Architecture B通过Week 05技术中立handover审计的primary-reference准入门；相对于原先AGV设想，它仍是non-AGV comparator，而不是direct AGV case。这个决定只允许我们继续深读和建card，不等于Candidate A成立，更不等于它已经成为最终论文案例。</div>
+</section>
+
+<section id="limits">
+  <h2>8. Known—Inferred—Unknown</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>类别</th><th>今天可以保留的内容</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag explicit">SOURCE-EXPLICIT</span></td><td>该专利提出一次/二次化成系统；carrier优选为battery tray；主输送、挡停、移载、入库机和堆垛机形成进入formation device的路径；进口/出口有carrier识别；电池数量是一个可启用条件。</td></tr>
+      <tr><td><span class="tag infer">ENGINEERING INTERPRETATION</span></td><td>挡停与扫码可能是handover前置状态；堆垛机交付后还应存在最终position/contact/acceptance，但具体状态不能由常识自动补齐。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>设备内最终定位、锁紧/施压、电气接触、cell–slot–channel校验、统一acceptance信号、拒收与恢复、现场节拍和长期部署表现。</td></tr>
+      <tr><td><span class="tag claim">NOT ESTABLISHED</span></td><td>它是行业标准；该结构已经规模化部署；它代表所有cell format；公开未写的状态必然构成research gap；AGV应替代该输送/堆垛结构。</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>专利证据的正确用法</h3>
+  <div class="grid">
+    <div class="card"><span class="tag explicit">可以支持</span><p>一种具体formation carrier-transfer架构已经被公开；某些部件、路线和条件存在于claim或embodiment。</p></div>
+    <div class="card"><span class="tag unknown">不能支持</span><p>真实工厂运行成熟度、普及率、可靠性、性能改善或问题仍未被工业界解决。</p></div>
+  </div>
+</section>
+
+<section id="decision">
+  <h2>9. 它怎样改变Candidate A</h2>
+  <p>Week 04的初始Candidate A关注operation-level carrier handover。读完这项专利后，候选必须承受一次收缩：</p>
+  <div class="flow">
+    <div class="node unknownnode"><strong>不能再说</strong><br>formation handover没有运行结构</div><div class="arrow">→</div>
+    <div class="node"><strong>专利反例</strong><br>已披露stop、transfer、inbound、stacker、ID和部分readiness</div><div class="arrow">→</div>
+    <div class="node interface"><strong>只能继续问</strong><br>最终position/contact/acceptance怎样完成并验证？</div>
+  </div>
+  <div class="warning"><strong>候选仍未成立：</strong>“专利没有写完整”首先是source boundary。只有证明剩余未知会影响可靠交接、质量、设备可用性或系统集成，并存在专家/设备验证路径，它才可能成为meaningful problem。</div>
+</section>
+
+<section id="task">
+  <h2>10. 你的学习任务：一次只做一个</h2>
+  <div class="teacher"><strong>现在只回答任务1。</strong>不要提前回答任务2–4。你回答后，我们再回到讲义中的相应设备，逐步修正。</div>
+  <h3>任务1｜先认清对象与边界</h3>
+  <p>请用两句话回答：</p>
+  <div class="answer">① 这项专利中被运输的flow object是什么？<br>② 今天研究的handover从哪个系统开始，到哪个设备结束？</div>
+
+  <details><summary>任务2｜之后再做：按顺序说出入口设备链</summary><p>不看讲义，尝试说出tray从主输送机构到formation device经过的五类设备/动作。</p></details>
+  <details><summary>任务3｜之后再做：区分已知与未知</summary><p>指出一个SOURCE-EXPLICIT状态和一个UNKNOWN状态，并说明为什么。</p></details>
+  <details><summary>任务4｜最后再做：压力测试Candidate A</summary><p>解释这项专利已经推翻了Candidate A的哪种宽泛说法，以及剩余问题应怎样缩小。</p></details>
+  <div class="checkpoint"><strong>Day 1最低完成条件：</strong>你能够讲清flow object、handover边界和入口设备链；能够区分transfer、position、contact和acceptance；并理解“来源未完整披露”尚不是research gap。</div>
+</section>
+
+<section id="recap">
+  <h2>11. 本轮带教复盘（2026-08-10）</h2>
+  <p>本轮按照“一次一个设备／状态”的方式完成。以下记录学生实际形成的理解，用于后续复习，不属于论文研究结果。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>检查点</th><th>学生形成的理解</th><th>需要长期保留的准确边界</th></tr></thead>
+    <tbody>
+      <tr><td>Flow object</td><td>被运输的是电池承载装置。</td><td>专利先使用carrier device；优选实施例[0038]进一步明确为承载若干电池的battery tray。</td></tr>
+      <tr><td>Handover boundary</td><td>Tray从主输送机构交给化成装置。</td><td>中间由第一转移机构实现；今天不把整条二次化成线或formation protocol纳入边界。</td></tr>
+      <tr><td>入口设备链</td><td>能够逐步识别挡停、移载、第三输送部、入库机、堆垛机和化成装置。</td><td>第五移载装置负责主线与第三输送部之间的转移；第三输送部继续向入口输送；堆垛机负责入库机与formation device之间的转移。</td></tr>
+      <tr><td>Source-explicit</td><td>能够判断“堆垛机把tray从入库机转移到化成装置”是source-explicit。</td><td>继续注明PATENT EMBODIMENT；它是公开技术方案，不是长期部署验证。</td></tr>
+      <tr><td>Contact unknown</td><td>能够判断tray进入设备不等于电气接触已经建立。</td><td>电气接触主体、顺序、channel mapping、检测和失败恢复在当前审读段落中仍是UNKNOWN。</td></tr>
+      <tr><td>Enableable state</td><td>认识到可启用不等于工艺已经实际执行。</td><td>准确含义是电池数量这一项前置条件满足；其他position/contact/safety条件以及启动信号仍未由该条款完整建立。</td></tr>
+      <tr><td>Candidate A压力测试</td><td>不能再说公开资料完全没有运行层handover；运输和交接已有描述，contact及与工艺程序的后续连接仍未知。</td><td>该判断只压力测试技术中立的formation-handover候选，不反驳AGV-specific研究设想；候选必须收缩到最终position/contact、完整equipment acceptance与process start之间的证据和验证问题。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="checkpoint"><strong>本轮判断：</strong>Day 1最低理解目标达到。学生能够讲清primary architecture的flow object、handover边界和入口设备链，能够区分transfer事实与contact未知，并能用专利反例主动缩小Candidate A。下一步不自动进入建模；经学生确认后可进入Day 2 primary architecture card的系统整理。</div>
+</section>
+
+<section id="refs">
+  <h2>12. 本讲义使用的原始证据</h2>
+  <ol>
+    <li>CN118970237A，《一种电池二次化成系统以及电池二次化成方法》，2024-11-15公开。本地PDF：<a href="../literatures/week_05_formation_handover/CN118970237A_secondary_formation_system.pdf">打开</a>。重点：Claims 1、9；说明书[0001]–[0003]、[0036]–[0038]、[0059]–[0062]、[0069]–[0073]、[0078]–[0080]；Figures 1–4。</li>
+    <li>WO2026026868A1，同族PCT公开文本，2026-02-05。<a href="https://patents.google.com/patent/WO2026026868A1/fr">在线记录</a>。</li>
+  </ol>
+  <p class="small muted">本讲义是内部学习与证据审计材料，不是正式论文正文。流程图是依据专利文字和附图的可编辑分析性重绘，不是实际工厂布局，也不是对专利附图的等比例复制。专利中的效率、成本和质量表述属于申请人主张，本讲义不把它们作为经独立验证的性能结果。</p>
+</section>
+
+</main>
+</body>
+</html>

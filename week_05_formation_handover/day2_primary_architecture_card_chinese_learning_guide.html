@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 05 Day 2｜Primary Architecture Card中文学习讲义</title>
+  <style>
+    :root{--ink:#17212b;--muted:#536270;--paper:#f5f1e8;--card:#fffdf8;--navy:#173b57;--blue:#2d6f93;--green:#2f7256;--amber:#a96516;--red:#963e3e;--violet:#66558f;--line:#d7d1c5;--softblue:#eaf3f7;--softgreen:#eaf4ee;--softamber:#fff2dd;--softred:#f9e9e7;--softviolet:#f0edf8}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}
+    header{background:linear-gradient(130deg,#102f45,#28677c);color:#fff;padding:50px 7vw 42px}header p{max-width:960px;color:#e1edf2;font-size:1.04rem}.eyebrow{font-weight:800;letter-spacing:.09em;color:#b8dce8}h1{font-size:clamp(2rem,4vw,3.2rem);line-height:1.15;margin:.3rem 0}
+    .nav{position:sticky;top:0;z-index:3;display:flex;gap:7px;overflow:auto;padding:10px 5vw;background:#fffdf8ef;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}.nav a{white-space:nowrap;text-decoration:none;color:var(--navy);font-size:.86rem;padding:5px 9px;border-radius:999px}.nav a:hover{background:var(--softblue)}
+    main{max-width:1140px;margin:auto;padding:30px 22px 74px}section{scroll-margin-top:65px;margin:0 0 42px}h2{color:var(--navy);font-size:1.62rem;border-bottom:2px solid #bdcdd5;padding-bottom:7px}h3{color:#24546f;margin-top:25px}.lead{font-size:1.08rem}.small{font-size:.88rem}.muted{color:var(--muted)}
+    .card,.checkpoint,.warning,.teacher,.sourcebox{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin:15px 0;box-shadow:0 3px 13px #1626360a}.checkpoint{border-left:6px solid var(--green);background:var(--softgreen)}.warning{border-left:6px solid var(--amber);background:var(--softamber)}.teacher{border-left:6px solid var(--blue);background:var(--softblue)}.sourcebox{border-left:6px solid var(--violet);background:var(--softviolet)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}.grid .card{margin:0}.tag{display:inline-block;font-size:.75rem;font-weight:800;letter-spacing:.03em;border-radius:999px;padding:3px 9px;margin:2px}.explicit{background:var(--softgreen);color:var(--green)}.claim{background:var(--softviolet);color:var(--violet)}.infer{background:var(--softamber);color:#7b4b10}.unknown{background:var(--softred);color:var(--red)}.boundary{background:var(--softblue);color:var(--navy)}
+    table{width:100%;border-collapse:collapse;background:var(--card);font-size:.92rem;margin:14px 0}th,td{border:1px solid var(--line);padding:10px;vertical-align:top}th{background:#e8eef1;color:var(--navy);text-align:left}.scroll{overflow-x:auto}
+    .flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:18px 0}.node{flex:1 1 150px;min-width:140px;background:#fff;border:2px solid #91afbd;border-radius:11px;padding:12px;text-align:center}.node.actor{border-color:#4f866b;background:#f1f8f3}.node.interface{border-color:#b98235;background:#fff9ed}.node.unknownnode{border-style:dashed;border-color:#b85a5a;background:#fff5f4}.arrow{align-self:center;font-size:1.35rem;color:var(--blue)}
+    .formula{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#182b38;color:#ecf5f8;border-radius:10px;padding:14px 18px;overflow:auto;white-space:pre-wrap}.answer{min-height:88px;border:2px dashed #9cb2bd;border-radius:10px;padding:12px;background:#fbfdfe}details{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 14px;margin:10px 0}summary{cursor:pointer;font-weight:700;color:var(--navy)}a{color:#17658e}.yes{color:var(--green);font-weight:800}.pending{color:var(--amber);font-weight:800}.no{color:var(--red);font-weight:800}
+    @media(max-width:720px){header{padding:38px 22px}.nav{padding-left:12px}.arrow{transform:rotate(90deg)}}@media print{.nav{display:none}body{background:#fff}.card{box-shadow:none}section{break-inside:avoid}}
+  </style>
+</head>
+<body>
+<div style="max-width:1100px;margin:18px auto;padding:14px 18px;border:2px solid #b42318;background:#fff1f0;color:#7a271a;font-family:Arial,'Microsoft YaHei',sans-serif"><strong>状态提示：</strong>本讲义的原Day 2叙事因与Day 1重复，已被重新设计，不再作为Day 2完成依据。当前有效记录见 <a href="02_Week05_case_dossier.md">Week 5综合case dossier</a> 的“Revised Day 2 — 责任边界选择”。本文件仅保留为阅读过程资料。</div>
+<header>
+  <div class="eyebrow">MASTER THESIS · WEEK 05 · DAY 2</div>
+  <h1>从“看懂路线”到“读懂设备职责”</h1>
+  <p>Day 1回答tray怎样进入formation equipment；Day 2进一步建立完整architecture card：谁实际移动tray、谁检测、谁协调、什么条件已经公开、什么条件仍未知。Architecture B是Week 05技术中立handover审计的primary reference，同时也是原AGV设想的non-AGV comparator。</p>
+</header>
+<nav class="nav">
+  <a href="#goal">今日目标</a><a href="#bridge">接住Day 1</a><a href="#method">读卡方法</a><a href="#primary">Primary card</a><a href="#responsibility">职责链</a><a href="#control">检测与控制</a><a href="#comparator">Comparator</a><a href="#compare">对照</a><a href="#agv">AGV边界</a><a href="#evidence">证据边界</a><a href="#task">学习任务</a><a href="#recap">带教复盘</a>
+</nav>
+<main>
+
+<section id="goal">
+  <h2>0. 今天只学会一件事</h2>
+  <div class="checkpoint"><strong>中心问题：</strong>在Architecture B中，tray从主输送机构进入formation device时，每一个物理动作由谁执行；专利又是否明确说明了控制责任和设备接收条件？</div>
+  <div class="grid">
+    <div class="card"><h3>Physical actor</h3><p>哪一个设备实际停止、移动或承接tray？</p></div>
+    <div class="card"><h3>Detection</h3><p>系统检测了tray身份、位置还是电池数量？</p></div>
+    <div class="card"><h3>Control</h3><p>谁发指令、谁确认完成、谁更新状态？</p></div>
+    <div class="card"><h3>Evidence</h3><p>哪些是claim、embodiment、inference或unknown？</p></div>
+  </div>
+  <div class="teacher"><strong>学习节奏：</strong>第一次只读第0—4节，然后回答第10节任务1。Day 2不是背完两项专利，而是学会用同一套字段读取一个设备架构。</div>
+</section>
+
+<section id="bridge">
+  <h2>1. 接住Day 1：你已经建立了什么</h2>
+  <div class="flow">
+    <div class="node">主输送机构1</div><div class="arrow">→</div>
+    <div class="node interface">挡停装置45</div><div class="arrow">→</div>
+    <div class="node actor">第五移载装置25</div><div class="arrow">→</div>
+    <div class="node">第三输送部26</div><div class="arrow">→</div>
+    <div class="node">入库机27</div><div class="arrow">→</div>
+    <div class="node actor">堆垛机28</div><div class="arrow">→</div>
+    <div class="node">化成装置3</div>
+  </div>
+  <p>Day 1已经解决了<strong>空间顺序</strong>。Day 2要解决的是<strong>功能与责任</strong>：</p>
+  <div class="formula">Where is the tray?
+Who physically handles it?
+What evidence says the action occurred?
+Who authorizes or confirms the next step?
+What remains unknown?</div>
+</section>
+
+<section id="method">
+  <h2>2. “谁拥有tray”不能凭常识填写</h2>
+  <p>Week 05计划使用“谁拥有/移动carrier”这个字段，但这里的<strong>拥有</strong>不是法律所有权，而是运行中的responsibility or state ownership。专利往往只告诉我们物理设备做了什么，并不完整公开控制权怎样切换。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>层</th><th>要问的问题</th><th>专利通常能否直接支持</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Physical handling</strong></td><td>哪个设备正在承载、停止或移动tray？</td><td>通常较强；可以从claim、部件说明和路径图追溯。</td></tr>
+      <tr><td><strong>Control command</strong></td><td>哪个controller/PLC发出动作指令？</td><td>有时只写“控制器控制”，未披露消息和互锁顺序。</td></tr>
+      <tr><td><strong>State ownership</strong></td><td>系统何时把tray状态从“on conveyor”改成“accepted by formation”？</td><td>经常未公开，不能由物理位置自动推定。</td></tr>
+      <tr><td><strong>Process responsibility</strong></td><td>formation equipment何时认为可以安全执行工艺？</td><td>可能只有部分readiness条件，不等于完整acceptance。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="warning"><strong>研究纪律：</strong>“堆垛机把tray送进设备”是physical-handling事实；“formation controller已经接管tray”若来源没有状态更新或acceptance信号，就仍是UNKNOWN。</div>
+</section>
+
+<section id="primary">
+  <h2>3. Architecture B完整证据卡</h2>
+  <div class="sourcebox"><strong>角色定位：</strong><span class="tag boundary">WEEK 05 PRIMARY REFERENCE</span><span class="tag unknown">NON-AGV ARCHITECTURE</span><br>它是技术中立formation-handover审计的primary，不是最终论文case，也不是direct AGV evidence。</div>
+  <div class="scroll"><table>
+    <tbody>
+      <tr><th>Source</th><td>CN118970237A，《一种电池二次化成系统以及电池二次化成方法》；同族WO2026026868A1。</td></tr>
+      <tr><th>Evidence type</th><td>Patent application：权利要求 + 优选实施例 + Figures 1–4。</td></tr>
+      <tr><th>Manufacturing scope</th><td>电池生产中的一次/二次formation、检测、分拣与二次注液衔接。直接formation相关，但只代表该架构。</td></tr>
+      <tr><th>Cell / load object</th><td>承载若干电池的carrier device；[0038]优选为带安装位的battery tray。原文主要使用“电池”，本项目按该化成/注液语境作cell-manufacturing解释。</td></tr>
+      <tr><th>Upstream equipment</th><td>主输送机构1；进入formation前可经过高温库20。</td></tr>
+      <tr><th>Transfer actor/mechanism</th><td>第一转移机构2；入口链包括挡停装置45、第五移载装置25、第三输送部26、入库机27和堆垛机28。</td></tr>
+      <tr><th>Destination equipment</th><td>Formation device 3；第一转移组件21靠近进口，第二转移组件22靠近出口。</td></tr>
+      <tr><th>Positioning / detection</th><td>挡停位置、carrier识别码、formation进口/出口扫码、数量检测。最终设备内position精度和position-confirmed信号未披露。</td></tr>
+      <tr><th>Control / acceptance evidence</th><td>权利要求9给出一项readiness：进入设备的电池数量满足预设要求后，设备处于可启用状态。没有完整统一acceptance状态机。</td></tr>
+      <tr><th>Validation stage</th><td>Disclosed/proposed in patent；不是deployment-validated，不支持长期运行可靠性。</td></tr>
+      <tr><th>AGV relevance</th><td>不使用AGV；可作为非AGV对照，帮助未来定位AGV可能面对的是主线端口、固定transfer port还是设备本体。</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>3.1 Source-explicit content</h3>
+  <ul>
+    <li><span class="tag claim">CLAIM 1</span> 第一转移机构在主输送机构与formation device之间转移carrier。</li>
+    <li><span class="tag explicit">[0038]</span> Carrier优选为带若干安装位的battery tray。</li>
+    <li><span class="tag explicit">[0059]–[0062]</span> 进口/出口、移载装置、第三输送部、入库机与堆垛机。</li>
+    <li><span class="tag explicit">[0069]–[0073]</span> Carrier识别码、进口/出口扫描与挡停装置。</li>
+    <li><span class="tag explicit">[0078]</span> Tray通过第一转移组件进入formation device。</li>
+    <li><span class="tag claim">CLAIM 9</span> 电池数量满足预设要求后，设备处于可启用状态。</li>
+  </ul>
+
+  <h3>3.2 Engineering interpretation</h3>
+  <p>挡停、识别、transfer和数量条件很可能组成handover的若干前置状态；但专利没有提供完整事件顺序、消息接口或状态更新，因此不能直接画成已验证的acceptance state machine。</p>
+
+  <h3>3.3 Unknown</h3>
+  <p>最终定位基准与精度、锁紧/夹持、施压、电气接触、cell–slot–channel映射、door/safety interlock、拒收、transfer failure、统一acceptance信号和deployment performance。</p>
+</section>
+
+<section id="responsibility">
+  <h2>4. Primary中的物理职责怎样逐段变化</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>阶段</th><th>Tray位置</th><th>直接可见的physical actor</th><th>能够说什么</th><th>不能自动说什么</th></tr></thead>
+    <tbody>
+      <tr><td>S0 Main transport</td><td>主输送机构</td><td>输送机构1</td><td>输送机构移动carrier。</td><td>谁创建formation任务。</td></tr>
+      <tr><td>S1 Stop at interface</td><td>与第一转移机构衔接处</td><td>挡停装置45</td><td>Carrier可在需要的位置被拦停。</td><td>到位精度和destination-ready是否已确认。</td></tr>
+      <tr><td>S2 Leave main line</td><td>主线与支线之间</td><td>第五移载装置25</td><td>在主线与第三输送部间transfer。</td><td>谁授权动作、互锁怎样实现。</td></tr>
+      <tr><td>S3 Approach inbound</td><td>第三输送部/入库机</td><td>第三输送部26、入库机27</td><td>Tray沿入口链继续移动；附近可识别carrier。</td><td>扫码成功是否等于设备接收。</td></tr>
+      <tr><td>S4 Enter equipment</td><td>入库机与formation device之间</td><td>堆垛机28</td><td>堆垛机将carrier转移到formation device。</td><td>最终position、锁紧和contact。</td></tr>
+      <tr><td>S5 Process readiness</td><td>Formation device内部</td><td>Formation device 3</td><td>数量满足是一个可启用条件。</td><td>完整acceptance和process start。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="checkpoint"><strong>Day 2核心收敛：</strong>我们能够重建physical handling chain，但还不能完整重建control/state ownership chain。两条链必须分开。</div>
+</section>
+
+<section id="control">
+  <h2>5. Detection不等于Acceptance</h2>
+  <div class="grid">
+    <div class="card"><span class="tag explicit">IDENTITY</span><h3>扫码</h3><p>说明carrier是谁、位于哪个工序附近。</p></div>
+    <div class="card"><span class="tag explicit">LOAD CONDITION</span><h3>数量</h3><p>说明进入设备的电池数量是否满足预设要求。</p></div>
+    <div class="card"><span class="tag infer">POSITION</span><h3>到位</h3><p>入口链暗示有组织的定位，但最终基准、精度与确认信号未披露。</p></div>
+    <div class="card"><span class="tag unknown">CONTACT</span><h3>工艺接口</h3><p>机械/电气接触怎样建立和验证仍未知。</p></div>
+  </div>
+  <p>因此不能使用以下跳跃：</p>
+  <div class="formula">scan successful
+≠ final position confirmed
+≠ mechanical/electrical contact confirmed
+≠ equipment accepted
+≠ formation started</div>
+</section>
+
+<section id="comparator">
+  <h2>6. Architecture A轻量对照卡</h2>
+  <div class="sourcebox"><strong>Role：</strong><span class="tag boundary">LIGHT COMPARATOR</span><span class="tag unknown">NON-AGV DEDICATED TRANSFER MACHINE</span><br>它只用于说明另一种conveyor-to-cabinet transfer实现，不与Architecture B拼成同一工厂。</div>
+  <div class="scroll"><table>
+    <tbody>
+      <tr><th>Source</th><td>TWM639367U，《多层同动托盘架及具备该托盘架之电池化成设备》，2023-04-01公开；申请人致茂电子。</td></tr>
+      <tr><th>Cell / load object</th><td>原文为“待化成电池模组BM”。它处于锂电池formation语境，但BM究竟是cell group、tray load还是module-level object仍需谨慎解释。</td></tr>
+      <tr><th>Upstream equipment</th><td>输送带模组5。</td></tr>
+      <tr><th>Transfer actor</th><td>多层同动托盘架1：活动层架、致动器、伸缩臂、马达与传动轴组成专用移载机器。</td></tr>
+      <tr><th>Destination</th><td>化成柜6中的多层化成腔61。</td></tr>
+      <tr><th>Position / detection</th><td>位置检测器22检测伸缩臂伸出/缩回；电池检测装置317检测载荷是否被活动臂夹持；实施例写明伸入化成腔并“达定位后”释放。</td></tr>
+      <tr><th>Control / acceptance</th><td>控制器7协调输送带、托盘架和化成柜，并控制夹持、移动、伸入、释放和缩回。未公开统一equipment-acceptance信号或电气contact验证。</td></tr>
+      <tr><th>Validation stage</th><td>Utility-model patent disclosure；不是量产部署验证。</td></tr>
+      <tr><th>AGV relevance</th><td>不是AGV；说明固定输送加专用多层移载机可以直接服务formation cabinet。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="warning"><strong>Comparator边界：</strong>Architecture A的mechanical transfer细节更强，但flow object边界比B弱。不能把A的夹持/定位机制补入B，也不能把B的识别/数量readiness补入A。</div>
+</section>
+
+<section id="compare">
+  <h2>7. 两种架构对照：不是优劣排名</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>维度</th><th>Architecture B：CN118970237A</th><th>Architecture A：TWM639367U</th><th>对Candidate A的含义</th></tr></thead>
+    <tbody>
+      <tr><td>Flow object</td><td>优选明确为battery tray。</td><td>待化成电池模组BM，边界有歧义。</td><td>不能仅凭“battery”统一载具语义。</td></tr>
+      <tr><td>Transfer chain</td><td>Stopper→transfer→conveyor→inbound→stacker。</td><td>Conveyor→multilayer rack→formation chambers。</td><td>公开工程方案已经有多种具体transfer实现。</td></tr>
+      <tr><td>Position/detection</td><td>Carrier识别、进口/出口扫码；最终position未知。</td><td>伸缩臂位置检测、夹持检测、“达定位后”释放。</td><td>“position完全没被描述”也过宽，但精度与设备确认仍未知。</td></tr>
+      <tr><td>Readiness</td><td>数量满足→设备可启用，是partial condition。</td><td>控制器协调动作，但工艺readiness未完整披露。</td><td>Acceptance只能按来源逐项拆解，不能拼装。</td></tr>
+      <tr><td>AGV</td><td>没有。</td><td>没有。</td><td>两者都不是AGV-specific direct evidence。</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="agv">
+  <h2>8. 它们与原AGV设想是什么关系</h2>
+  <div class="flow">
+    <div class="node"><strong>Architecture B</strong><br>固定输送 + 入库 + 堆垛</div><div class="arrow">↔</div>
+    <div class="node interface"><strong>Analytical checklist</strong><br>arrival / transfer / position / contact / acceptance</div><div class="arrow">↔</div>
+    <div class="node unknownnode"><strong>Future AGV case</strong><br>AGV → transfer port或formation equipment？</div>
+  </div>
+  <p>两项专利的作用是帮助我们形成问题清单，不是证明AGV不适用。未来找到AGV直接案例后，需要重新确认：</p>
+  <ul>
+    <li>AGV直接把tray送进formation equipment，还是只交给固定transfer port？</li>
+    <li>AGV完成drop后，谁负责最终定位和process contact？</li>
+    <li>AGV任务完成条件是“到站”“卸货”，还是“下游设备已accept”？</li>
+  </ul>
+  <div class="checkpoint"><strong>准确定位：</strong>Architecture B是Week 05 primary reference和non-AGV comparator；Architecture A是light comparator；真正的AGV-specific primary case尚未找到。</div>
+</section>
+
+<section id="evidence">
+  <h2>9. Day 2 Known—Inferred—Unknown</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>状态</th><th>今天可以保留的内容</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag explicit">KNOWN FROM PATENTS</span></td><td>两种非AGV formation transfer architectures已经被公开；B给出输送—入库—堆垛链和识别/readiness；A给出专用多层移载机的夹持、伸缩、位置/载荷检测和放置动作。</td></tr>
+      <tr><td><span class="tag infer">OUR INTERPRETATION</span></td><td>Physical handling可被重建为责任链；position/contact/acceptance是比较不同架构的合理分析维度。</td></tr>
+      <tr><td><span class="tag unknown">UNKNOWN</span></td><td>两种架构的现场部署、控制消息、设备内最终contact、完整acceptance、失败恢复，以及目标AGV系统是否存在和怎样交接。</td></tr>
+      <tr><td><span class="tag boundary">NOT A CONCLUSION</span></td><td>AGV被专利反驳；专利方案更优；Candidate A已经成立；公开未写等于工业界没有。</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="task">
+  <h2>10. 你的Day 2学习任务</h2>
+  <div class="teacher"><strong>现在只回答任务1。</strong>我们仍采用一次一个判断。回答后再进入physical responsibility chain。</div>
+  <h3>任务1｜Physical actor与state ownership</h3>
+  <p>Architecture B中，堆垛机28已经把tray从入库机送入formation device。请回答：</p>
+  <div class="answer">我们能够直接确认的physical action是什么？为什么还不能仅凭这个动作说“formation equipment已经正式accept了tray”？</div>
+  <details><summary>任务2｜之后再做：逐段分配physical actor</summary><p>分别说明挡停装置、第五移载装置、第三输送部、入库机和堆垛机对tray做了什么。</p></details>
+  <details><summary>任务3｜之后再做：Detection ladder</summary><p>解释扫码、数量满足、最终定位、contact与acceptance为什么不能互相替代。</p></details>
+  <details><summary>任务4｜之后再做：Comparator边界</summary><p>说出Architecture A提供了哪个B没有的机械细节，以及为什么不能把它直接补到B。</p></details>
+  <details><summary>任务5｜最后再做：AGV关系</summary><p>说明两项非AGV专利对未来AGV-specific研究能够支持什么、不能支持什么。</p></details>
+  <div class="checkpoint"><strong>Day 2最低完成条件：</strong>能够解释primary card的关键字段；能把physical handling与state/control ownership分开；能从A提取一个轻量反例但不拼接来源；能准确说明两项专利都不是AGV direct cases。</div>
+</section>
+
+<section id="recap">
+  <h2>11. 本轮带教复盘（2026-08-11）</h2>
+  <p>本轮从Architecture B的physical responsibility开始，再用Architecture A检查mechanical-state和跨来源边界，最后回到AGV接口。以下记录学生实际形成的理解，不属于论文研究结论。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>检查点</th><th>学生形成的理解</th><th>需要长期保留的准确边界</th></tr></thead>
+    <tbody>
+      <tr><td>Transfer与acceptance</td><td>堆垛机把tray送入formation device是transfer；到达不代表电气/物理接触与工艺接收完成。</td><td>继续区分physical transfer、final position、contact、equipment acceptance、start permission和process start。</td></tr>
+      <tr><td>Stop与transfer</td><td>挡停后transfer尚未开始；第五移载装置动作才开始第一段transfer。</td><td>挡停只建立接口等待位置；destination-ready、动作授权和state ownership仍未由挡停动作证明。</td></tr>
+      <tr><td>Physical与state ownership</td><td>Tray到第三输送部仍不能证明formation system正式接管。</td><td>更一般地，即使物理进入设备，没有状态更新或acceptance证据也不能自动判定ownership transfer。</td></tr>
+      <tr><td>扫码与数量</td><td>扫码确认carrier身份；数量检测确认具体电池数量。</td><td>专利没有规定扫码成功触发acceptance；数量满足只构成一项enableable/readiness条件。</td></tr>
+      <tr><td>Partial readiness</td><td>数量满足后设备处于readiness，但工艺尚未实际执行。</td><td>准确写为quantity-related partial readiness / enableable state；其他position/contact/safety条件与启动许可仍未知。</td></tr>
+      <tr><td>Architecture A对象</td><td>整台多层同动托盘架负责从输送带到化成柜的运输，伸缩臂负责夹取和释放。</td><td>区分system-level transfer actor与内部load-handling component。</td></tr>
+      <tr><td>Mechanical states</td><td>理解伸缩臂夹持与放置载荷。</td><td>转为状态语言：arm extended/retracted与load engaged/released；夹持成功不等于delivery完成。</td></tr>
+      <tr><td>Comparator纪律</td><td>不能把A的夹持机构补到B，因为不是同一装置，B也没有多层同动托盘架。</td><td>A只能证明一种已公开实现，并生成检查问题；不能替B或未来AGV case回答。</td></tr>
+      <tr><td>AGV边界</td><td>非AGV专利能提供contact/handover思路；未来必须确认AGV把tray交给什么位置和设备，不假设直接进入formation。</td><td>两项专利形成analytical checklist和non-AGV comparators，不是AGV direct evidence。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="checkpoint"><strong>本轮判断：</strong>Day 2最低理解目标达到。学生能够区分physical handling与control/state ownership，理解identity、quantity、position、contact和acceptance不是同一状态，能够使用Architecture A作轻量对照而不拼接来源，并能准确说明非AGV架构对未来AGV handover研究的作用。经学生确认后，Day 3才建立只对应primary reference的evidence-bounded state diagram。</div>
+</section>
+
+<section id="refs">
+  <h2>12. 原始证据</h2>
+  <ol>
+    <li>CN118970237A，《一种电池二次化成系统以及电池二次化成方法》。<a href="../literatures/week_05_formation_handover/CN118970237A_secondary_formation_system.pdf">本地PDF</a>。重点：Claims 1、9；[0036]–[0038]、[0059]–[0062]、[0069]–[0073]、[0078]–[0080]；Figures 1–4。</li>
+    <li>TWM639367U，《多层同动托盘架及具备该托盘架之电池化成设备》。<a href="../literatures/week_05_formation_handover/TWM639367U_multilayer_tray_rack.pdf">本地PDF</a>。重点：Claims 8–10；说明书[0023]–[0028]；Figure 6（PDF p.23）。</li>
+  </ol>
+  <p class="small muted">本讲义是内部学习与证据审计材料，不是论文正文。所有结构图均为可编辑的分析性重绘。两项专利分别形成独立architecture card，没有被拼成一条实际生产线；申请人的效率、成本或质量主张未作为经独立验证的结果使用。</p>
+</section>
+
+</main>
+</body>
+</html>
