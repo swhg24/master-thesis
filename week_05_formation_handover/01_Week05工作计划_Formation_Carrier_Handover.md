@@ -2,6 +2,7 @@
 
 > 制定日期：2026-08-07
 > 依据：Thomas 的 Week 02/03 反馈、Week 03–04 已完成成果、GPT 对最新 `main` 的外部审查、`docs/collaboration_and_pacing.md`。
+> 方向校准：2026-08-11。Architecture B/B2只作为non-AGV fixed-automation reference/baseline；Week 05不得收缩成堆垛机或一般设备接口课题。后续必须执行`docs/research_direction_guardrails.md`中的robotics-relevance gate。
 > 状态：经 Codex 核查后的执行计划。它不是最终 research gap、最终研究问题、最终论文题目或 PEM/RWTH 官方要求。
 
 ---
@@ -49,37 +50,39 @@ Week 05 的职责不是继续扩大知识面，而是让最优先候选问题接
 - “Handover 有操作动作，所以必须使用 humanoid。”
 - “某篇论文没有写 handover，所以整个领域存在 gap。”
 
-### 2.3 当前第一候选
+### 2.3 当前待检验候选
 
-Week 04 暂时保留：
+Week 04留下的是`operation-level carrier handover`候选。外部GPT审查建议进一步关注`process-aware carrier handover requirements`；方向复核后，这个表述只能作为**待检验的feasibility hypothesis**：
 
-> **Candidate A — Process-aware carrier handover at operation level**
+> **Candidate A — test whether one directly supported formation-specific requirement changes an identifiable robotic-system task or a concrete robot–equipment integration decision at one validated loading interface.**
 
-谨慎含义是：现有来源已经表达 carrier 的工艺接口功能和部分 intralogistics，但一个具体 carrier 怎样完成 transfer、positioning、contact 和 equipment acceptance，仍需结合设备实现证据核验。Failure/recovery 本周只登记为未知，不重建异常状态。
+现有来源分别表达了一些carrier工艺功能、intralogistics transition与设备transfer，但它们不是同一工厂。Week 05必须先证明某一条件在同一配置中跨入robotic/handling task，不能把transfer、positioning、contact与equipment acceptance预先拼成一条已知流程。Failure/recovery本周只登记为未知，不重建异常状态。
 
-它目前仍是 `candidate problem`，不是 `established research gap`。
+它目前仍是`feasibility hypothesis`，不是`established practical problem`、`research gap`或最终研究问题。
 
 ---
 
-## 3. Week 05 唯一核心问题
+## 3. Week 05 唯一核心问题（2026-08-11校准）
 
-> **Can a concrete formation-carrier handover be reconstructed with clear evidence boundaries and a credible validation route, so that it remains a feasible thesis case?**
+> **In one concrete formation-loading configuration, is there a directly supported process-specific condition that changes an identifiable robotic-system task or a concrete robot–equipment integration decision, with a credible validation route?**
 
 中文：
 
-> **能否从公开技术证据中重建一个边界清楚的 formation-carrier handover，识别有直接支持的 battery-specific 条件，并建立可信的验证路径，使它继续成为可行的硕士论文案例？**
+> **在一个具体的化成上料配置中，是否存在有直接证据的工艺特定条件，会改变可辨认的机器人系统任务，或改变机器人与固定上料/工艺设备之间的具体集成决策，并且能够通过可信路径验证？**
 
 ### 人话版本
 
 本周只想弄清一件事：
 
-> 关于一个 formation carrier 从“外部物流系统仍在负责它”到“formation equipment 接收它”的过程，公开证据明确描述了哪些动作和状态，哪些仍需要现实验证？
+> B2不只是“怎样把tray送进去”的固定搬运描述；是否至少有一项formation要求真正改变机器人任务，或改变机器人与固定上料/工艺设备之间的责任分配，使它成为机器人系统集成问题？
+
+若答案为`NO`，B2保留为学习case和fixed-automation baseline，不继续成为thesis candidate。这也是Week 05的有效结果。
 
 ---
 
 ## 4. Reference interface 与范围边界
 
-### 4.1 本周只研究
+### 4.1 本周只研究的reference evidence
 
 ```text
 UPSTREAM INTRALOGISTICS
@@ -89,6 +92,16 @@ FORMATION CARRIER
 [TRANSFER / POSITION / CONTACT / ACCEPTANCE]
           ↓
 FORMATION EQUIPMENT
+```
+
+该图只是接口证据审计范围，不等于论文核心已经变成handover。潜在论文相关性必须进一步连接：
+
+```text
+BATTERY-SPECIFIC REQUIREMENT
+          ↓
+ROBOTIC / AUTOMATED HANDLING TASK OR DECISION
+          ↓
+IMPLEMENTATION AND VALIDATION
 ```
 
 ### 4.2 本周不同时研究
@@ -111,7 +124,7 @@ FORMATION EQUIPMENT
 - 二次化成系统不自动代表所有首次 formation 路线；
 - 来源没有明确写 electrical contact 时，不得把“送入柜体”改写为“电气接触完成”。
 
-每一种设备结构先建立独立 architecture card。Day 1通过准入检查后，只选择一个`PRIMARY REFERENCE ARCHITECTURE`进行深读和状态建模；第二项只作为轻量`COMPARATOR / COUNTEREXAMPLE`。
+每一种设备结构先建立独立 architecture card。Day 1通过准入检查后，只选择一个`MAIN REFERENCE ARCHITECTURE`进行深读和robotics-relevance责任审计；第二项只作为轻量`COMPARATOR / COUNTEREXAMPLE`。只有某一跨系统条件通过审计，才制作最小状态表示。
 
 只有跨来源共同出现的功能，才可在更高层形成analytical checklist。该checklist只是分析工具，不是已观察到的统一architecture，更不是一条实际生产线。
 
@@ -169,7 +182,7 @@ FORMATION EQUIPMENT
 
 Week 05只维护一个综合case dossier。只完成以下三项，即达到最低目标：
 
-1. **一个primary architecture的完整card，加一个轻量comparator card**
+1. **一个main reference architecture的完整card，加一个轻量comparator card**
    - 谁拥有/移动 carrier；
    - 从哪里 transfer 到哪里；
    - 使用什么机构；
@@ -177,17 +190,19 @@ Week 05只维护一个综合case dossier。只完成以下三项，即达到最�
    - `SOURCE-EXPLICIT / ENGINEERING INFERENCE / UNKNOWN`；
    - evidence type与validation status。
 
-2. **一张只对应primary architecture的evidence-bounded handover state diagram**
-   - 至少区分 arrival、transfer、position/contact 和 equipment acceptance；
-   - 每个状态或箭头标记 `SOURCE-EXPLICIT / ENGINEERING INFERENCE / UNKNOWN`；
-   - `SOURCE-EXPLICIT`继续注明`peer-reviewed statement / patent claim / patent embodiment`；
-   - 另列validation status，例如`disclosed/proposed—not deployment-validated`；
-   - 不把不同来源拼成一个已存在系统。
+2. **一张robotics-relevance responsibility matrix**
+   - 候选条件是否在main reference中有直接证据；
+   - 谁负责：mobile robot、fixed transfer、carrier、formation equipment、MES/PLC或unknown；
+   - 该条件是否真正改变robotic-system task或robot–equipment integration decision；
+   - 失败的实际后果是否有证据；
+   - 谁或什么资料能够验证。
+   - 状态图只有在至少一项跨系统条件通过初筛后才作为可选的最小补充；不得为UNKNOWN画出一台看似完整的系统。
 
 3. **一次 Candidate A 压力测试**
    - 已有技术证据解释了什么；
    - 哪些内容仍然未知；
    - 剩余问题是否 battery-specific；
+   - 剩余问题是否明确改变一个robotic-system task或实施决策；
    - 是否有具体、可执行的credible validation route；
    - 最终作出 `KEEP / NARROW / ABANDON / CONTINUE LEARNING` 决定。
 
@@ -224,29 +239,29 @@ Day 1–5 仍表示逻辑顺序，不是必须每天生成一个文件，也不�
 - 核对两项专利的申请人、公开日、family、图号、claims/description；
 - 明确每个来源中的flow object究竟是cell、tray、battery module还是未充分定义；
 - 对Architecture A和B分别执行准入检查；
-- 选出一个primary architecture，另一个只作comparator；
+- 选出一个main reference architecture，另一个只作comparator；这里的main只表示Week 05主要阅读来源，不表示thesis primary case；
 - 在dossier中画一张最小边界图，不画完整工厂。
 
 #### Day 1案例准入门
 
-一个来源只有同时满足以下条件，才可成为primary case：
+一个来源只有同时满足以下条件，才可成为Week 05 main reference：
 
 1. 明确属于lithium-ion **cell manufacturing / formation**，不是module/pack装配或其他电池使用场景；
 2. 被transfer的load/carrier object可以辨识，或至少其边界能够可靠解释；
 3. 来源明确描述load/carrier进入formation equipment，而不是只在附近运输；
 4. 关键结构可追溯到原始图、claims或description。
 
-每项记录`YES / NO / UNKNOWN + exact evidence`。如果两项专利都不能通过，不得为了凑card而扩展到module/pack；本周可以得出“公开primary case不足”。
+每项记录`YES / NO / UNKNOWN + exact evidence`。如果两项专利都不能通过，不得为了凑card而扩展到module/pack；本周可以得出“公开reference evidence不足”。
 
-最低产出：在综合dossier内完成准入表并选定primary；不增加独立文件。
+最低产出：在综合dossier内完成准入表并选定main reference；不增加独立文件。
 
-### Day 2 — 深读primary，轻量检查comparator
+### Day 2 — 深读main reference，轻量检查comparator
 
 核心问题：
 
 > 公开设备结构实际上怎样把载荷送入formation equipment？
 
-Primary完整填写，comparator只填写能够形成反例的必要字段：
+Main reference完整填写，comparator只填写能够形成反例的必要字段：
 
 ```text
 Source:
@@ -263,41 +278,37 @@ Engineering inference:
 Unknown:
 ```
 
-最低产出：primary完整card和comparator轻量card，均留在同一dossier。第三种supplier architecture只作为可选扩展。
+最低产出：main-reference完整card和comparator轻量card，均留在同一dossier。第三种supplier architecture只作为可选扩展。
 
-### Day 3 — 建立 evidence-bounded handover states
+### Day 3 — Robotics relevance 与责任分配审计（方向校准后）
 
 核心问题：
 
-> 运输任务在什么条件下才真正完成？
+> 哪一项formation-specific condition（如果存在）真正改变了机器人系统任务或robot–equipment integration decision，而不是只属于固定搬运或化成设备内部？
 
-起始状态骨架：
+先建立责任矩阵，不先画完整状态机：
 
 ```text
-Carrier arrives at interface
-→ identity / load condition checked?
-→ destination available?
-→ transfer mechanism engages
-→ carrier/load physically transferred
-→ positioned / locked?
-→ process interface established?
-→ equipment acceptance signal?
-→ ownership/state updated
-→ handover completed
+Candidate condition
+→ direct evidence in this same architecture?
+→ responsible subsystem?
+→ changes a robotic-system task or robot–equipment integration decision?
+→ creates a meaningful implementation decision?
+→ practical consequence?
+→ credible validation route?
 ```
 
 规则：
 
-- 问号表示不能自动假定；
-- 状态图只对应primary architecture，不把comparator内容补入图中；
-- 每条箭头必须能够回到primary来源，或明确写为engineering inference；
-- 专利明确披露的动作标记为`SOURCE-EXPLICIT—PATENT CLAIM/EMBODIMENT`，不标记为现实部署`FACT`；
-- 图旁单列validation status；
-- `physically delivered` 与 `equipment accepted` 分开；
-- `positioned`、`mechanically locked`、`pressure applied` 和 `electrically contacted` 不得合并成一个模糊动作；
-- comparator如有不同，只在对照card中记录，不强行形成统一流程。
+- Position、contact、pressure、identity和readiness只是筛选行，不是五个并列研究主题；
+- 另一来源中的fixture/pressure/contact不得补入Architecture B；
+- 如果要求由formation equipment内部完全消化，则保留为process background，不写成robotics problem；
+- fixed stacker crane是否属于本论文期待的core robotic system仍需Thomas确认；
+- 如果没有明确robot actor或可研究的robotic-system decision，B2立即降为baseline；
+- 只有通过初筛的一项要求，才允许用最小evidence-bounded state line继续表示；
+- 专利披露只能标为`disclosed/proposed—not deployment-validated`。
 
-最低产出：在综合dossier中加入一张可编辑primary state diagram及其evidence table。此处不写SimPy。
+最低产出：在综合dossier中加入一张responsibility/robotics-relevance matrix，并对每行作`KEEP FOR TEST / PROCESS-INTERNAL / GENERIC / UNKNOWN`判断。此处不写SimPy。
 
 ### Day 4 — 检查battery-specific requirement
 
@@ -307,17 +318,18 @@ Carrier arrives at interface
 
 优先检查：
 
-| 候选维度 | 假设/证据起点 | 是否适用于primary？ | 必须继续确认 |
+| 候选维度 | 假设/证据起点 | 是否适用于main reference？ | 必须继续确认 |
 | --- | --- | --- | --- |
 | Carrier contact | Schomburg支持某类carrier contact功能 | `YES / NO / UNKNOWN + source` | 接触由carrier、cabinet还是独立机构完成 |
-| Fixture/pressure | Deng支持其案例中的tray fixture与受控施压 | `YES / NO / UNKNOWN + source` | 施压是否属于primary的transfer、process或二者之间 |
-| Identity mapping | 专利线索可能包含carrier identification | `YES / NO / UNKNOWN + source` | Primary是否需要cell–slot–tray–channel一致性，以及谁校验 |
-| Process readiness | Working hypothesis：工艺开始可能需要状态许可 | `YES / NO / UNKNOWN + source` | Primary是否公开release/acceptance条件；未找到前不得当作事实 |
+| Fixture/pressure | Deng支持其案例中的tray fixture与受控施压 | `YES / NO / UNKNOWN + source` | 施压是否属于main reference的transfer、process或二者之间 |
+| Identity mapping | 专利线索可能包含carrier identification | `YES / NO / UNKNOWN + source` | Main reference是否需要cell–slot–tray–channel一致性，以及谁校验 |
+| Process readiness | Working hypothesis：工艺开始可能需要状态许可 | `YES / NO / UNKNOWN + source` | Main reference是否公开release/acceptance条件；未找到前不得当作事实 |
 
 判断标准：
 
 - 如果只剩“到站—定位—放货—确认”，且没有cell-specific约束，Candidate A的论文价值下降；
-- 如果工艺接触、压力、身份或process readiness确实改变handover状态，继续检查其研究与验证价值；
+- 如果工艺接触、压力、身份或process readiness只有跨来源线索、或只由formation equipment内部处理，不能用来维持Candidate A；
+- 只有某一条件有同一case直接证据、确实改变robotic-system task或robot–equipment integration decision并有现实后果时，才继续检查其研究与验证价值；
 - thermal runaway、泄漏和隔离只记录为secondary branch，本周不展开安全系统设计。
 
 最低产出：把`general logistics vs battery-specific`判断合入Candidate A压力测试，不另建文件。
@@ -333,19 +345,22 @@ Carrier arrives at interface
 1. 公开技术已经描述到了哪些机械/信息/控制状态？
 2. 剩余未知是科学问题、工程实施细节、商业保密，还是我们的检索不足？
 3. 剩余问题是否会影响可靠交接、质量、设备可用性或系统集成？
-4. 是否能通过真实设备资料或专家获得验证？
-5. 这个候选是否符合Master Thesis范围？
+4. 剩余问题具体改变了哪个机器人系统的task，或哪项robot–equipment integration decision？
+5. 是否能通过真实设备资料或专家获得验证？
+6. 这个候选是否仍符合Thomas给出的`Robotic Systems in Battery Manufacturing`方向？
 
 最低产出：综合dossier中的一页Candidate A decision memo；Thomas meeting brief从这一页裁剪，不算额外最低产出。
 
 ---
 
-## 8. 给Thomas的四个决定性问题
+## 8. 给Thomas的决定性问题
 
-1. **Do we have access to a concrete formation carrier or equipment interface at FFB/PEM that could serve as a reference case?**
-2. **Is the operational handover between intralogistics and formation equipment a sufficiently relevant technical problem, or is it already a mature engineering detail from your perspective?**
-3. **Is there an equipment or intralogistics expert who could validate the actual transfer, positioning, process-contact and acceptance sequence?**
-4. **Should this carrier-interface case be narrowed further as a possible thesis case, or remain only a learning case while another battery-specific problem is considered?**
+1. **Does a thesis centered on automated carrier handover at a formation-loading interface still match the intended scope of “Robotic Systems in Battery Manufacturing,” or should it remain only a learning use case?**
+2. **Within this thesis, can a fixed stacker-crane/conveyor interface constitute the core robotic system, or should the final case contain a more explicit AGV/AMR, robot-loading, or mobile-manipulation actor?**
+3. **Do we have access to a concrete formation carrier or equipment interface at FFB/PEM that could serve as a reference case?**
+4. **Does any formation-specific requirement actually change the transport/handling-system task, or are positioning, contact, pressure and process acceptance handled entirely inside the formation equipment?**
+5. **Is there an equipment, robotics or intralogistics expert who could validate the actual responsibility split and its practical importance?**
+6. **Should this carrier-interface case be narrowed further as a possible thesis case, or remain only a learning case while another battery-specific robotics problem is considered?**
 
 若组会尚未发生，计划不能假装已经有验证入口；应将其状态写为`pending supervisor/expert confirmation`。
 
@@ -355,16 +370,17 @@ Carrier arrives at interface
 
 ### A. KEEP — 继续进入problem definition
 
-对以下四项逐一记录`YES / NO / UNKNOWN + evidence`：
+对以下五项逐一记录`YES / NO / UNKNOWN + evidence`：
 
 | KEEP条件 | 必须达到的含义 |
 | --- | --- |
-| Concrete reference interface | Primary通过Day 1准入门，并能追溯其对象、transfer和destination |
-| Directly supported battery-specific condition | 至少一个不是普通pallet logistics的条件直接适用于primary |
+| Concrete reference interface | Main reference通过Day 1准入门，并能追溯其对象、transfer和destination |
+| Directly supported battery-specific condition | 至少一个不是普通pallet logistics的条件直接适用于main reference |
+| Identifiable robotics relevance | 能指出robotic-system actor或有现实理由评价的robotic solution，以及被改变的robot task或robot–equipment integration decision；generic fixed automation本身不满足本项 |
 | Meaningful problem | 剩余问题会实际影响可靠交接、质量、可用性或系统集成，而不只是资料写得少 |
 | Credible validation route | 已识别具体专家、FFB/设备接口资料或另一种可执行验证方法；不能只写“以后问Thomas” |
 
-只有四项均为`YES`，才进入KEEP。
+只有五项均为`YES`，并得到Thomas对题目边界的确认，才进入KEEP。
 
 Week 06才可以开始认真写：
 
@@ -408,8 +424,8 @@ practical problem
 
 - 补充第三种formation-equipment architecture，但必须有比供应商营销概述更具体的结构证据；
 - 追踪一项关键专利的family/citations，检查是否存在更早、更强的直接反例；
-- 在主handover状态图旁登记reject/rework需要哪些未知状态，但本周仍不重建异常流程；
-- 将最终状态图整理成一页Thomas组会图。
+- 只有一项robotics-relevant条件通过初筛后，才在最小状态表示旁登记reject/rework需要哪些未知状态；本周仍不重建异常流程；
+- 只有最小状态表示有助于Thomas判断责任边界时，才整理成一页组会图。
 
 以上均不是Week 05成功条件，不得同时全部开展。
 
@@ -457,17 +473,17 @@ Week 05不再为Day 1–5分别制作大型HTML讲义。只维护一个综合cas
 
 ### 学生
 
-- 能够从头讲清primary architecture中载荷怎样进入formation equipment，并说明comparator在哪一点形成反例；
+- 能够从头讲清main reference architecture中载荷怎样进入formation equipment，并说明comparator在哪一点形成反例；
 - 主动指出图中哪些是transport、transfer、position/contact和acceptance；
 - 不要求背专利号，但应知道每项结论来自哪一类证据；
-- 在组会中提出四个决定性问题，并尽可能原样带回Thomas反馈；
+- 在组会中提出六个决定性问题，并尽可能原样带回Thomas反馈；
 - 参与`KEEP / NARROW / ABANDON / CONTINUE LEARNING`决定。
 
 ### Codex
 
 - 精读专利原文和图纸，核对申请人、family、公开时间、claims与description；
 - 建立独立architecture cards，禁止跨来源拼接；
-- 绘制只对应primary的可编辑state diagram与evidence table；
+- 建立只对应main reference的responsibility/robotics-relevance matrix；仅在筛选通过后绘制最小state representation；
 - 区分peer-reviewed statement、patent claim/embodiment、engineering inference和unknown，并单列validation status；
 - 控制范围与学习节奏；
 - 根据Thomas反馈更新决策记录，但不擅自宣布gap。
@@ -485,8 +501,8 @@ Week 05不再为Day 1–5分别制作大型HTML讲义。只维护一个综合cas
 
 Week 05计划执行完成时，学生应能用自己的话回答：
 
-> 一个formation载荷如何从外部物流进入设备，哪些动作有来源支持，哪些接触/确认仍未知，哪些要求真正来自电芯formation，以及为什么该接口应该被保留或放弃为论文候选案例。
+> 一个formation载荷如何从外部物流进入设备；哪些动作有来源支持；哪一项formation-specific requirement是否真正改变了机器人系统任务或robot–equipment integration decision；以及为什么该接口应作为robotics thesis candidate继续、缩小或退出。
 
-如果只能复述专利结构，却不能解释它怎样改变Candidate A，则本周仍未完成。
+如果只能复述专利结构，或只能说“某状态未知”，却不能解释它怎样改变robotic-system task或implementation decision，则本周仍未完成。
 
 如果Candidate A最终被反例推翻或被Thomas判断为成熟工程细节，只要证据链和决策透明，Week 05仍然成功。
