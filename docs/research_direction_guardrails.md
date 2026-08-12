@@ -171,6 +171,23 @@ Thomas与学生确认后建立一页`case charter`，至少固定：production l
 
 调整必须写出`原case → 新case、触发证据、对已完成工作的影响、学生/Thomas决定`；不得靠周计划连续性或新热点隐性换题。
 
+### 4.6 2026-08-12组会后的最新状态
+
+根据2026-08-12组会录屏的音频与Teams字幕复核：
+
+- Thomas明确表示Pack end-of-line testing方向可以，因此module/pack不再只是等待讨论的抽象候选范围；Candidate B可以在pack层级进入Week 06暂定深挖。正式注册摘要仍须显式说明其与原始`battery cell production value chain`措辞的关系。
+- Thomas没有替学生在A/B/C之间作最终选择。他强调学生需要作出自己感觉合适、能够解释的决定，并建议使用清楚的解释/决策树。
+- 学生提出下一周继续Candidate B并查找更多文献和详细信息，Thomas明确认可该计划。
+- 当battery-humanoid直接技术细节不足时，Thomas允许从其他工业领域提取可迁移细节，或总结humanoid robotics属性并判断其适用/不适用区域。
+- Thomas同时否定仅依赖新闻信息的证据方式。企业新闻只证明企业披露，不能独立证明性能、成熟度或经济优势。
+- Thomas提出下周可准备约1–2页/张的abstract并进入注册流程，他将另行提供信息。正式动作前仍须核验最新PEM/RWTH/ZPA流程。
+
+因此当前状态更新为：
+
+> **Candidate B = PROVISIONAL WEEK 06 FOCUS / supervisor-accepted student choice for further investigation / NOT YET FINAL CASE LOCK.**
+
+Humanoid/mobile dual-arm system可以成为Week 06的重点评价对象，但必须与专用自动化和固定工业机器人比较，不预设优越性。公开信息不足可构成检索与迁移研究的入口，但不能单独构成research gap。
+
 ## 5. Week 05 Architecture B 的正确身份
 
 Architecture B（CN118970237A）公开了：
@@ -278,6 +295,14 @@ Position、contact、pressure、identity 和 readiness 只是筛选项，不是�
 
 `B2 formation handover`已执行`ABANDON / RETURN TO MAP`：作为baseline保留，但退出thesis-candidate path。下一阶段不是自动选择humanoid，也不是直接宣布新gap，而是完成第4节A/B/C短名单的同口径证据卡并交由Thomas与学生选择。
 
+### 2026-08-12组会后的执行决定
+
+- 不返回B2 formation handover；
+- Week 06暂定深化Candidate B——Pack EoL/DCR柔性测试接插件处理；
+- 该决定由学生提出，Thomas认可继续，但Thomas没有替学生宣布最终题目；
+- Week 06应形成selection tree、任务/责任边界、跨行业证据迁移、三类架构条件比较和validation route；
+- 只有通过robotics-relevance与validation gate后，Candidate B才可正式锁定；否则将humanoid降为future-trend scenario或按既定规则返回Candidate A。
+
 ### KEEP / NARROW
 
 只有机器人相关性硬门、battery-specific effect、practical relevance和validation均有证据时，才允许选择一个要求继续窄化。
@@ -302,6 +327,18 @@ Position、contact、pressure、identity 和 readiness 只是筛选项，不是�
 3. **Should humanoid robots be the primary technology under evaluation, one candidate within a technology comparison, or mainly a future-trend scenario?**
 4. **Which concrete FFB/PEM/industry station, expert, equipment specification, or dataset could validate the selected task requirements and current automation pain points?**
 5. **After selecting the case, which product format and production environment should form the first concrete application scenario?**
+
+2026-08-12状态更新：
+
+| 问题 | 当前状态 |
+| --- | --- |
+| module/pack能否作为当前case范围 | `WORKING ACCEPTANCE`：Thomas表示Pack EoL testing方向可以；注册abstract仍需显式写清正式边界 |
+| A/B/C选择 | `STUDENT DECISION`：学生暂选B并提出继续深化，Thomas认可计划；尚未通过最终case-lock gate |
+| humanoid角色 | `PARTLY RESOLVED`：可作为重点评价对象并做属性适用性分析；主对象/比较方案/future trend的最终论文角色仍由证据和abstract决定 |
+| validation access | `UNRESOLVED`：尚未得到具体PEM/FFB/industry专家、站点或设备资料入口 |
+| product format / station environment | `UNRESOLVED`：必须在后续具体application scenario前锁定 |
+
+下次不再把前三项原样作为“请Thomas替我们选题”的问题。学生应先提交自己的decision tree和Candidate B证据，再请Thomas审查边界、验证入口和注册abstract。
 
 ## 12. 每周计划前的强制自检
 

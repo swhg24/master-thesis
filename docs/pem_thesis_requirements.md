@@ -163,8 +163,9 @@ The bundled materials specify:
 
 ## 11. Project-specific research guardrails
 
-- Core scope: lithium-ion battery cell manufacturing from electrode production through cell assembly, finishing/testing, and intralogistics.
-- Adjacent scope only unless redirected: module/pack assembly, recycling, humanoid robotics, detailed control algorithms, and detailed electrochemical design.
+- Core scope: lithium-ion battery manufacturing. Always state whether a claim or case concerns cell, module, or pack production.
+- Scope update after the 2026-08-12 supervisor meeting: Thomas stated that pack end-of-line testing is an acceptable current direction. Candidate B in pack EoL/DCR testing may therefore be deepened as a provisional case. The registered title and the relationship to the original wording `battery cell production value chain` must still be made explicit in the registration abstract.
+- Adjacent scope unless explicitly broadened: recycling, detailed control algorithms, and detailed electrochemical design. Humanoid robotics may be evaluated as a primary comparison object or future scenario only when tied to a concrete battery-manufacturing task, baseline and validation route.
 - Current research bridge: battery fundamentals -> process requirements -> robotics opportunity -> implementation strategy.
 - Evaluate a robotic system as more than a robot arm: include end effector, vision/sensors, fixtures, safety, process-equipment interfaces, MES/traceability, material flow, and operating environment.
 - Separate core process equipment from surrounding robot-suitable handling, transport, inspection, sampling, and data tasks.
