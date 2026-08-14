@@ -1,389 +1,464 @@
-# Week 06工作计划：Candidate B——Pack EoL/DCR柔性测试接插件处理
+# Week 06工作计划：用Pack EoL接插件处理建立论文分析方法原型
 
-> 制定依据：2026-08-12 Thomas组会录屏、`abschlussarbeiten_42444.pdf`、`docs/research_direction_guardrails.md`、`docs/collaboration_and_pacing.md`和Week 04–05研究成果。
-> 当前状态：**Thomas认可继续深化的暂定单案例；不是最终题目、最终research gap、最终RQ或永久case lock。**
-> Production level：**battery-pack manufacturing**。Thomas已表示Pack EoL testing方向可以，但正式注册边界仍须在abstract中明确。
+> 校准日期：2026-08-13
+>
+> 制定依据：Thomas原始课题PDF、2026-08-12组会反馈、Week 01–05成果、`AGENTS.md`、`docs/research_direction_guardrails.md`、`docs/collaboration_and_pacing.md`以及学生与GPT对论文定位的进一步讨论。
+>
+> 当前状态：**Battery-Pack EoL test-connector handling是第一个deep reference case；不是整篇论文唯一case，也不是最终注册题目、最终gap或最终RQ。**
+>
+> Production level：**battery-pack manufacturing**。Thomas已认可Pack EoL testing作为可继续研究的方向；注册abstract仍须明确其与原始`battery cell production value chain`措辞的关系。
 
 ---
 
-## 0. 一页结论
+## 0. Week 06结论先行
 
-Week 06不再同时推进A/B/C，也不返回formation handover。只推进一个中心问题：
+Week 06不再承担“Candidate B能否成为唯一最终case”的生死审查。它的作用是：
 
-> **在battery-pack EoL/DCR测试中，柔性测试接插件处理需要哪些任务能力和battery-specific constraints；这些要求在什么条件下支持、条件性支持或不支持humanoid/mobile dual-arm system，而不是专用自动化或固定工业机器人？**
+> **把Pack EoL test-connector handling作为第一个深度案例，第一次完整跑通并提炼整篇论文可迁移的分析方法。**
 
-本周不是证明humanoid更好，而是完成一份可解释的Candidate B可行性判断：
+本周唯一核心问题：
+
+> **For battery-pack EoL test-connector handling, what task and production requirements determine the suitability of dedicated automation, fixed industrial robots, and humanoid/mobile dual-arm systems?**
+
+中文：
+
+> **对于Battery Pack EoL测试接插件处理任务，哪些任务特征和生产要求决定了专用自动化、固定工业机器人以及人形/移动双臂机器人各自的适用性？**
+
+本周的核心逻辑是：
 
 ```text
-Pack EoL/DCR制造任务
-→ connector/线束处理动作与责任边界
-→ battery-specific safety、quality和integration要求
-→ dedicated / fixed robot / humanoid-mobile方案比较
-→ 跨行业证据能迁移到哪一步
-→ validation route与case decision
+Manufacturing task
+→ Task characteristics
+→ Process / production requirements
+→ Existing automation baseline
+→ Required robotic capabilities
+→ Task–capability matching
+→ Conditional suitability
+→ Implementation barriers and scenarios
 ```
 
-最低产出是一份轻量`Candidate B feasibility pack`，包含任务边界、证据矩阵、要求—能力比较和一页决策说明。注册abstract是并行行政任务，不应挤掉本周唯一研究问题。
+不是问“humanoid能不能做”，也不是比较品牌，而是回答：
+
+> **在什么条件下，哪一种机器人/自动化架构更有理由被采用或继续评价？**
 
 ---
 
-## 1. 为什么现在研究它
+## 1. 这篇论文现在应被理解成什么
 
-### 来自Thomas的最新反馈
+当前thesis更接近：
 
-- Pack EoL testing方向可以；
-- 选题最终由学生决定，必须能够解释自己的选择；
-- 直接humanoid资料少时，可以从其他行业迁移细节；
-- 可以总结humanoid属性，判断适用和不适用的场景；
-- 新闻报道不足以承担技术结论；
-- 学生提出继续Candidate B和补充详细文献，Thomas认可该计划。
+> **Evidence-based prospective robotics application assessment in battery manufacturing**
 
-### 来自原始任务PDF
+论文主要依靠：
 
-Thomas的原始任务要求：
+- literature review；
+- industrial cases与equipment baselines；
+- robotics technology assessment；
+- battery-manufacturing task analysis；
+- task–capability matching；
+- scenario-based conditional assessment；
+- implementation strategy与future potential。
+
+论文不以以下内容为必要成果：
+
+- 新robot algorithm、controller或foundation model；
+- 新robot hardware或end effector设计；
+- 大型代码项目；
+- 真机平台与大量实验数据；
+- 为了得到结果而构造的产线仿真；
+- 必须获得CATL或其他企业的内部数据。
+
+Expert review、实验、simulation或quantitative analysis如果以后确实能回答一个明确问题，可以作为增强证据；没有它们不代表论文不成立。
+
+但偏综述不等于纯描述。最终必须从“有哪些机器人”推进到：
+
+> **为什么某类机器人在某种电池制造任务和生产条件下适合、不适合或值得进一步研究，以及这个判断为何可信。**
+
+---
+
+## 2. 整篇论文的暂定研究路线
+
+当前采用：
+
+> **1个deep reference case + 2–3个adjacent battery-manufacturing cases**
 
 ```text
-制造工艺与要求
-→ 合适机器人应用
-→ 技术与经济评价
-→ 具体应用场景
-→ 实施建议和未来趋势
+Week 06
+Deep case: Pack EoL test-connector handling
+→ 建立Task–Requirement–Capability–Suitability Framework v0.1
+
+Week 07（暂定，须由Week 06结果确认）
+Adjacent case 1: cell recognition / grasping / loading
+→ 用同一框架检验可迁移性
+
+Week 08及以后（不是硬计划）
+Adjacent case 2: multi-station handling / picking或证据更强的任务
+→ cross-case comparison
+→ task characteristics favoring different robotic systems
+→ application potential、implementation barriers、future trends和recommendations
 ```
 
-Candidate B能够承载这一结构，但前提是研究对象是**机器人系统实施决策**，而不是千寻“小墨”的企业新闻，也不是测试设备内部电气测量原理。
+CATL/千寻“小墨”只是Candidate B的现实industrial anchor，不是论文研究对象。论文研究对象是更一般的：
 
-### 来自Week 04–05的教训
-
-- 直接企业披露不等于独立验证；
-- 一项来源没写，不等于领域不存在；
-- 不同来源不能拼成同一工厂；
-- battery requirement必须真正改变robot task或robot–equipment integration decision；
-- 没有task、baseline和validation route时，不建模、不算ROI、不宣布gap。
+> **Pack EoL测试接插件处理任务中的机器人系统适用条件和实施选择。**
 
 ---
 
-## 2. 暂定case boundary
+## 3. Deep-case边界
 
-### 2.1 Included
+### 3.1 Included
 
-| 字段 | Week 06暂定边界 |
+| 字段 | Week 06边界 |
 | --- | --- |
-| Production level | battery-pack manufacturing |
-| Process | Pack EoL和/或DCR测试工位；两者关系待原始证据确认 |
-| Flow object | 测试接插件、柔性线束和battery-pack test interface |
-| Robot task | 找到接口、处理线束、对准、插入、确认连接、测试后拔出、异常上报/安全退出 |
-| Main technology under evaluation | wheeled humanoid或mobile dual-arm manipulator |
-| Direct function baseline | dedicated automatic connector/test-harness mechanism |
-| Robotics baseline | fixed industrial robot或dual-arm industrial robot；cobot/mobile manipulator按证据纳入 |
-| System interfaces | test equipment、PLC/safety interlock、MES/traceability、fixture/station、human intervention |
+| Production level | Battery Pack |
+| Primary process | Pack End-of-Line testing |
+| DCR | adjacent / possibly related；不默认与EoL使用同一工位、connector或robot |
+| Manipulated object | test connector + flexible harness |
+| Physical task | locate → grasp/support harness → align → insert → confirm → remove → return |
+| Compared architectures | dedicated automation / fixed industrial robot / humanoid or mobile dual-arm system |
+| Human operation | reality reference，不作为目标架构 |
+| Deep-case purpose | 建立可迁移的task–requirement–capability–suitability方法原型 |
 
-### 2.2 Responsibility boundary
+### 3.2 Responsibility boundary
 
 ```text
-Robot / automation system
-  → physical connector and flexible-harness handling
+Robot / connector automation
+→ physical connector and harness manipulation
 
 Test equipment
-  → electrical measurement and test execution
+→ electrical measurement and test execution
 
 PLC / safety system
-  → de-energized state, interlock, permission and safe stop
+→ permission, interlock, safe state and safe stop
 
 MES / traceability
-  → product identity, recipe and result association
+→ pack identity, test recipe and result association
+
+Fixture / station
+→ pack positioning and physical station support
 ```
 
-该责任划分当前是分析框架。CATL/千寻现场的实际责任必须由同一case直接资料或专家确认。
+这是分析框架。CATL/千寻现场的实际责任分配仍须标记为`UNKNOWN`，除非同一case的直接资料支持。
 
-### 2.3 Explicitly excluded this week
+### 3.3 本周不研究
 
-- 不深挖Candidate A或C；A只保留为失败后的backup；
-- 不返回B2 formation stacker-crane/PLC/contact细节；
-- 不研究测试设备内部测量算法、电池电气模型或高压测试标准全文；
-- 不研究humanoid步态、全身控制、foundation model或抓取算法开发；
-- 不建立产线仿真、节拍优化或ROI模型；
-- 不给架构打无证据的数字分数；
-- 不把公司公布的性能、规模、节拍和成功率当作独立事实。
+- CATL“小墨”的性能评测或品牌研究；
+- DCR电气测量模型和EoL测试标准全文；
+- humanoid步态、全身控制、VLA训练、轨迹规划和抓取算法开发；
+- connector的虚构几何、力值、节拍、成本或成功率；
+- formation handover、AGV fleet sizing或dispatching；
+- final title、final gap、final RQ和定量ROI；
+- 缺乏现实输入、只为产生“实验结果”的仿真。
 
 ---
 
-## 3. Week 06必须牢记的注意事项
+## 4. Evidence strategy
 
-### 3.1 Thomas认可方向，不等于Thomas替我们完成选择
+Week 06使用`credible evaluation / evidence strategy`，不是“必须找到实验验证入口”。
 
-本周必须建立一棵`decision/explanation tree`，解释：
+### 4.1 证据层级
+
+| 标签 | 用途与边界 |
+| --- | --- |
+| `PEER-REVIEWED EVIDENCE` | 支持任务物理、机器人能力、方法或已研究限制；不得脱离原配置外推性能 |
+| `DIRECT COMPANY DISCLOSURE` | 支持企业声称的任务或部署；不独立证明可靠性、节拍、经济性或优越性 |
+| `INDUSTRIAL / EQUIPMENT BASELINE` | 支持传统设备或机器人方案确实存在；需标明是否为相同工序 |
+| `CROSS-INDUSTRY EVIDENCE` | 支持可迁移的物理能力或评价维度；必须记录等价与不等价之处 |
+| `ENGINEERING INFERENCE` | 透明推理；不能冒充已观察现场事实 |
+| `UNKNOWN` | 当前证据不能回答；不自动等于research gap |
+
+### 4.2 可组合的可信证据
 
 ```text
-为什么选择B
-→ 为什么是pack EoL/DCR
-→ 为什么connector handling具有机器人研究价值
-→ 为什么需要比较humanoid与其他架构
-→ 需要什么证据才能继续
-→ 哪个结果会让B退出
+Battery manufacturing / testing literature
++ robotics manipulation literature
++ industrial equipment baselines
++ direct humanoid industrial disclosures
++ bounded cross-industry transfer
++ transparent task–capability reasoning
++ scenario-based assessment
++ optional expert review / simulation
 ```
 
-### 3.2 “资料少”只能成为检索信号
+每个关键结论至少应记录：
 
-Thomas认为资料少可能意味着研究空间，但项目不得把它直接写成gap。每个缺口必须检查：
+```text
+Claim
+→ Source and exact section/page where possible
+→ Evidence type
+→ Battery-manufacturing implication
+→ Robotics implication
+→ Transfer limit / unknown
+```
 
-- 是否只是企业保密或未公开；
-- 是否已有专用自动化解决；
-- 是否在相邻行业已有成熟方法；
-- 是否能够转移到battery context；
-- 是否能用专家、设备资料、实验或场景评价验证。
-
-### 3.3 跨行业迁移必须经过等价性检查
-
-每条transfer evidence至少记录：
+### 4.3 跨行业迁移检查
 
 | 字段 | 必须回答 |
 | --- | --- |
-| Source task | 原行业究竟处理什么对象和接口？ |
-| Relevant attribute | 证明了视觉、线束处理、force control、插接还是移动？ |
-| Battery equivalence | 与Pack EoL/DCR任务相同的物理或系统要求是什么？ |
-| Non-equivalence | 高压安全、接口几何、节拍、环境或验证阶段哪里不同？ |
-| Allowed inference | 可以迁移到能力/方法/评价维度的哪一层？ |
+| Source task | 原行业处理什么对象、接口和工作环境？ |
+| Transferable attribute | 它支持视觉、柔性物体处理、force control、插接、双臂还是移动？ |
+| Battery equivalence | 与Pack EoL相同的物理或系统要求是什么？ |
+| Non-equivalence | 高压、安全、connector geometry、节拍和成熟度哪里不同？ |
+| Allowed inference | 能迁移到能力、方法或评价维度的哪一层？ |
 | Forbidden inference | 哪些性能数字和部署结论不能迁移？ |
 
-### 3.4 企业新闻只能证明“企业声称”
-
-千寻/CATL/SAIC/Galbot等一手披露可以证明任务和部署说法的存在，但不能独立证明：
-
-- 插接成功率和长期可靠性；
-- 节拍和产能；
-- 经济优势；
-- 相对于工业机器人的优越性；
-- “规模化部署”的具体数量和持续运行表现。
-
-### 3.5 结论使用条件语言
-
-优先使用：
-
-- `supported under the following conditions`；
-- `conditionally suitable`；
-- `not supported by the current evidence`；
-- `unknown / requires validation`。
-
-避免使用没有足够证据的绝对表达：
-
-- `humanoid is better`；
-- `humanoid cannot be used`；
-- `the task is impossible for industrial robots`；
-- `this is an established research gap`。
-
-### 3.6 图和专利必须让听众看得懂
-
-任何`27 / 28 / device 3`或专利编号必须同时给出：原图、来源、图号/段落、设备名称和高亮边界。可编辑重绘图可以用于解释，但不能替代原始证据。
-
-### 3.7 注册任务与研究判断分开
-
-Thomas要求准备abstract，但abstract不能为了注册而提前把working hypothesis写成事实。正式注册前必须核对Thomas即将提供的最新信息以及PEM/RWTH/ZPA当前流程。
-
 ---
 
-## 4. Day 1–5学习顺序
+## 5. Day 1–5学习顺序
 
-Day 1–5表示逻辑顺序，不是硬性日历。前一步没有回答清楚时，不为凑五天进入下一步。
+Day 1–5表示逻辑顺序，不是硬性日历。前一步未理解时可以跨天，不以文件数量衡量进度。
 
-### Day 1 — 冻结暂定边界与决策树
+### Day 1 — Deep-case charter与selection logic
 
 核心问题：
 
-> 我们选择B，究竟是在研究什么机器人系统决定？
+> **为什么选择Pack EoL connector handling作为第一个deep reference case？**
 
 任务：
 
-- 建立Candidate B `case charter v0.1`；
-- 固定production level、flow object、task、actor、baseline和unknown；
-- 画出Thomas要求的selection/explanation tree；
-- 将CATL/千寻直接披露逐条登记为`DIRECT COMPANY DISCLOSURE`；
-- 寻找原始完整视频、图或技术说明，并记录“找到/未找到”，不把缺失写成gap。
+- 建立`Case Charter v0.1`；
+- 固定EoL为primary process，DCR保留为adjacent unknown；
+- 固定flow object、physical task、三类architecture和系统边界；
+- 登记CATL/千寻直接披露及其证据限制；
+- 建立Thomas要求的selection/explanation tree。
 
-最低结果：能够用两分钟解释为什么选B，以及哪个证据会让B退出。
+建议决策树：
 
-### Day 2 — 重建任务周期与责任边界
+```text
+Why battery manufacturing?
+→ Why Pack EoL?
+→ Why connector and harness handling?
+→ Why is this a robotic-system task?
+→ Why compare architectures?
+→ Why is humanoid/mobile dual-arm worth evaluating?
+→ What evidence supports and limits the analysis?
+```
+
+最低结果：学生能够用两分钟解释为什么用B建立第一个方法原型，并说明B不等于CATL案例研究。
+
+### Day 2 — Task cycle与responsibility map
 
 核心问题：
 
-> 一个测试connector从未连接到安全拔出，哪些步骤由机器人负责，哪些由测试设备、PLC和MES负责？
+> **一个测试connector从未连接到安全拔出，中间发生什么，各子系统分别负责什么？**
+
+参考任务周期：
+
+```text
+Pack arrives and is identified
+→ Pack positioned
+→ Safe state / connection permission
+→ Connector located
+→ Harness grasped or supported
+→ Connector aligned and inserted
+→ Connection confirmed
+→ Test permission
+→ EoL test executed by test equipment
+→ De-energized / safe release confirmed
+→ Connector removed and harness returned
+→ Result associated and Pack released
+```
 
 任务：
 
-- 建立最小task sequence；
-- 逐步标记`SOURCE-EXPLICIT / ENGINEERING REFERENCE / INFERENCE / UNKNOWN`；
-- 区分定位、线束处理、插接、连接确认、电气测试、断电许可和拔出；
-- 列出可能的failure modes，但只保留有来源或需要专家确认的项；
-- 不把KUKA assembly connector案例写成同一EoL/DCR工位。
+- 每一步标记`DIRECT / BASELINE / CROSS-INDUSTRY / INFERENCE / UNKNOWN`；
+- 明确robot、test equipment、PLC/safety、MES和fixture责任；
+- 只登记有来源或值得核实的failure modes；
+- 不把KUKA battery assembly connector案例写成相同EoL工位。
 
-最低结果：一张robot/test-equipment/PLC/MES responsibility map。
+最低结果：一张可演化为thesis figure的`Task + Responsibility Map`。
 
-### Day 3 — Humanoid属性与跨行业证据迁移
-
-核心问题：
-
-> 哪些humanoid/mobile-manipulation能力与B直接相关，哪些只是一般机器人宣传？
-
-优先属性：
-
-- 视觉定位和来料位置变化；
-- 柔性线束抓取、支撑和形变管理；
-- contact-rich insertion、force/torque sensing和连接状态确认；
-- 双臂协同或一臂理线、一臂插接；
-- 工位间移动、多型号changeover和既有人工作业空间复用；
-- 安全互锁、失效退出、traceability和人工接管。
-
-证据顺序：
-
-1. 同行评审或工程论文；
-2. 原始工业技术资料/完整任务视频；
-3. 设备商或机器人厂商案例；
-4. 新闻转载仅作线索。
-
-最低结果：一张`source task → transferable attribute → battery boundary`证据表。
-
-### Day 4 — 三类架构的条件性比较
+### Day 3 — Battery-specific task requirements
 
 核心问题：
 
-> 在什么任务和生产条件下，各架构更有理由进入候选？
+> **为什么这个任务不能简单等同于普通pick-and-place或“插一个插头”？**
 
-比较对象：
+只研究六类要求：
+
+1. flexible-harness handling；
+2. contact-rich connector insertion；
+3. electrical / HV safety interface；
+4. pack / connector variation与changeover；
+5. connection-quality confirmation；
+6. traceability与system integration。
+
+每项回答：
+
+```text
+Evidence
+→ Why it matters
+→ Effect on robot task
+→ Required capability
+→ Current unknown
+```
+
+这里不先从humanoid属性出发。如果产品多样性、接口变化或高压状态没有直接证据，就保留`UNKNOWN`。
+
+最低结果：一张`Requirement → Robot-task Effect → Required Capability`表。
+
+### Day 4 — Architecture conditional-suitability comparison
+
+核心问题：
+
+> **面对Day 3的requirements，三类architecture分别在什么生产条件下更合理？**
+
+比较：
 
 1. dedicated connector/test-harness automation；
-2. fixed industrial robot或dual-arm robot；
-3. humanoid/mobile dual-arm manipulator。
+2. fixed industrial robot / fixed dual-arm robot；
+3. humanoid / mobile dual-arm manipulator。
 
-沿用Thomas原始PDF维度：
+主要条件：
 
-- automation potential；
-- cost及所需成本证据；
-- quality impact mechanism；
-- scalability。
+- product and connector variety；
+- flexible-harness complexity；
+- volume / takt；
+- changeover frequency；
+- fixed vs multi-station task；
+- brownfield / human-oriented layout；
+- safety and integration；
+- quality mechanism；
+- scalability；
+- cost evidence availability与maturity。
 
-补充本case必要维度：
+结论只使用：
 
-- HV safety/interlock；
-- flexible-harness handling；
-- product-variant/changeover；
-- station integration与占地；
-- connector protection和异常恢复；
-- evidence maturity与validation access。
+- `SUPPORTED`；
+- `CONDITIONALLY SUITABLE`；
+- `NOT SUPPORTED BY CURRENT EVIDENCE`；
+- `UNKNOWN`。
 
-本周只使用`SUPPORTED / CONDITIONAL / NOT SUPPORTED / UNKNOWN`，不设置无依据权重或数字评分。
+不使用品牌排名、无证据权重或数字总分。可能形成但必须由证据检验的条件假设包括：
 
-最低结果：一张requirement-to-architecture matrix，并能解释至少一个“humanoid可能有价值”和一个“专用/固定自动化可能更合理”的条件。
+```text
+low variety + high volume + fixed interface
+→ dedicated automation may be favored
 
-### Day 5 — Case decision、validation route与abstract入口
+moderate variation + fixed workstation
+→ fixed industrial robot may be attractive
+
+high variation + multiple stations + legacy human-oriented layout
+→ mobile dual-arm / humanoid becomes worth evaluating
+```
+
+最低结果：一张`Requirement / Production Condition → Architecture Suitability`矩阵，并能解释至少一个humanoid可能有价值和一个传统方案更合理的条件。
+
+### Day 5 — Deep-case synthesis与Method Framework v0.1
 
 核心问题：
 
-> Candidate B现在是否具备继续形成正式case charter和注册abstract的证据条件？
+> **Pack EoL案例是否已经帮助我们形成一套可迁移到其他battery-manufacturing tasks的分析方法？**
 
 任务：
 
-- 输出`KEEP / NARROW / HOLD AS FUTURE TREND / RETURN TO A`判断；
-- 写出最强支持证据、最强反例、核心unknown和退出条件；
-- 形成5–8个只针对事实缺口的专家/设备问题；
-- 明确一个现实validation route及备选route；
-- 收到Thomas的注册信息后，按最新要求制作约1–2页working abstract；
-- abstract内容至少覆盖题目、motivation/problem、objective、unresolved problem、candidate RQ、method、work packages、desired results和proposed structure。
+1. 用`Task → Requirements → Baseline → Capabilities → Suitability conditions`总结deep case；
+2. 提取`Task–Requirement–Capability–Suitability Framework v0.1`：
+   - manufacturing-task identification；
+   - task / production-requirement extraction；
+   - existing automation baseline；
+   - robotic-capability mapping；
+   - conditional-suitability assessment；
+   - implementation-barrier analysis；
+   - scenario-based evaluation；
+3. 评估哪些框架字段能够迁移、哪些只属于Pack EoL；
+4. 决定Week 07是否把框架应用到`cell recognition / grasping / loading`；
+5. 如果B的humanoid直接证据仍弱，缩小主张或把humanoid标成future scenario，而不是宣布整条论文路线失败。
 
-最低结果：一页Candidate B decision memo和一条可执行validation route。注册abstract不因资料未到而仓促定稿。
-
----
-
-## 5. 本周最低完成目标
-
-Week 06达到以下四项即可视为合格：
-
-1. 一个能让学生独立解释的Candidate B边界和selection tree；
-2. 一张带证据状态的connector-handling task/responsibility map；
-3. 一张humanoid属性迁移与三类架构条件比较表；
-4. 一个透明的case decision：继续什么、仍缺什么、怎样验证、什么情况下退出。
-
-不以文献数量或文件长度衡量成功。少量强来源、清楚的迁移逻辑和一个现实验证入口，比收集很多新闻更重要。
+最低结果：`Framework v0.1 + deep-case synthesis memo + Week 07单一入口`。
 
 ---
 
-## 6. 有余力再做
+## 6. Week 06最低完成目标
 
-最低目标完成后，只选择一项：
+完成以下四项即为合格：
 
-- 针对一种明确的connector/pack format画第一版具体application scenario；
-- 为专家访谈制作一页图和结构化问题；
-- 建立注册abstract v0.1；
-- 检查Candidate A是否仍是可靠backup，但不开展第二个deep dive。
+1. **Deep Case Charter v0.1 + selection/explanation tree**；
+2. **Pack EoL connector-handling Task + Responsibility Map**；
+3. **Requirement → Capability → Architecture conditional-suitability matrix**；
+4. **Task–Requirement–Capability–Suitability Framework v0.1**。
+
+本周不以文献数量、新闻数量、网页数量、讲义长度、代码或实验数据衡量成功。学生是否能独立解释分析链条，是首要标准。
 
 ---
 
-## 7. Case B进入正式锁定的最低证据
+## 7. 有余力再做
 
-| Evidence block | Week 06要求 |
+最低目标完成后，只选一项：
+
+- 用一种透明的Pack/connector variation假设建立scenario examples，但不得冒充CATL现场；
+- 为可选专家review制作一页任务图和事实问题；
+- 根据Thomas提供的最新模板起草registration abstract v0.1；
+- 轻量检查Candidate A的直接证据是否足以作为Week 07入口，不开始第二个deep dive。
+
+---
+
+## 8. Week 06结束时怎样判断进展
+
+Week 06不再只做`KEEP / ABANDON`二元判断。应记录：
+
+| 决定 | 含义 |
 | --- | --- |
-| Direct battery task | 至少一个一手来源能明确支持Pack EoL/DCR和connector/线束处理任务 |
-| Conventional baseline | 至少一个专用自动化或固定工业机器人资料支持可比较的connector handling功能，并标明是否同工序 |
-| Task-capability evidence | 至少一个同行评审或工程来源支持关键能力，如柔性线束处理、插接/力控或连接确认 |
-| Humanoid/mobile evidence | 至少一个一手工业或技术来源支持相关属性；若来自其他行业，完成迁移边界表 |
-| Validation route | 明确可联系的专家/站点/设备资料，或一个不依赖CATL内部数据的可执行验证方案 |
+| `DEEP CASE CONTINUES` | B足以继续支撑方法与场景分析 |
+| `NARROW CLAIM` | 只保留证据能够支撑的connector/harness任务或architecture comparison |
+| `HUMANOID AS FUTURE SCENARIO` | humanoid部署证据不足，但任务与架构比较仍有研究价值 |
+| `FRAMEWORK TRANSFER READY` | 方法字段足够清楚，可进入一个adjacent case |
+| `RETURN TO CASE MAP` | 连battery-specific task或robotics decision都无法建立时才返回候选地图 |
 
-前四项不能形成可信证据链，或validation route仍完全不存在时，不得宣布final gap/RQ或正式永久锁定B。
+停止扩大B的条件：
 
----
+- 无法确认connector/harness handling是直接battery-manufacturing task；
+- battery-specific requirements没有改变任何robot task或implementation decision；
+- 比较始终停留在“humanoid更灵活/industrial robot更稳定”的口号；
+- 证据组合无法支撑目标主张，且缩小主张后仍无可信分析内容。
 
-## 8. 退出与变更条件
-
-出现以下任一情况，Week 06应停止继续扩大B：
-
-1. 无法确认直接案例的具体robot task和connector-handling边界；
-2. battery-specific requirements没有改变任何robot task或implementation decision；
-3. 所有关键能力只来自营销文字，无法建立可迁移的技术证据；
-4. 比较始终停留在“humanoid更灵活/工业机器人更稳定”的泛化口号；
-5. 完成预定检索和联系路径后仍无credible validation route。
-
-可能决定：
-
-- `KEEP`：B通过证据与验证门，进入正式case charter；
-- `NARROW`：只保留一项明确任务，例如柔性测试connector插拔与连接确认；
-- `HOLD AS FUTURE TREND`：humanoid证据不足，把它降为future scenario，主研究转为架构比较；
-- `RETURN TO A`：B任务/验证不可行时，按已定义规则返回A，不自动跳C或AGV仿真。
+缺少专家、现场或实验本身不再自动触发放弃；应先判断文献、工业baseline、跨行业证据和scenario analysis能否形成可信组合。
 
 ---
 
-## 9. 学生本周应能用自己的话回答
+## 9. 学生本周应能回答
 
-1. Pack EoL/DCR工位在测试什么，机器人为什么只负责物理连接而不是电气测量？
-2. 柔性线束和测试connector为什么可能改变机器人感知、抓取、力控和确认要求？
-3. 什么条件下专用自动化或固定工业机器人比humanoid更合理？
-4. 什么条件下移动、双臂和既有人工工位复用可能使humanoid/mobile manipulator值得评价？
-5. 哪些结论来自CATL/千寻直接披露，哪些来自相邻行业，哪些仍是未知？
-6. 为什么“公开信息少”不等于已经找到research gap？
-7. 哪个证据或验证失败会让我们放弃或降级Candidate B？
+1. 为什么Pack EoL connector handling是一个robotic-system application，而不是电气测试设备研究？
+2. Robot、test equipment、PLC/safety、MES和fixture分别负责什么？
+3. Flexible harness、contact-rich insertion和安全互锁怎样改变robot task？
+4. 什么生产条件可能支持dedicated automation、fixed robot或humanoid/mobile dual-arm？
+5. 哪些结论来自直接企业披露，哪些来自设备baseline或跨行业证据，哪些仍是unknown？
+6. 为什么company news不等于技术验证，资料少也不等于research gap？
+7. `Task–Requirement–Capability–Suitability Framework`如何迁移到cell loading等其他case？
+8. 为什么偏综述的论文仍需要方法，而不一定需要新算法或仿真？
 
 ---
 
 ## 10. 下次向Thomas汇报的最小结构
 
-不需要再次展示宽泛application map。建议只汇报四件事：
+只汇报五件事：
 
-1. **My decision and explanation tree**：为什么暂选B；
-2. **What the task actually is**：connector handling的动作和责任边界；
-3. **Where humanoid may or may not fit**：三类架构的条件比较和证据边界；
-4. **What I need to validate**：一个具体专家/站点/资料入口，以及注册abstract状态。
+1. **My selection logic**：为什么用Pack EoL作为第一个deep reference case；
+2. **What the task actually is**：任务周期与系统责任；
+3. **What requirements drive robot selection**：battery-specific task requirements；
+4. **Under which conditions each architecture fits**：条件性比较，而非humanoid优越性；
+5. **The reusable method and next case**：Framework v0.1及是否迁移到cell loading。
 
-建议只向Thomas确认：
+可以请Thomas审查：
 
-- 他即将提供的注册abstract模板、日期和流程；
-- 是否能介绍Pack testing、automation integration或connector-handling相关专家/设备；
-- 当前“humanoid为重点评价对象＋专用/固定机器人为baseline”的比较结构是否符合预期。
+- 这种`deep case → transferable framework → adjacent cases → cross-case comparison`是否符合他的预期；
+- 当前Pack scope和registration abstract如何准确表述；
+- 是否有可选的Pack testing / automation expert可增强证据。
 
-不再把“A/B/C选哪一个”原样交回Thomas，因为本次会议已明确要求学生作出并解释自己的决定。
+不要再让Thomas替学生从A/B/C中选题，也不要把专家入口说成论文成立的唯一前提。
 
 ---
 
-## 11. 注册abstract并行任务
+## 11. Registration abstract并行任务
 
-收到Thomas的新信息后，按最新要求准备working draft。仓库内的PEM资料显示abstract通常需要约1.5页，并包含德英题目、motivation、objective、gap/unresolved problem、RQ、method、work packages、desired results和structure；但该资料包含2022/2025版本。
+Thomas提出可开始准备约1–2页/张的abstract。根据仓库内PEM参考，它应是compact research proposal，并可能包括德英题目、motivation/problem、objective、unresolved problem、candidate RQ、method、work packages、desired results和structure。
 
-因此：
+但本地PEM材料包含2022/2025版本。正式注册前必须等待Thomas最新信息，并向Thomas/PEM/ZPA确认：
 
-> **先起草，后按Thomas/PEM/ZPA最新模板、截止时间、院系流程和引用要求核验；未经核验不进行正式注册提交。**
+- 当前模板与语言；
+- 实际篇幅与格式；
+- Faculty 4/Faculty 6流程；
+- 注册日期、签字和提交要求；
+- 当前引用与格式要求。
+
+Week 06可以起草working draft，但不得为了注册提前把working hypothesis写成事实，也不得在未核验前正式提交。

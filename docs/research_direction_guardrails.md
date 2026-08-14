@@ -1,6 +1,6 @@
 # Research Direction Guardrails / 研究方向与防跑偏护栏
 
-> 维护日期：2026-08-12
+> 维护日期：2026-08-13
 > 用途：本文件是 GPT、Codex 与学生在选择案例、制定周计划、收缩研究问题和判断论文相关性时的**必读项目规则**。
 > 状态：项目内部方向协议，不是 PEM/RWTH 官方文件，也不是最终注册题目、最终 research question 或 Thomas 的逐字书面决定。
 
@@ -38,6 +38,50 @@ Thomas 最初给出的 working title 是：
 
 根据`abschlussarbeiten_42444.pdf`，原始任务轮廓是：先理解制造工艺及要求，再识别工业机器人、协作机器人和移动系统的合适应用，随后从自动化潜力、成本、质量影响和可扩展性等维度开展技术经济评价，把选定use case发展成具体应用场景，并形成未来趋势与实施建议。PDF任务段落写有`battery cell production value chain`，标题写有`Battery Manufacturing`；module/pack是否可成为正式核心必须向Thomas确认。工艺学习只是机器人应用研究的输入，不是独立终点。
 
+### 1.3 论文类型与预期贡献
+
+本论文当前定位为：
+
+> **Evidence-based prospective robotics application assessment in battery manufacturing**
+
+它以文献、工业案例、机器人技术评价、应用场景、实施策略和未来潜力为核心，不以提出新算法、控制器、foundation model、机器人硬件或建立实验平台为必要成果。代码、真机实验、大规模数据、专家评价、仿真和定量分析可以在确实增强某项结论时加入，但不得为了显得“技术”而强行制造。
+
+偏综述和前瞻不等于application catalogue。论文必须采用透明、可复用的分析方法，并形成有证据边界的条件性结论：
+
+> 在什么battery-manufacturing task和production conditions下，不同robotic systems适合、不适合或值得进一步评价？
+
+暂定总体研究路线为：
+
+```text
+Battery-manufacturing task
+→ task characteristics
+→ process / production requirements
+→ existing automation baseline
+→ robotic-system capabilities
+→ task–capability matching
+→ conditional suitability
+→ application scenarios
+→ implementation barriers
+→ future potential / recommendations
+```
+
+案例结构采用`1个deep reference case + 2–3个adjacent battery-manufacturing cases`。Deep case用于建立`Task → Requirement → Capability → Suitability`方法原型，不等于整篇论文只能研究该case。
+
+### 1.4 Evidence credibility而非强制实验验证
+
+候选和论文结论必须具备**credible evaluation / evidence strategy**，回答“为什么这个判断可信”。可组合使用：
+
+- peer-reviewed battery-manufacturing与robotics literature；
+- industrial equipment / automation cases；
+- direct company disclosures（只证明企业作出该披露）；
+- 经过等价性与非等价性审计的cross-industry evidence；
+- transparent task–capability reasoning；
+- scenario-based assessment；
+- optional expert review；
+- optional simulation / quantitative analysis。
+
+实验、现场访问或专家并非普遍硬门，但证据边界、反营销纪律和可追溯推理仍是硬要求。任何simulation只有在回答明确问题、输入假设透明且结果不冒充真实工厂数据时才可加入。
+
 ## 2. 信息类型必须分开
 
 ### 2.1 Thomas 明确或较可靠的指导
@@ -46,7 +90,7 @@ Thomas 最初给出的 working title 是：
 - 不能停留在宏观机器人应用目录，应选择一个 use case step by step 深入；
 - 需要同时理解电池工艺和机器人系统，再判断机器人能否解决具体问题；
 - scope、case 和数据需求应随问题与证据逐步形成；
-- 文献之外最终需要专家、设备资料、案例或数据支撑；
+- 文献综述之外需要工业案例、设备资料、跨行业证据、场景评价、专家意见或数据中的适当组合支撑；专家和实验数据不是普遍强制项；
 - Week 03 组会字幕整理显示 Thomas 认可继续聚焦 transported material，并要求先看 state of the art 与 battery-specific problem。
 
 注意：后两项部分依据 Teams 字幕/OCR 整理，属于对导师反馈的可靠解释，不应冒充逐字书面要求。
@@ -85,7 +129,7 @@ Thomas 最初给出的 working title 是：
 - B2足以作为学习显微镜和fixed-automation baseline，但证据充分不等于论文价值充分；
 - 越接近B3，潜在battery-specificity越强，但直接证据与现实验证越弱；
 - 不继续细化堆垛机机构、PLC sequence或未披露端口；
-- 任何候选必须同时通过practical relevance、battery specificity、robotics relevance与validation access；
+- 当时的审查把practical relevance、battery specificity、robotics relevance与validation access并列；其中`validation access`已于2026-08-13校准为`credible evaluation / evidence strategy`，不再要求每个候选必须具有实验或现场入口；
 - `patent unknown`或`paper unknown`不等于industrial problem或research gap；
 - Week 05不进入simulation；Candidate A失败时返回problem map，不自动跳Candidate B或AGV fleet sizing。
 
@@ -135,7 +179,7 @@ Week 05 Day 3责任审计没有找到直接证据证明formation-specific condit
 
 它退出当前thesis-candidate path。除非未来出现一个真实可验证的robotic target case，不再继续细化B2的PLC、contact、positioning、acceptance或handover state。
 
-### 4.2 Thomas决策短名单（尚未选定）
+### 4.2 已完成的A/B/C短名单比较
 
 在进一步case deep dive前，仅比较以下三个有直接企业证据的候选：
 
@@ -145,29 +189,29 @@ Week 05 Day 3责任审计没有找到直接证据证明formation-specific condit
 
 `cell-EoL终检/分选`不再是已选case；`module/pack`也不再被内部规则预先排除。正式边界由Thomas结合原始PDF和最新humanoid反馈确认。
 
-### 4.3 当前唯一中心问题
+### 4.3 Week 06及论文方法原型的当前中心问题
 
-> **A、B、C中哪一个case最符合Thomas预期的battery-manufacturing scope，并同时具有足够清楚的robot task、battery-specific requirement、比较baseline、研究方法与验证入口，可以被正式锁定？**
+> **For battery-pack EoL test-connector handling, what task and production requirements determine the suitability of dedicated automation, fixed industrial robots, and humanoid/mobile dual-arm systems?**
 
-这一阶段的产出是给Thomas的evidence-bounded case-selection brief，不是新一轮宽泛landscape，也不是直接宣布research gap。
+Week 06把Candidate B作为第一个deep reference case，用它建立`Task → Requirement → Capability → Suitability`分析方法。目标不是证明humanoid更好，也不是把CATL/千寻案例变成整篇论文对象。
 
 ### 4.4 尚未确定
 
 - 最终论文是否以humanoid为主对象，还是把它作为一种候选robot architecture；
-- A、B、C中哪个成为primary case；
+- B能否持续作为deep reference case，以及DCR能否与EoL使用同一handling abstraction；
 - cell format与生产环境如何进一步收缩；
 - 最终 practical problem、research gap、research question、method 和 validation design；
-- 是否存在可访问的FFB/PEM/industry reference case与专家验证入口。
+- 最终credible evaluation / evidence strategy采用哪些证据组合；专家或现场入口属于可选增强项。
 
 ### 4.5 Case Lock与变更控制
 
-Thomas与学生确认后建立一页`case charter`，至少固定：production level、system boundary、flow object、robot task、comparison baseline、central question、evidence minimum和validation route。每日学习只能填充这些字段，不能静默改变case。
+为deep case建立一页`case charter`，至少固定：production level、system boundary、flow object、robot task、comparison baseline、central question、evidence minimum和credible evaluation / evidence strategy。每日学习只能填充这些字段，不能静默改变边界。
 
 锁定case只有在以下任一条件出现时才允许正式调整：
 
 1. Thomas明确改向；
 2. 直接证据否定关键可行性或robotics-relevance gate；
-3. 在预先定义的检索与专家路径完成后，仍不存在可执行的validation route。
+3. 在预先定义的检索与证据组合完成后，仍无法形成足以支撑目标结论的credible evidence strategy。
 
 调整必须写出`原case → 新case、触发证据、对已完成工作的影响、学生/Thomas决定`；不得靠周计划连续性或新热点隐性换题。
 
@@ -187,6 +231,8 @@ Thomas与学生确认后建立一页`case charter`，至少固定：production l
 > **Candidate B = PROVISIONAL WEEK 06 FOCUS / supervisor-accepted student choice for further investigation / NOT YET FINAL CASE LOCK.**
 
 Humanoid/mobile dual-arm system可以成为Week 06的重点评价对象，但必须与专用自动化和固定工业机器人比较，不预设优越性。公开信息不足可构成检索与迁移研究的入口，但不能单独构成research gap。
+
+2026-08-13进一步校准：Candidate B的身份从“唯一最终case的生死候选”调整为**第一个deep reference case**。Week 06的终点不是永久锁题，而是形成可迁移的方法原型。后续优先将同一框架应用到Candidate A（cell recognition / grasping / loading），再根据证据选择第二或第三adjacent case并开展cross-case comparison。
 
 ## 5. Week 05 Architecture B 的正确身份
 
@@ -256,9 +302,9 @@ Battery-manufacturing problem是什么？
 | Battery-specific effect on the robot task | 至少一项工艺条件直接改变载荷处理、定位、感知、交接、确认、异常行为或其他机器人任务要求 |
 | Meaningful system decision | 存在可研究的task allocation、architecture selection、interface design或implementation decision，而不只是资料没写 |
 | Practical consequence | 问题影响可靠性、质量、安全、可用性、柔性或系统集成 |
-| Credible validation route | 有具体专家、设备资料、真实/规划案例、日志、实验或其他可执行验证入口 |
+| Credible evaluation / evidence strategy | 有可追溯的证据组合与推理方法支撑目标结论；可包括文献、工业baseline、跨行业迁移和scenario analysis，专家、实验或仿真为可选增强项 |
 
-前五项不能至少形成可信 `YES` 候选、或 validation route 仍完全不存在时，不得宣布 KEEP、gap 或 RQ。
+前五项不能至少形成可信 `YES`，或证据组合无法支撑目标结论时，不得宣布established gap、final RQ或无条件适用性结论。
 
 ## 8. 对候选条件的责任审计
 
@@ -300,12 +346,12 @@ Position、contact、pressure、identity 和 readiness 只是筛选项，不是�
 - 不返回B2 formation handover；
 - Week 06暂定深化Candidate B——Pack EoL/DCR柔性测试接插件处理；
 - 该决定由学生提出，Thomas认可继续，但Thomas没有替学生宣布最终题目；
-- Week 06应形成selection tree、任务/责任边界、跨行业证据迁移、三类架构条件比较和validation route；
-- 只有通过robotics-relevance与validation gate后，Candidate B才可正式锁定；否则将humanoid降为future-trend scenario或按既定规则返回Candidate A。
+- Week 06应形成deep-case charter、selection tree、任务/责任边界、要求—能力—架构条件比较和方法框架v0.1；
+- Candidate B用于建立方法原型，不承担“唯一最终case”的生死审查；证据不足时缩小主张或将humanoid降为future-trend scenario，而不是自动推翻整篇多案例研究路线。
 
 ### KEEP / NARROW
 
-只有机器人相关性硬门、battery-specific effect、practical relevance和validation均有证据时，才允许选择一个要求继续窄化。
+只有机器人相关性硬门、battery-specific effect、practical relevance和credible evidence strategy均成立时，才允许继续强化该case的结论。
 
 ### CONTINUE LEARNING
 
@@ -335,10 +381,10 @@ Position、contact、pressure、identity 和 readiness 只是筛选项，不是�
 | module/pack能否作为当前case范围 | `WORKING ACCEPTANCE`：Thomas表示Pack EoL testing方向可以；注册abstract仍需显式写清正式边界 |
 | A/B/C选择 | `STUDENT DECISION`：学生暂选B并提出继续深化，Thomas认可计划；尚未通过最终case-lock gate |
 | humanoid角色 | `PARTLY RESOLVED`：可作为重点评价对象并做属性适用性分析；主对象/比较方案/future trend的最终论文角色仍由证据和abstract决定 |
-| validation access | `UNRESOLVED`：尚未得到具体PEM/FFB/industry专家、站点或设备资料入口 |
+| evidence strategy | `IN DEVELOPMENT`：不以专家/现场为强制门；Week 06将组合文献、设备baseline、直接披露、跨行业迁移和scenario analysis，专家/站点为可选增强 |
 | product format / station environment | `UNRESOLVED`：必须在后续具体application scenario前锁定 |
 
-下次不再把前三项原样作为“请Thomas替我们选题”的问题。学生应先提交自己的decision tree和Candidate B证据，再请Thomas审查边界、验证入口和注册abstract。
+下次不再把前三项原样作为“请Thomas替我们选题”的问题。学生应提交自己的decision tree、Candidate B方法原型和证据边界，再请Thomas审查scope、分析逻辑、可选专家入口和注册abstract。
 
 ## 12. 每周计划前的强制自检
 

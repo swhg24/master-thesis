@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 6 Day 1｜Battery Pack EoL 接插件机器人研究讲义</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #d9e0e8;
+      --paper: #ffffff;
+      --wash: #f4f7fb;
+      --navy: #15385f;
+      --blue: #1769aa;
+      --cyan: #dff3f7;
+      --green: #18794e;
+      --green-bg: #eaf7f0;
+      --amber: #986801;
+      --amber-bg: #fff6d8;
+      --red: #a33a2b;
+      --red-bg: #fff0ed;
+      --purple: #6741a5;
+      --purple-bg: #f2edff;
+      --shadow: 0 10px 30px rgba(20, 42, 70, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(180deg, #eef4f8 0, #f8fafc 360px, #fff 100%);
+      font-family: "Noto Sans SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.72;
+    }
+    a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--navy); }
+    code, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .94em;
+    }
+    .page { max-width: 1180px; margin: 0 auto; padding: 28px 24px 80px; }
+    .hero {
+      color: white;
+      padding: 42px 46px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 86% 18%, rgba(85, 210, 219, .35), transparent 28%),
+        linear-gradient(135deg, #102d4d, #174f7f 62%, #117d8d);
+      box-shadow: var(--shadow);
+    }
+    .hero .eyebrow { margin: 0 0 8px; color: #bcebf1; font-weight: 700; letter-spacing: .06em; }
+    .hero h1 { margin: 0; max-width: 900px; font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.16; }
+    .hero .lead { max-width: 900px; margin: 20px 0 0; font-size: 1.12rem; color: #e9f4fb; }
+    .hero .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .hero .meta span { padding: 6px 12px; border: 1px solid rgba(255,255,255,.32); border-radius: 999px; background: rgba(255,255,255,.09); }
+
+    nav {
+      position: sticky;
+      top: 10px;
+      z-index: 4;
+      margin: 20px 0 28px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.93);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 6px 24px rgba(20, 42, 70, .07);
+      backdrop-filter: blur(12px);
+    }
+    nav a { display: inline-block; margin: 4px 12px 4px 0; font-size: .92rem; font-weight: 650; text-decoration: none; }
+
+    section { margin: 28px 0; padding: 30px 34px; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); }
+    h2 { margin: 0 0 18px; color: var(--navy); font-size: 1.7rem; line-height: 1.25; }
+    h3 { margin: 26px 0 10px; color: #214d72; font-size: 1.2rem; }
+    h4 { margin: 20px 0 8px; }
+    p { margin: 10px 0; }
+    ul, ol { padding-left: 1.35rem; }
+    li { margin: 6px 0; }
+    .kicker { color: var(--blue); font-weight: 750; letter-spacing: .03em; }
+    .big-claim { margin: 18px 0; padding: 17px 20px; border-left: 5px solid var(--blue); background: #edf6fc; border-radius: 4px 12px 12px 4px; font-size: 1.08rem; }
+    .note, .warning, .finding, .unknown {
+      margin: 16px 0;
+      padding: 14px 17px;
+      border-radius: 12px;
+      border: 1px solid;
+    }
+    .note { color: #225a65; background: var(--cyan); border-color: #a9dbe3; }
+    .finding { color: var(--green); background: var(--green-bg); border-color: #b7dfca; }
+    .warning { color: var(--red); background: var(--red-bg); border-color: #f1c2b9; }
+    .unknown { color: var(--amber); background: var(--amber-bg); border-color: #ead796; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: .78rem; font-weight: 750; white-space: nowrap; }
+    .tag.direct { color: #0e5d3b; background: #dff4e8; }
+    .tag.industry { color: #194f7a; background: #e4f0fb; }
+    .tag.paper { color: #55358a; background: #eee5ff; }
+    .tag.infer { color: #835c00; background: #fff0b6; }
+    .tag.unknown { color: #94372b; background: #ffe4df; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .card { padding: 17px; border: 1px solid var(--line); border-radius: 14px; background: var(--wash); }
+    .card h3, .card h4 { margin-top: 0; }
+    .card .num { font-size: 2rem; line-height: 1; font-weight: 800; color: var(--blue); }
+
+    .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 9px; margin: 18px 0; }
+    .flow .node { flex: 1 1 150px; min-width: 135px; padding: 13px 12px; border: 1px solid #b8cad8; border-radius: 12px; background: #f6fbff; text-align: center; font-weight: 680; }
+    .flow .arrow { align-self: center; color: #6e8294; font-size: 1.25rem; font-weight: 800; }
+    .responsibility { display: grid; grid-template-columns: 155px 1fr; gap: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    .responsibility > div { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+    .responsibility > div:nth-child(odd) { background: #edf4fa; color: var(--navy); font-weight: 750; }
+    .responsibility > div:nth-last-child(-n+2) { border-bottom: 0; }
+
+    .table-wrap { overflow-x: auto; margin: 14px 0 20px; }
+    table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: .93rem; }
+    th { color: white; background: var(--navy); text-align: left; }
+    th, td { padding: 11px 12px; vertical-align: top; border: 1px solid #d5dde6; }
+    tr:nth-child(even) td { background: #f7f9fb; }
+    td strong { color: #244b6b; }
+
+    .source-card { margin: 12px 0; padding: 15px 17px; border-left: 4px solid var(--purple); background: var(--purple-bg); border-radius: 4px 12px 12px 4px; }
+    .source-card p { margin: 5px 0; }
+    .source-card .use { color: #4d3476; }
+    .source-card .limit { color: #7b4b2d; }
+
+    .decision { border-left: 2px solid #b9c9d8; margin-left: 8px; padding-left: 20px; }
+    .decision .step { position: relative; margin: 13px 0; padding: 12px 14px; background: #f4f8fb; border-radius: 10px; }
+    .decision .step::before { content: ""; position: absolute; left: -27px; top: 19px; width: 12px; height: 12px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 4px #dcebf6; }
+    .verdict { font-weight: 800; color: var(--green); }
+
+    .refs { counter-reset: refs; padding-left: 0; list-style: none; }
+    .refs li { position: relative; padding: 11px 12px 11px 46px; border-bottom: 1px solid var(--line); }
+    .refs li::before { counter-increment: refs; content: "[" counter(refs) "]"; position: absolute; left: 8px; color: var(--blue); font-weight: 800; }
+    .refs li:last-child { border-bottom: 0; }
+    footer { color: var(--muted); text-align: center; font-size: .88rem; margin-top: 30px; }
+
+    @media (max-width: 820px) {
+      .page { padding: 14px 12px 50px; }
+      .hero { padding: 30px 24px; border-radius: 18px; }
+      section { padding: 24px 20px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .responsibility { grid-template-columns: 1fr; }
+      .responsibility > div:nth-child(odd) { border-bottom: 0; }
+      .flow .arrow { display: none; }
+    }
+
+    @media print {
+      body { background: white; }
+      .page { max-width: none; padding: 0; }
+      nav { display: none; }
+      .hero, section { box-shadow: none; break-inside: avoid; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">WEEK 06 · DAY 01 · 中文研究讲义</p>
+    <h1>Battery Pack EoL测试接插件处理：从真实工序进入机器人系统研究</h1>
+    <p class="lead">本讲义不再讨论“这个选题是否值得”。它直接重建Pack EoL工序、目标机器人任务和三种现有实施路径，并用企业案例与同行评审论文回答：我们已经知道什么，技术难点在哪里，下一步应研究什么。</p>
+    <div class="meta">
+      <span>Production level：Battery Pack</span>
+      <span>Deep reference case：EoL connector handling</span>
+      <span>Primary method：Task → Requirement → Capability → Suitability</span>
+      <span>校准日期：2026-08-13</span>
+    </div>
+  </header>
+
+  <nav aria-label="讲义目录">
+    <a href="#outcome">本日成果</a>
+    <a href="#process">EoL工序</a>
+    <a href="#task">机器人任务</a>
+    <a href="#xiaomo">小墨证据审计</a>
+    <a href="#baselines">三类实施路径</a>
+    <a href="#literature">文献地图</a>
+    <a href="#requirements">技术要求</a>
+    <a href="#charter">Case Charter</a>
+    <a href="#learning-progress">学习复盘</a>
+    <a href="#next">研究推进</a>
+    <a href="#references">来源</a>
+  </nav>
+
+  <section id="outcome">
+    <p class="kicker">结论先行</p>
+    <h2>Day 1真正向前推进了什么</h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="num">01</div>
+        <h3>工序得到独立确认</h3>
+        <p>VDMA/PEM的2026版模组与Pack生产过程资料把EoL列为Pack生产第11步，并明确包括连接测试设备、检查电子系统、验证BMS、充放电与放行。</p>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <h3>替代方案真实存在</h3>
+        <p>Marposs、thyssenkrupp和Schaeffler均公开了Pack EoL的人工或自动接线方案。专用自动接触机构不是虚构比较对象。</p>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <h3>机器人难点可以被文献解释</h3>
+        <p>连接器插接与柔性线束研究提供了位姿不确定性、接触状态、卡滞、柔顺、双臂协调和线缆状态估计等可分析要求。</p>
+      </div>
+    </div>
+    <div class="big-claim"><strong>本案例的技术核心：</strong>机器人必须在柔性线束状态不完全确定、连接器与接口存在位姿偏差且插接过程发生接触的情况下，可靠地建立和解除Pack与测试设备之间的物理连接。</div>
+    <p>人形机器人只是完成这一任务的一种系统架构。研究将比较三种路径：<strong>专用自动接触机构、固定工业机器人/固定双臂机器人、人形或移动双臂机器人</strong>。</p>
+  </section>
+
+  <section id="process">
+    <p class="kicker">LECTURE 01</p>
+    <h2>Pack EoL究竟处于哪里、做什么</h2>
+    <p>VDMA与PEM RWTH Aachen共同编制的《Production Process of Battery Modules and Battery Packs (2026)》给出的Pack生产主链如下。具体产品设计和生产规模会改变工序的选择、配置与顺序，因此这是一条行业参考链，而不是CATL现场的逐站复原。</p>
+    <div class="flow" aria-label="Pack生产末端流程">
+      <div class="node">7<br>模组集成</div><div class="arrow">→</div>
+      <div class="node">8<br>Pack部件装配</div><div class="arrow">→</div>
+      <div class="node">9<br>密封与泄漏测试</div><div class="arrow">→</div>
+      <div class="node">10<br>Charging &amp; Flashing</div><div class="arrow">→</div>
+      <div class="node">11<br>End-of-Line Test</div>
+    </div>
+    <p>VDMA/PEM在第24页把Pack EoL描述为：</p>
+    <ul>
+      <li>把测试设备连接到电池Pack接口；</li>
+      <li>利用测试软件检查电子系统，并由专业人员进行视觉检查；</li>
+      <li>检查BMS及温度传感器、从板等子部件；</li>
+      <li>按照规定性能曲线进行充放电，并达到交付所需SOC；</li>
+      <li>完成标签、警示和合格放行，随后包装与运输。</li>
+    </ul>
+    <div class="finding"><strong>研究含义：</strong>EoL不是“只测一个电压”。它是Pack离开生产线前的综合功能与安全验证。连接器处理只是整个EoL中的物理接口任务，但它是测试能否自动开始和安全结束的前提。</div>
+
+    <h3>EoL与DCR为什么暂时分开</h3>
+    <p><strong>DCR/DCIR</strong>指直流内阻测试或相应测试环节；<strong>EoL</strong>是更宽的最终测试阶段。千寻智能把EoL与DCR并列披露，但当前没有公开资料证明两者使用同一连接器、同一工位、同一测试程序或同一台机器人。因此：</p>
+    <div class="note"><strong>Week 6主边界：</strong>以Pack EoL test-connector handling为primary process。DCR作为相邻任务登记，等待同一任务抽象或同一工位证据后再决定是否合并。</div>
+
+    <h3>测试内容：哪些已经有设备资料支持</h3>
+    <p>Marposs的Pack测试系统列出绝缘/电气强度、连续性、OCV、脉冲、BMS、HVIL、CAN记录等可配置项目；RePower当前官方手册的Pack EoL方案也列出绝缘、耐压、等电位、总电压/内阻、单体压降、BMS通信与信号模拟等类别。不同产线不会必然使用全部项目。</p>
+    <div class="warning"><strong>不要写成：</strong>“CATL小墨所在工位一定执行上述全部测试。”这些资料只说明行业设备可以配置哪些测试，不是CATL现场recipe。</div>
+  </section>
+
+  <section id="task">
+    <p class="kicker">LECTURE 02</p>
+    <h2>把工序转换成机器人系统任务</h2>
+    <p>目前可以建立的不是CATL现场逐帧复原，而是一条<strong>有来源标记的参考任务链</strong>。每一步的证据身份不同：</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>步骤</th><th>物理/信息动作</th><th>责任主体</th><th>当前证据</th><th>对目标案例的状态</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Pack进入并在测试位置停稳</td><td>输送/AGV/fixture</td><td>thyssenkrupp、Marposs提供多种上料架构</td><td><span class="tag unknown">现场未知</span></td></tr>
+          <tr><td>2</td><td>Pack身份、型号和测试程序关联</td><td>PLC/MES/test software</td><td>VDMA强调测试结果与交付；设备商支持数据记录</td><td><span class="tag infer">行业参考</span></td></tr>
+          <tr><td>3</td><td>取得或支撑测试连接器与线束</td><td>机器人/自动接触机构</td><td>小墨披露支持柔性线束插拔；KUKA展示柔性电缆抓取</td><td><span class="tag direct">任务存在</span> <span class="tag unknown">供料未知</span></td></tr>
+          <tr><td>4</td><td>定位Pack接口和连接器姿态</td><td>机器人视觉/机构定位</td><td>小墨披露插接点变化；KUKA使用2D视觉</td><td><span class="tag direct">变化主张</span></td></tr>
+          <tr><td>5</td><td>对准、接触、插入并完成锁止</td><td>机器人/末端执行器</td><td>企业案例＋连接器插接论文</td><td><span class="tag direct">插接存在</span> <span class="tag unknown">几何未知</span></td></tr>
+          <tr><td>6</td><td>确认物理连接完成并允许测试</td><td>传感器、PLC、安全系统</td><td>小墨披露连接状态检查；工业系统使用终点/锁止确认</td><td><span class="tag direct">检查被披露</span> <span class="tag unknown">判据未知</span></td></tr>
+          <tr><td>7</td><td>执行电气、功能和安全测试</td><td>EoL测试设备</td><td>VDMA、Marposs、RePower、Festo</td><td><span class="tag industry">工序基线</span></td></tr>
+          <tr><td>8</td><td>测试结束、去能量并给出安全释放许可</td><td>测试设备/PLC/safety</td><td>安全系统工程必需；目标现场时序未公开</td><td><span class="tag infer">系统推导</span> <span class="tag unknown">现场未知</span></td></tr>
+          <tr><td>9</td><td>拔出连接器，恢复线束与连接器规定状态</td><td>机器人/自动接触机构</td><td>小墨企业披露支持plug/unplug</td><td><span class="tag direct">拔出存在</span> <span class="tag unknown">返回位置未知</span></td></tr>
+          <tr><td>10</td><td>结果关联、Pack放行或转入返修</td><td>MES/quality system</td><td>VDMA要求记录结果并放行</td><td><span class="tag industry">工序基线</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>责任边界</h3>
+    <div class="responsibility">
+      <div>机器人系统</div><div>连接器/线束的定位、抓取或支撑、对准、插入、状态检查、拔出与返回。</div>
+      <div>EoL测试设备</div><div>施加测试条件、测量电气/功能响应、运行test recipe、产生测试结果。</div>
+      <div>PLC / Safety</div><div>连接许可、测试许可、去能量许可、安全互锁、故障与安全停机。</div>
+      <div>MES / Traceability</div><div>Pack身份、测试配方、测试记录和最终结果之间的关联。</div>
+      <div>Fixture / Transport</div><div>把Pack带入工位、提供可重复定位和物理支撑。</div>
+    </div>
+    <div class="big-claim"><strong>关键理解：</strong>机器人不是“测电池参数”；机器人建立测试所需的物理连接。把这一边界划清后，论文才不会滑向电池测试算法或测试设备设计。</div>
+  </section>
+
+  <section id="xiaomo">
+    <p class="kicker">CASE EVIDENCE</p>
+    <h2>CATL × 千寻智能“小墨”：目前究竟确认了什么</h2>
+    <p>截至本讲义校准日，最接近原始信息的是千寻智能官方英文页面。它是<strong>直接企业披露</strong>，不是同行评审论文，也不是第三方验收报告。</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>可作为目标案例事实登记</h3>
+        <ul>
+          <li>企业称部署发生在CATL中州基地的新能源动力电池Pack产线；</li>
+          <li>企业称小墨用于EoL与DCR环节的电池测试连接器插接；</li>
+          <li>企业明确提到柔性线束的插入和拔出；</li>
+          <li>企业称系统应对来料位置和插接点变化；</li>
+          <li>企业称机器人检查线束连接状态并报告异常。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>只能作为企业性能主张登记</h3>
+        <ul>
+          <li>插接成功率持续超过99%；</li>
+          <li>节拍达到熟练工人水平；</li>
+          <li>单日工作量增加三倍；</li>
+          <li>规模化部署、稳定性与一致性表现；</li>
+          <li>VLA模型带来的泛化和实时姿态调整效果。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="unknown"><strong>仍未确认：</strong>连接器类型和几何；接口数量；连接器供料方式；是否使用腕部六维力/力矩传感器；完整插拔和安全时序；一台机器人是否跨EoL/DCR工位；真实工位布局；人工干预和故障恢复；独立验证的节拍、成功率、成本与ROI。</div>
+
+    <h3>视频证据核查结果</h3>
+    <p>本轮检索检查了千寻官方页面、CATL新闻目录及中英文关键词结果。当前官方网页正文只提供静态图片和文字披露；尚未找到可核验的<strong>连续完整工序视频</strong>，无法从画面独立识别“取连接器—对准—插入—测试—拔出—返回”的完整周期。</p>
+    <p class="warning"><strong>这意味着：</strong>讲义和论文不能依据二次媒体的短片或配图补画CATL现场细节。后续若获得原始视频，应按时间戳重新做动作与责任审计。</p>
+  </section>
+
+  <section id="baselines">
+    <p class="kicker">LECTURE 03</p>
+    <h2>三类实施路径已经不是抽象设想</h2>
+
+    <h3>A. 专用自动接触机构 / fixed automation</h3>
+    <p>这是完成同一功能的直接基线。它通常利用固定工位、适配器、气动/电动轴和自动接触单元建立HV与通信连接。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>来源</th><th>公开方案</th><th>能支持的结论</th><th>不能支持的结论</th></tr></thead>
+        <tbody>
+          <tr><td><strong>thyssenkrupp System Engineering</strong></td><td>输送托盘方案自动连接HV与通信插头；AGV方案可选择人工或自动适配单元；手推车方案为人工接线。</td><td>Pack EoL存在从人工接线到全自动接触的多种直接实施路径。</td><td>未说明CATL采用哪一种，也不提供通用成本优势。</td></tr>
+          <tr><td><strong>Marposs</strong></td><td>Pack EoL可采用人工连接/断开，或由自动系统完成Pack处理与连接；版本中明确列出电源和信号线手动/自动连接。</td><td>自动接线是成熟设备配置选项，且接口位置与Pack形式会影响设备适配。</td><td>不能证明自动接触能无改造覆盖任意Pack型号。</td></tr>
+          <tr><td><strong>Schaeffler Special Machinery</strong></td><td>Pack整线包含EoL automatic plug contacting与performance test。</td><td>自动插头接触可以被集成进Pack交钥匙生产系统。</td><td>网页没有公开连接器结构、换型时间和具体节拍。</td></tr>
+          <tr><td><strong>RePower</strong></td><td>当前官方产品手册支持Pack EoL测试项目、自动化测试流程和多种接口/功能模块。</td><td>可用于测试设备与测试项目基线。</td><td><strong>当前手册不能独立证明</strong>自动插接、扫码、MES和Pack流转的完整产线链。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>B. 固定工业机器人 / fixed dual-arm robot</h3>
+    <p>KUKA、Liebherr与KOSTAL公开的Pack装配案例使用两台KR CYBERTECH机器人同步连接带柔性电缆的高压模组连接器。其工程方案包括：</p>
+    <ul>
+      <li>2D相机寻找电缆抓取点并把连接器定位到对接接口上方；</li>
+      <li>特殊夹具处理未精确预定位的柔性电缆；</li>
+      <li>弹簧机构、气缸和终点传感器控制插接与CPA锁止；</li>
+      <li>双机器人同步，适应不同电缆长度和连接位置；</li>
+      <li>企业披露的工位节拍结果，但该数字仍属于企业案例数据。</li>
+    </ul>
+    <div class="note"><strong>它与B的关系：</strong>这是Pack assembly中的永久连接，不是EoL临时测试连接；但二者共享“柔性电缆＋电连接器＋位姿偏差＋接触插入＋连接确认”的技术结构，因此是高价值邻近工业基线。</div>
+
+    <h3>C. 人形 / 移动双臂机器人</h3>
+    <p>小墨提供了Pack EoL连接器操作的直接工业锚点，但公开证据尚不足以把其价值归因于“人形形态”。至少需要拆分：</p>
+    <div class="grid-3">
+      <div class="card"><h4>操作能力</h4><p>视觉定位、柔顺插接、线束支撑、双臂协调、连接状态检查。</p></div>
+      <div class="card"><h4>移动与复用</h4><p>是否跨工位、是否执行巡检或其他任务、是否减少多工位重复设备投资。</p></div>
+      <div class="card"><h4>人类工位兼容</h4><p>是否能直接使用既有工位高度、工具和通道，减少brownfield改造。</p></div>
+    </div>
+    <p>第一组能力固定工业机器人也可能具备；第二、第三组才可能形成移动双臂或人形架构的系统级差异。目前CATL目标案例对后两组的公开证据仍不完整。</p>
+
+    <h3>从现有案例得出的第一版架构图</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>生产条件</th><th>优先进入评价的架构</th><th>依据</th><th>仍需量化</th></tr></thead>
+        <tbody>
+          <tr><td>高产量、固定Pack与接口、任务长期不变</td><td>专用自动接触机构</td><td>直接EoL设备方案已经存在，机构可围绕固定接口优化。</td><td>实际节拍、换型成本、可用率、维护成本。</td></tr>
+          <tr><td>型号/接口位置变化，但工位固定且任务主要为插拔</td><td>固定工业机器人或固定双臂</td><td>KUKA邻近案例证明视觉、柔顺机构和双机器人可以处理柔性HV连接。</td><td>目标测试连接器的抓持、力和锁止需求。</td></tr>
+          <tr><td>多型号、多任务、多个既有人工作位，需要机器人复用</td><td>人形或移动双臂值得评价</td><td>移动、双臂和human-oriented layout compatibility可能产生系统价值。</td><td>CATL是否真实跨站、任务切换时间、导航与安全、充电、总拥有成本。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="warning"><strong>这不是最终结论：</strong>上表是由现有方案形成的情景假设。Day 3–4要用任务要求、成熟度与经济数据逐项检验。</p>
+  </section>
+
+  <section id="literature">
+    <p class="kicker">LITERATURE MAP</p>
+    <h2>六组真正服务本案例的论文</h2>
+    <p>这些论文不研究CATL小墨，也不研究完全相同的Pack EoL工位。它们的用途是解释任务物理、提供机器人能力证据和建立评价方法；不能把其性能数字迁移成CATL现场结果。</p>
+
+    <div class="source-card">
+      <p><span class="tag paper">系统综述</span> <strong>Wang et al. (2024), A systematic literature review of computer vision applications in robotized wire harness assembly</strong></p>
+      <p class="use"><strong>本案例用途：</strong>把线束视为DLO，支持“线束形态变化、部件识别、动态跟踪、产品变型和工业鲁棒性”这些感知要求。</p>
+      <p class="limit"><strong>迁移边界：</strong>研究对象主要是汽车线束装配，不是Pack测试线束；不能证明某种机器人形态更优。</p>
+    </div>
+
+    <div class="source-card">
+      <p><span class="tag paper">系统综述</span> <strong>Caporali et al. (2026), Robotic perception and manipulation of deformable linear objects: A survey</strong></p>
+      <p class="use"><strong>本案例用途：</strong>建立DLO建模、感知、状态估计、控制、规划与操作任务的总体知识框架。</p>
+      <p class="limit"><strong>迁移边界：</strong>是通用DLO综述，需要再由Pack连接器与线束几何约束收缩。</p>
+    </div>
+
+    <div class="source-card">
+      <p><span class="tag paper">同行评审实验</span> <strong>Wang et al. (2025), Geometry and Force Guided Robotic Assembly With Large Initial Deviations for Electrical Connectors</strong></p>
+      <p class="use"><strong>本案例用途：</strong>说明连接器在初始位姿偏差、视觉遮挡、摩擦和卡滞条件下可通过力/力矩接触状态与几何约束完成对准。</p>
+      <p class="limit"><strong>迁移边界：</strong>论文配置偏航空连接器和固定UR5实验；不能据此断言小墨使用同样传感器或算法。</p>
+    </div>
+
+    <div class="source-card">
+      <p><span class="tag paper">同行评审实验</span> <strong>Gebauer et al. (2024), Robot-based, sensitive mating of electrical connectors using automatically designed gripper jaws</strong></p>
+      <p class="use"><strong>本案例用途：</strong>通过多个高压连接器的大量抓取/插接试验，支持“夹爪设计、in-hand pose uncertainty和柔顺插接策略共同影响鲁棒性”。</p>
+      <p class="limit"><strong>迁移边界：</strong>不是Pack EoL现场；论文试验参数和结果只能在原连接器/夹爪配置下解释。</p>
+    </div>
+
+    <div class="source-card">
+      <p><span class="tag paper">双臂系统实验</span> <strong>Malvido Fresnillo et al. (2025), A dual-arm robotic system for automated multi-branch wire harness assembly in automotive industry</strong></p>
+      <p class="use"><strong>本案例用途：</strong>展示双臂、视觉、CAD/任务级编程和防缠绕规划如何组合；两个复杂场景的成功率仍有限，反映从实验到稳定生产的距离。</p>
+      <p class="limit"><strong>迁移边界：</strong>处理多分支线束装配，不是临时测试连接器；它证明双臂路径的能力与难点，不证明EoL性能。</p>
+    </div>
+
+    <div class="source-card">
+      <p><span class="tag paper">综述/方法</span> <strong>Petzoldt, Harms &amp; Freitag (2023), Review of task allocation for human-robot collaboration in assembly</strong></p>
+      <p class="use"><strong>本案例用途：</strong>支持“先分解任务和能力，再进行系统/人员分工”的评价顺序，并为任务配置、节拍、安全和经济等维度提供方法背景。</p>
+      <p class="limit"><strong>迁移边界：</strong>不是humanoid评价论文，也不证明本案例必须与人协作。</p>
+    </div>
+
+    <h3>推荐阅读顺序</h3>
+    <ol>
+      <li><strong>先读工序：</strong>VDMA/PEM 2026，第6页总流程＋第24页Pack EoL。</li>
+      <li><strong>再读直接工业方案：</strong>千寻官方、thyssenkrupp第2页、Marposs Pack测试、KUKA柔性连接器案例。</li>
+      <li><strong>再读任务物理：</strong>Wang 2024线束视觉综述＋Wang 2025连接器力引导插接。</li>
+      <li><strong>最后读系统实现：</strong>Gebauer 2024高压连接器＋Malvido Fresnillo 2025双臂线束系统。</li>
+    </ol>
+  </section>
+
+  <section id="requirements">
+    <p class="kicker">LECTURE 04</p>
+    <h2>从证据中提取出的第一版技术要求</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>任务难点</th><th>物理原因</th><th>机器人系统所需能力</th><th>现有证据</th><th>目标案例仍缺什么</th></tr></thead>
+        <tbody>
+          <tr><td><strong>柔性线束状态</strong></td><td>形态受抓取点、重力、弯曲刚度、支撑与运动历史影响。</td><td>线束/连接器感知，合适抓取点，支撑与防缠绕策略；必要时双臂协调。</td><td>线束综述、双臂系统、KUKA案例。</td><td>线束长度、分支、初始存放、允许弯曲半径。</td></tr>
+          <tr><td><strong>连接器初始偏差</strong></td><td>Pack位置、接口位置和抓取后连接器位姿可能不完全一致。</td><td>视觉或几何定位、在线位姿修正、容差吸收。</td><td>小墨主张、KUKA视觉、T-ASE论文。</td><td>偏差范围、接口可见性、遮挡与照明。</td></tr>
+          <tr><td><strong>接触丰富的插入</strong></td><td>边缘、平面、槽口、摩擦与装配公差导致卡滞或楔紧。</td><td>力/力矩或等效接触反馈、柔顺/阻抗、搜索与异常恢复。</td><td>T-ASE论文、Gebauer 2024。</td><td>插入力/拔出力、允许力矩、插入深度和搜索策略。</td></tr>
+          <tr><td><strong>防损伤与锁止</strong></td><td>过大力、偏插或未完成CPA/锁止会损伤连接器或产生错误连接。</td><td>末端执行器与力限制、机械柔顺、锁止/终点确认。</td><td>KUKA案例、连接器论文。</td><td>目标连接器是否有锁止、CPA或其他确认机构。</td></tr>
+          <tr><td><strong>HV与测试安全</strong></td><td>只有在正确连接、正确测试状态和去能量后才应允许后续动作。</td><td>安全I/O、interlock、测试许可、去能量确认、异常安全释放。</td><td>VDMA、Marposs、thyssenkrupp。</td><td>CATL现场安全状态机、连接时是否带电、保护区域。</td></tr>
+          <tr><td><strong>多型号与换型</strong></td><td>Pack、接口位置、连接器/adapter与test recipe可能变化。</td><td>型号识别、程序/工具/adapter切换、参数管理。</td><td>小墨企业主张；Marposs强调接口适应。</td><td>型号数量、几何差异、换型频率、是否同一连接器。</td></tr>
+          <tr><td><strong>质量与追溯</strong></td><td>物理连接状态必须与测试结果及Pack身份一致。</td><td>连接状态信号、Pack ID、test recipe和结果的可追溯关联。</td><td>VDMA、Marposs。</td><td>实际MES接口、数据字段和责任主体。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="big-claim"><strong>本案例不是普通pick-and-place的原因：</strong>抓到连接器只是开始；真正的难点发生在柔性线束状态、接触插入、锁止确认、安全许可和测试系统集成的连续闭环中。</div>
+  </section>
+
+  <section id="charter">
+    <p class="kicker">CASE CHARTER v0.2</p>
+    <h2>经过资料核验后的稳定研究边界</h2>
+    <div class="table-wrap">
+      <table>
+        <tbody>
+          <tr><th style="width:22%">研究对象</th><td>Battery Pack EoL测试中的连接器与柔性线束处理任务，以及不同自动化/机器人架构的条件性适用性。</td></tr>
+          <tr><th>Production level</th><td>Battery Pack manufacturing。Thomas于2026-08-12认可Pack EoL作为可继续研究方向；不是最终注册题目。</td></tr>
+          <tr><th>Primary process</th><td>Pack End-of-Line testing。DCR暂为adjacent，不默认同一工位或任务。</td></tr>
+          <tr><th>Manipulated object</th><td>测试连接器及其柔性线束。具体CATL connector、HV/LV/communication配置未知。</td></tr>
+          <tr><th>Robot task boundary</th><td>获取/支撑连接器与线束 → 定位接口 → 对准与插入 → 确认连接 → 测试后拔出 → 恢复规定状态。具体CATL起止点仍待视频或设备资料确认。</td></tr>
+          <tr><th>Outside robot responsibility</th><td>EoL测试设备执行测量和test recipe；PLC/safety执行许可与互锁；MES关联Pack、配方与结果；fixture/transport定位Pack。</td></tr>
+          <tr><th>Compared architectures</th><td>① dedicated automatic plug contacting；② fixed industrial robot / fixed dual-arm；③ humanoid / mobile dual-arm system。人工连接作为现实参考。</td></tr>
+          <tr><th>Industrial anchor</th><td>CATL × Spirit AI “Moz/小墨”企业披露。它证明企业声称在Pack EoL/DCR使用该机器人，不独立证明性能和优越性。</td></tr>
+          <tr><th>Direct baselines</th><td>Marposs、thyssenkrupp、Schaeffler的Pack EoL人工/自动接线方案。</td></tr>
+          <tr><th>Adjacent robotics baseline</th><td>KUKA/Liebherr/KOSTAL固定双工业机器人处理Pack装配中的柔性高压连接器。</td></tr>
+          <tr><th>Central research question</th><td>哪些任务特征与生产条件决定专用自动化、固定工业机器人和人形/移动双臂系统在Pack EoL测试接插件处理中的适用性？</td></tr>
+          <tr><th>Evaluation dimensions</th><td>任务可实现性、连接质量机制、柔性/换型、节拍、可靠性、安全与集成、可扩展性、成本证据与成熟度。</td></tr>
+          <tr><th>Evidence strategy</th><td>工序协会资料＋直接设备方案＋目标企业披露＋连接器/线束同行评审论文＋有边界的条件场景；可选专家访谈或站点核验。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="learning-progress">
+    <p class="kicker">STUDENT LEARNING RECORD</p>
+    <h2>Day 1学生理解与带教复盘</h2>
+    <p>本节记录学生在实际交流中达到的理解程度。它不是研究事实来源，而是后续带教的起点：已经掌握的内容不再反复讲，尚未展开的内容按Day 2–4逐步进入。</p>
+
+    <h3>1. 本日实际学习路径</h3>
+    <div class="flow" aria-label="Day 1实际学习路径">
+      <div class="node">区分Pack与Cell</div><div class="arrow">→</div>
+      <div class="node">定位Pack EoL</div><div class="arrow">→</div>
+      <div class="node">划分机器人/测试设备责任</div><div class="arrow">→</div>
+      <div class="node">明确三类比较架构</div><div class="arrow">→</div>
+      <div class="node">完成简短口头验证</div>
+    </div>
+
+    <h3>2. 学生最终口头回答（保留原意）</h3>
+    <div class="grid-3">
+      <div class="card">
+        <h4>Pack与EoL位置</h4>
+        <p>“Pack是电池模组装配密封后的产品，处于finishing后的测试部分，end of line。”</p>
+      </div>
+      <div class="card">
+        <h4>责任划分</h4>
+        <p>“机器人负责物理层面的连接器和线束整理、连接等；EoL负责具体测试Pack的电压等参数，决定Pack是否可用。”</p>
+      </div>
+      <div class="card">
+        <h4>研究对象</h4>
+        <p>“不是研究小墨；我们研究的是针对Pack EoL这个工序，三类架构哪种更适合这个任务。”</p>
+      </div>
+    </div>
+
+    <h3>3. 已经掌握与需要校准的边界</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>学习点</th><th>当前判断</th><th>已经掌握</th><th>校准后的准确表达</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pack是什么</strong></td><td><span class="tag direct">通过</span></td><td>理解Pack是下游集成后的完整电池产品，而不是单个电芯。</td><td>Pack可以由模组构成，也可能采用Cell-to-Pack而没有独立模组层；还包括箱体、BMS、热管理、高低压连接和安全部件。</td></tr>
+          <tr><td><strong>Pack EoL在哪里</strong></td><td><span class="tag direct">通过</span></td><td>理解它位于Pack生产线末端，是产品离线前的测试阶段。</td><td>使用“Pack manufacturing末端”而不是“cell finishing之后”，避免与化成、老化和电芯终检所属的cell finishing混淆。</td></tr>
+          <tr><td><strong>机器人做什么</strong></td><td><span class="tag direct">通过</span></td><td>清楚机器人承担物理层面的连接器与线束操作。</td><td>任务包括获取/支撑、定位、对准、插入、连接确认、拔出和规定状态恢复；“整理线束”的具体动作仍需现场证据。</td></tr>
+          <tr><td><strong>EoL设备做什么</strong></td><td><span class="tag direct">通过</span></td><td>能够区分“物理连接”和“执行测试”。</td><td>EoL不只测电压，还可能按配方检查电气功能、BMS和安全保护；最终放行涉及测试设备、质量系统与MES等责任。</td></tr>
+          <tr><td><strong>论文研究什么</strong></td><td><span class="tag direct">通过</span></td><td>明确研究对象不是小墨品牌，而是Pack EoL任务与架构适用性。</td><td>比较①专用自动接触机构，②固定工业机器人/固定双臂，③人形/移动双臂机器人。</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding"><strong>Day 1结论：通过。</strong>学生已经能够说明“Pack制造位置 → EoL作用 → 机器人插拔任务 → 三类可能架构”。这就是Day 1的最低且充分成果；不要求在同一天掌握全部测试项目、控制算法、论文参数或最终架构结论。</div>
+
+    <h3>4. 带教方式的反馈与调整</h3>
+    <p>学生明确反馈：前期反复讨论“案例为何有意义”和连续证据分类提问造成原地踏步感；一次性阅读整份研究档案又难以跟上节奏。后续带教据此采用以下规则：</p>
+    <ul>
+      <li>每个Day只保留一个中心学习问题，不把整份研究档案当作一次课的学习量；</li>
+      <li>先讲具体工序、任务、设备或论文内容，再进行不超过三题的简短理解检查；</li>
+      <li>已经通过的“为什么选B”和Day 1基础概念不再循环证明；</li>
+      <li>HTML作为可回查研究档案，课堂只指定当日需要阅读的章节；</li>
+      <li>文献必须承担明确用途：推进工序理解、任务拆解或架构比较，而不是堆砌来源；</li>
+      <li>由学生的反馈决定是否减速、补讲或进入下一步，不为完成Day 1–5形式而强行推进。</li>
+    </ul>
+
+    <h3>5. 下一次带教的准确起点</h3>
+    <div class="note"><strong>不要重新开始Day 1。</strong>Day 2只研究一个问题：测试连接器从未连接状态到测试结束后安全拔出，完整任务循环包含哪些可观察步骤，各步骤由机器人、测试设备、PLC/safety、MES还是fixture负责。先学习任务链，再在结束时用一张简图验证理解。</div>
+  </section>
+
+  <section id="next">
+    <p class="kicker">RESEARCH FORWARD</p>
+    <h2>Day 1之后，我们具体往哪里推进</h2>
+    <p>接下来不再重复解释为什么选择B，而是逐步把上面的UNKNOWN转成任务模型和可评价参数。</p>
+    <div class="decision">
+      <div class="step"><strong>Day 2｜任务周期与责任图</strong><br>从VDMA、设备方案和目标披露建立完整参考周期；给每一步标记来源与责任主体，形成可作为论文图的Task + Responsibility Map。</div>
+      <div class="step"><strong>Day 3｜任务要求</strong><br>集中研究柔性线束、接触插入、连接确认、HV安全、型号/接口变化和traceability；不研究VLA算法细节。</div>
+      <div class="step"><strong>Day 4｜架构适用性</strong><br>用相同要求比较自动接触机构、固定机器人和人形/移动双臂；只给条件性结论，不做品牌排名。</div>
+      <div class="step"><strong>Day 5｜方法原型</strong><br>把本案例沉淀为Task → Requirement → Capability → Suitability框架，并检验哪些字段可迁移到Candidate A。</div>
+    </div>
+
+    <h3>Day 2优先补证清单</h3>
+    <ol>
+      <li>寻找Pack EoL自动接触机构的结构图、完整循环或视频，确认adapter如何定位、插入和退出；</li>
+      <li>提取thyssenkrupp、Marposs、Schaeffler三种设备架构的输入、输出和安全边界；</li>
+      <li>从连接器论文提取可用于任务图的接触阶段：approach、first contact、alignment、insertion、lock/confirmation；</li>
+      <li>继续寻找小墨原始连续工序视频；若仍无，明确保持目标现场几何和时序为UNKNOWN；</li>
+      <li>形成一张“CATL direct / EoL baseline / adjacent robot / paper / inference”分层流程图。</li>
+    </ol>
+
+    <h3>本日可向Thomas汇报的研究发现</h3>
+    <div class="finding">
+      <ol>
+        <li>Pack EoL的确包含把测试设备连接到Pack接口，且行业存在人工、半自动和自动接触多种实施方式。</li>
+        <li>小墨是目标工序的直接企业锚点，但完整工序、传感器、连接器和独立性能仍未公开。</li>
+        <li>KUKA邻近案例说明柔性高压连接器并不要求人形形态；视觉、专用夹具、柔顺机构和固定双机器人已经形成一条现实技术路线。</li>
+        <li>同行评审文献允许我们把任务进一步拆成DLO感知、抓取后位姿不确定性、接触状态、卡滞恢复和连接确认。</li>
+        <li>因此下一步不是继续找“人形更灵活”的宣传，而是确定目标生产变化发生在哪里，以及哪些变化真正需要移动、多任务或human-oriented layout compatibility。</li>
+      </ol>
+    </div>
+
+    <h3>对仓库旧资料的证据修正</h3>
+    <p>旧brief曾写“RePower pp. 27–28公开了定位、自动插接、扫码、测试、MES和流转”。本次下载的2026-05官方英文手册只有18个PDF页面；其Pack EoL内容位于PDF第7页（印刷页11–12），可以支持测试项目与设备能力，<strong>没有清楚支持上述完整自动接线产线链</strong>。本讲义因此不再使用该过度解读，专用接线基线改由Marposs、thyssenkrupp和Schaeffler直接支撑。</p>
+  </section>
+
+  <section id="references">
+    <p class="kicker">TRACEABLE SOURCES</p>
+    <h2>本讲义来源与用途</h2>
+    <ol class="refs">
+      <li><a href="../abschlussarbeiten_42444.pdf">Thomas Fey：Robotic Systems in Battery Manufacturing: Potentials, Applications, and Implementation Strategies</a>。本地原始任务PDF；用于最高方向锚点。</li>
+      <li><a href="https://www.vdma.eu/documents/34570/35405938/Production%2BProcess%2Bof%2BBattery%2BModules%2Band%2BBattery%2BPacks%2B%282026-03%29.pdf/c0b5ed59-8713-074d-5db2-fab4fee69410?filename=Production+Process+of+Battery+Modules+and+Battery+Packs+%282026-03%29.pdf">VDMA / PEM RWTH Aachen：Production Process of Battery Modules and Battery Packs (2026)</a>，重点第6页与第24页；用于Pack流程、EoL任务与质量要求。</li>
+      <li><a href="https://www.spirit-ai.com/en/news/23">Spirit AI：A World First! Embodied AI Robots Achieve Large-Scale Deployment in CATL Battery Production Line</a>；用于小墨目标案例的直接企业披露。</li>
+      <li><a href="https://www.marposs.com/ger/application/electrical-test-battery-pack">Marposs：Electrical testing of battery packs</a>；用于人工/自动接线版本、Pack EoL测试项目和设备架构。</li>
+      <li><a href="https://ucpcdn.thyssenkrupp.com/_legacy/UCPthyssenkruppBAISSystemEngineering/assets.files/automobilindustrie/future-automotive-factory/tech-days/06_testingsolutions.pdf">thyssenkrupp System Engineering：Battery End of Line test</a>，重点第2页；用于输送、AGV、手推车三种上料/接线配置。</li>
+      <li><a href="https://www.schaeffler-special-machinery.de/en/business-sectors/e-mobility/battery-systems/battery-pack/">Schaeffler Special Machinery：Assembly and testing of battery packs</a>；用于automatic plug contacting的直接Pack EoL基线。</li>
+      <li><a href="https://www.repowerstock.com/data/downloads/6a0e820412482.pdf">RePower：Battery Testing Equipment &amp; Battery Test System (2026)</a>，PDF第7页/印刷页11–12；仅用于Pack EoL测试设备与项目参考。</li>
+      <li><a href="https://www.festo.com/us/en/e/solutions/customer-references/end-of-line-testing-for-battery-systems-id_4056130">Festo / HAHN：Automated end-of-line testing for battery systems</a>；用于综合EoL测试与handling-system集成参考。</li>
+      <li><a href="https://www.kuka.com/en-us/industries/solutions-database/2023/05/liebherr-battery-pack-assembly%2C-high-voltage-battery">KUKA / Liebherr / KOSTAL：Automated battery pack assembly for high-voltage batteries</a>；用于固定双工业机器人处理柔性高压连接器的邻近工业基线。</li>
+      <li>Wang, H. et al. (2024). <a href="https://doi.org/10.1016/j.aei.2024.102596">A systematic literature review of computer vision applications in robotized wire harness assembly</a>. <em>Advanced Engineering Informatics</em>, 62, 102596.</li>
+      <li>Caporali, A. et al. (2026). <a href="https://doi.org/10.1177/02783649261432253">Robotic perception and manipulation of deformable linear objects: A survey</a>. <em>The International Journal of Robotics Research</em>, OnlineFirst.</li>
+      <li>Wang, Z. et al. (2025). <a href="https://doi.org/10.1109/TASE.2024.3477918">Geometry and Force Guided Robotic Assembly With Large Initial Deviations for Electrical Connectors</a>. <em>IEEE Transactions on Automation Science and Engineering</em>, 22, 8095–8107.</li>
+      <li>Gebauer, D., Roith, A., Dirr, J., &amp; Daub, R. (2024). <a href="https://doi.org/10.1016/j.procir.2024.10.176">Robot-based, sensitive mating of electrical connectors using automatically designed gripper jaws</a>. <em>Procedia CIRP</em>, 130, 861–866.</li>
+      <li>Malvido Fresnillo, P. et al. (2025). <a href="https://doi.org/10.1016/j.jmsy.2025.10.008">A dual-arm robotic system for automated multi-branch wire harness assembly in automotive industry</a>. <em>Journal of Manufacturing Systems</em>, 83, 577–596.</li>
+      <li>Petzoldt, C., Harms, M., &amp; Freitag, M. (2023). <a href="https://doi.org/10.1080/0951192X.2023.2204467">Review of task allocation for human-robot collaboration in assembly</a>. <em>International Journal of Computer Integrated Manufacturing</em>, 36.</li>
+      <li>Salunkhe, O. et al. (2023). <a href="https://doi.org/10.1016/j.procir.2023.09.061">Review of Current Status and Future Directions for Collaborative and Semi-Automated Automotive Wire Harnesses Assembly</a>. <em>Procedia CIRP</em>, 120, 696–701.</li>
+    </ol>
+    <div class="note"><strong>证据标签说明：</strong>企业页面用于证明企业披露的设备/部署/动作；同行评审论文用于解释任务机理和在其原配置中的结果；工程推理用于构造待检验的系统关系；UNKNOWN表示当前来源无法回答，不自动等于research gap。</div>
+  </section>
+
+  <footer>
+    Week 6 Day 1 learning guide · Master Thesis at PEM, RWTH Aachen · Editable HTML source retained in the repository
+  </footer>
+</main>
+</body>
+</html>

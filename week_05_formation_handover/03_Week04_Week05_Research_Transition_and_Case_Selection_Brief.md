@@ -381,7 +381,7 @@ PACK进入测试工位
 
 | Architecture | 当前直接作用 | 证据边界 |
 | --- | --- | --- |
-| Dedicated automation | RePower等公开了定位、自动插接、扫码、测试、MES和流转的PACK测试线 | 设备商方案；不代表CATL现场 |
+| Dedicated automation | Marposs公开Pack EoL人工/自动连接配置；thyssenkrupp公开输送、AGV与手推车三种上料/接线架构；Schaeffler公开EoL automatic plug contacting | 直接功能baseline；均不代表CATL现场，也未公开完整经济数据 |
 | Fixed industrial robots | KUKA双工业机器人处理高压电池包柔性plug-in module connectors | 技术邻近baseline；属于battery-pack assembly，不是同一EoL/DCR站 |
 | Wheeled humanoid/mobile manipulator | 千寻称可应对来料位置/插接点变化并处理柔性线束 | 企业披露；实际性能和经济性未独立验证 |
 
@@ -402,8 +402,11 @@ PACK进入测试工位
 - 千寻智能：[A World First! Embodied AI Robots Achieve Large-Scale Deployment in CATL Battery Production Line](https://www.spirit-ai.com/en/news/23)
 - 北京国际科技创新中心转载：[全球首条！北京人形具身智能机器人，在这条产线规模化“上岗”](https://www.ncsti.gov.cn/kjdt/xwjj/202512/t20251219_232737.html)
 - KUKA：[Robot-based assembly of flexible plug-in module connectors](https://www.kuka.com/en-us/industries/solutions-database/2023/05/liebherr-battery-pack-assembly%2C-high-voltage-battery)
-- RePower：[Battery Pack Automated Production Line Solutions, printed pp. 27–28](https://www.repowerstock.com/data/downloads/6a0e820412482.pdf)
-- Marposs：[Battery Module Electrical Test Systems](https://www.marposs.com/eng/application/electrical-test-battery-modules)
+- VDMA / PEM RWTH Aachen：[Production Process of Battery Modules and Battery Packs (2026), pp. 6 and 24](https://www.vdma.eu/documents/34570/35405938/Production%2BProcess%2Bof%2BBattery%2BModules%2Band%2BBattery%2BPacks%2B%282026-03%29.pdf/c0b5ed59-8713-074d-5db2-fab4fee69410?filename=Production+Process+of+Battery+Modules+and+Battery+Packs+%282026-03%29.pdf)
+- Marposs：[Electrical Testing of Battery Packs](https://www.marposs.com/ger/application/electrical-test-battery-pack)
+- thyssenkrupp System Engineering：[Battery End of Line Test, PDF p. 2](https://ucpcdn.thyssenkrupp.com/_legacy/UCPthyssenkruppBAISSystemEngineering/assets.files/automobilindustrie/future-automotive-factory/tech-days/06_testingsolutions.pdf)
+- Schaeffler Special Machinery：[Assembly and Testing of Battery Packs](https://www.schaeffler-special-machinery.de/en/business-sectors/e-mobility/battery-systems/battery-pack/)
+- RePower：[Battery Testing Equipment & Battery Test System (2026), PDF p. 7 / printed pp. 11–12](https://www.repowerstock.com/data/downloads/6a0e820412482.pdf)；仅支持Pack EoL测试设备与测试项目，不再用于证明自动插接、扫码、MES和流转的完整产线链
 
 ---
 
