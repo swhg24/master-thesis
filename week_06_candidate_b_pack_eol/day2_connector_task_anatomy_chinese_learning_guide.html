@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 6 Day 2｜Pack EoL Connector Handling — Task Anatomy &amp; Responsibility Boundary</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #d9e0e8;
+      --paper: #ffffff;
+      --wash: #f4f7fb;
+      --navy: #15385f;
+      --blue: #1769aa;
+      --cyan: #dff3f7;
+      --green: #18794e;
+      --green-bg: #eaf7f0;
+      --amber: #986801;
+      --amber-bg: #fff6d8;
+      --red: #a33a2b;
+      --red-bg: #fff0ed;
+      --purple: #6741a5;
+      --purple-bg: #f2edff;
+      --shadow: 0 10px 30px rgba(20, 42, 70, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(180deg, #eef4f8 0, #f8fafc 360px, #fff 100%);
+      font-family: "Noto Sans SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.72;
+    }
+    a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--navy); }
+    code, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .94em;
+    }
+    .page { max-width: 1180px; margin: 0 auto; padding: 28px 24px 80px; }
+    .hero {
+      color: white;
+      padding: 42px 46px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 86% 18%, rgba(85, 210, 219, .35), transparent 28%),
+        linear-gradient(135deg, #102d4d, #174f7f 62%, #117d8d);
+      box-shadow: var(--shadow);
+    }
+    .hero .eyebrow { margin: 0 0 8px; color: #bcebf1; font-weight: 700; letter-spacing: .06em; }
+    .hero h1 { margin: 0; max-width: 900px; font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.16; }
+    .hero .lead { max-width: 900px; margin: 20px 0 0; font-size: 1.12rem; color: #e9f4fb; }
+    .hero .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .hero .meta span { padding: 6px 12px; border: 1px solid rgba(255,255,255,.32); border-radius: 999px; background: rgba(255,255,255,.09); }
+
+    nav {
+      position: sticky;
+      top: 10px;
+      z-index: 4;
+      margin: 20px 0 28px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.93);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 6px 24px rgba(20, 42, 70, .07);
+      backdrop-filter: blur(12px);
+    }
+    nav a { display: inline-block; margin: 4px 12px 4px 0; font-size: .92rem; font-weight: 650; text-decoration: none; }
+
+    section { margin: 28px 0; padding: 30px 34px; background: var(--paper); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); }
+    h2 { margin: 0 0 18px; color: var(--navy); font-size: 1.7rem; line-height: 1.25; }
+    h3 { margin: 26px 0 10px; color: #214d72; font-size: 1.2rem; }
+    h4 { margin: 20px 0 8px; }
+    p { margin: 10px 0; }
+    ul, ol { padding-left: 1.35rem; }
+    li { margin: 6px 0; }
+    .kicker { color: var(--blue); font-weight: 750; letter-spacing: .03em; }
+    .big-claim { margin: 18px 0; padding: 17px 20px; border-left: 5px solid var(--blue); background: #edf6fc; border-radius: 4px 12px 12px 4px; font-size: 1.08rem; }
+    .note, .warning, .finding, .unknown {
+      margin: 16px 0;
+      padding: 14px 17px;
+      border-radius: 12px;
+      border: 1px solid;
+    }
+    .note { color: #225a65; background: var(--cyan); border-color: #a9dbe3; }
+    .finding { color: var(--green); background: var(--green-bg); border-color: #b7dfca; }
+    .warning { color: var(--red); background: var(--red-bg); border-color: #f1c2b9; }
+    .unknown { color: var(--amber); background: var(--amber-bg); border-color: #ead796; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: .78rem; font-weight: 750; white-space: nowrap; }
+    .tag.direct { color: #0e5d3b; background: #dff4e8; }
+    .tag.industry { color: #194f7a; background: #e4f0fb; }
+    .tag.paper { color: #55358a; background: #eee5ff; }
+    .tag.infer { color: #835c00; background: #fff0b6; }
+    .tag.unknown { color: #94372b; background: #ffe4df; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .card { padding: 17px; border: 1px solid var(--line); border-radius: 14px; background: var(--wash); }
+    .card h3, .card h4 { margin-top: 0; }
+    .card .num { font-size: 2rem; line-height: 1; font-weight: 800; color: var(--blue); }
+
+    .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 9px; margin: 18px 0; }
+    .flow .node { flex: 1 1 150px; min-width: 135px; padding: 13px 12px; border: 1px solid #b8cad8; border-radius: 12px; background: #f6fbff; text-align: center; font-weight: 680; }
+    .flow .arrow { align-self: center; color: #6e8294; font-size: 1.25rem; font-weight: 800; }
+
+    .table-wrap { overflow-x: auto; margin: 14px 0 20px; }
+    table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: .93rem; }
+    th { color: white; background: var(--navy); text-align: left; }
+    th, td { padding: 11px 12px; vertical-align: top; border: 1px solid #d5dde6; }
+    tr:nth-child(even) td { background: #f7f9fb; }
+    td strong { color: #244b6b; }
+
+    /* Swimlane diagram */
+    .swimlane { margin: 18px 0; overflow-x: auto; }
+    .swimlane table { min-width: 900px; }
+    .swimlane th { text-align: center; background: #1a3a54; font-size: .85rem; }
+    .swimlane td { text-align: center; font-size: .88rem; padding: 10px 8px; }
+    .swimlane .lane-label { background: #e8eef5; color: var(--navy); font-weight: 750; text-align: left; width: 140px; min-width: 140px; }
+    .swimlane .robot-cell { background: #dff0d8; }
+    .swimlane .tester-cell { background: #d9edf7; }
+    .swimlane .plc-cell { background: #fcf8e3; }
+    .swimlane .mes-cell { background: #f5e6ff; }
+    .swimlane .fixture-cell { background: #f0f0f0; }
+    .swimlane .empty-cell { background: #fafafa; color: #bbb; }
+
+    /* Vertical step-flow */
+    .step-flow { margin: 20px 0; }
+    .step-flow .step-row { display: flex; align-items: flex-start; margin-bottom: 1px; }
+    .step-flow .step-num { flex: 0 0 44px; padding: 14px 0; text-align: center; font-weight: 800; color: var(--blue); font-size: 1.1rem; background: #eaf2fa; border-radius: 8px 0 0 8px; }
+    .step-flow .step-body { flex: 1; padding: 12px 16px; background: #f9fbfd; border-radius: 0 8px 8px 0; }
+    .step-flow .step-body .step-name { font-weight: 700; color: var(--navy); }
+    .step-flow .step-body .step-detail { font-size: .9rem; color: var(--muted); margin-top: 3px; }
+    .step-flow .step-body .step-tags { margin-top: 5px; }
+    .step-flow .phase-label { padding: 10px 14px; font-weight: 750; color: white; background: var(--navy); border-radius: 8px; margin: 14px 0 6px; font-size: .95rem; }
+
+    .concept-box { margin: 16px 0; padding: 18px 20px; border: 2px solid var(--line); border-radius: 14px; background: #fff; }
+    .concept-box .concept-title { font-weight: 750; color: var(--red); font-size: 1.05rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .concept-box .concept-title .icon { font-size: 1.3rem; }
+    .concept-box .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+    .concept-box .compare .col { padding: 12px; border-radius: 10px; }
+    .concept-box .compare .col.a { background: #fff3e0; border: 1px solid #ffe0b2; }
+    .concept-box .compare .col.b { background: #e8f5e9; border: 1px solid #c8e6c9; }
+    .concept-box .compare .col .col-title { font-weight: 700; margin-bottom: 6px; }
+
+    .failure-card { margin: 12px 0; padding: 15px 17px; border-left: 4px solid var(--red); background: #fff8f6; border-radius: 4px 12px 12px 4px; }
+    .failure-card .f-title { font-weight: 750; color: var(--red); }
+    .failure-card .f-impact { margin-top: 6px; font-size: .92rem; }
+    .failure-card .f-impact span { display: inline-block; margin-right: 10px; padding: 2px 7px; background: #ffe4df; border-radius: 4px; font-size: .82rem; }
+
+    .refs { counter-reset: refs; padding-left: 0; list-style: none; }
+    .refs li { position: relative; padding: 11px 12px 11px 46px; border-bottom: 1px solid var(--line); }
+    .refs li::before { counter-increment: refs; content: "[" counter(refs) "]"; position: absolute; left: 8px; color: var(--blue); font-weight: 800; }
+    .refs li:last-child { border-bottom: 0; }
+    footer { color: var(--muted); text-align: center; font-size: .88rem; margin-top: 30px; }
+
+    @media (max-width: 820px) {
+      .page { padding: 14px 12px 50px; }
+      .hero { padding: 30px 24px; border-radius: 18px; }
+      section { padding: 24px 20px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .flow .arrow { display: none; }
+      .step-flow .step-row { flex-direction: column; }
+      .step-flow .step-num { border-radius: 8px 8px 0 0; flex: none; }
+      .step-flow .step-body { border-radius: 0 0 8px 8px; }
+      .concept-box .compare { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: white; }
+      .page { max-width: none; padding: 0; }
+      nav { display: none; }
+      .hero, section { box-shadow: none; break-inside: avoid; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <p class="eyebrow">WEEK 06 · DAY 02 · 中文研究讲义</p>
+    <h1>Pack EoL Connector Handling：Task Anatomy 与 Responsibility Boundary</h1>
+    <p class="lead">Day 2 不再讨论"有哪些机器人能做 Pack EoL"，而是把一次完整的测试连接任务拆解成可验证的物理动作、接触阶段、状态转换和系统责任。这是 Day 3 建立 Requirement → Capability 的必要前提。</p>
+    <div class="meta">
+      <span>唯一核心问题：机器人到底在这个工位干了哪几步？</span>
+      <span>学习方法：Task Anatomy + Responsibility Swimlane</span>
+      <span>校准日期：2026-08-17</span>
+    </div>
+  </header>
+
+  <nav aria-label="讲义目录">
+    <a href="#outcome">本日成果</a>
+    <a href="#cycle">模块1：EoL 完整测试周期</a>
+    <a href="#zoom">模块2：Connector Handling 放大</a>
+    <a href="#distinctions">模块3：三个关键概念区分</a>
+    <a href="#swimlane">模块4：Responsibility Swimlane</a>
+    <a href="#failures">模块5：关键 Failure Modes</a>
+    <a href="#sources">精读来源</a>
+    <a href="#check">学习检查</a>
+    <a href="#qa">带教问答记录</a>
+  </nav>
+
+  <!-- ============================================================ -->
+  <section id="outcome">
+    <p class="kicker">结论先行</p>
+    <h2>Day 2 要回答什么、产出什么</h2>
+    <div class="big-claim"><strong>Day 2 唯一核心问题：</strong>一次完整的 Pack EoL 测试连接任务，从"Pack 已到测试工位"到"测试结束并安全拔出 connector"，到底经历哪些物理动作、状态转换和系统责任？</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="num">01</div>
+        <h3>完整测试周期</h3>
+        <p>从 Pack 到站到 Pack 放行，建立一层参考任务链，每一步标记证据类型。这不是 CATL 现场复原，而是有来源标记的 reference task abstraction。</p>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <h3>Connector Handling 放大</h3>
+        <p>把"插拔连接器"拆成 10+ 个 sub-step：locate → approach → grasp → pre-align → first contact → fine alignment → insertion → lock → confirm → extract → return。每一步区分物理含义和负责系统。</p>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <h3>Responsibility Swimlane</h3>
+        <p>横向时间轴（Arrival → Connect → Test → Disconnect → Leave），纵向五个主体（Robot / Tester / PLC-Safety / MES / Fixture）。明确谁在哪个阶段做什么。</p>
+      </div>
+    </div>
+    <div class="finding"><strong>Day 2 不做什么：</strong>不比较 humanoid vs industrial robot；不重新搜文献；不研究 BMS fault、thermal runaway 或 EoL 测试算法；不把"必须找到完整小墨视频"设成成功标准。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="cycle">
+    <p class="kicker">模块 1</p>
+    <h2>完整 EoL 测试周期：一层参考任务链</h2>
+    <p>下图是<strong>有来源标记的 reference task abstraction</strong>，不是 CATL 现场逐帧复原。它融合了 VDMA/PEM 2026 的工序描述、thyssenkrupp/Marposs/Schaeffler 的设备架构、千寻小墨的企业披露，以及连接器插接的同行评审文献。</p>
+
+    <div class="step-flow">
+      <div class="phase-label">PHASE 1 — ARRIVAL &amp; IDENTIFICATION</div>
+
+      <div class="step-row">
+        <div class="step-num">S1</div>
+        <div class="step-body">
+          <div class="step-name">Pack enters test station and is positioned</div>
+          <div class="step-detail">Pack 由输送线、AGV 或人工推车送入测试工位，并在 fixture 上完成粗定位/重复定位。</div>
+          <div class="step-tags"><span class="tag industry">EoL BASELINE</span> <span class="tag unknown">现场 UNKNOWN</span></div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">S2</div>
+        <div class="step-body">
+          <div class="step-name">Pack identified and test recipe associated</div>
+          <div class="step-detail">扫码或 RFID 读取 Pack 身份 → MES 调取对应测试配方 → 确认 Pack 型号与测试程序匹配。</div>
+          <div class="step-tags"><span class="tag industry">EoL BASELINE</span> <span class="tag infer">系统推导</span></div>
+        </div>
+      </div>
+
+      <div class="phase-label">PHASE 2 — CONNECTION ESTABLISHMENT</div>
+
+      <div class="step-row">
+        <div class="step-num">S3</div>
+        <div class="step-body">
+          <div class="step-name">Safe-to-connect permission granted</div>
+          <div class="step-detail">PLC/Safety 确认 Pack 已定位、测试设备处于安全状态、工作区域无人员 → 发出连接许可。</div>
+          <div class="step-tags"><span class="tag infer">系统推导</span> <span class="tag unknown">现场时序 UNKNOWN</span></div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">S4</div>
+        <div class="step-body">
+          <div class="step-name">Connector / harness made available</div>
+          <div class="step-detail">测试连接器与线束从存放位置（挂钩、托盘、供料器）进入可被抓取状态。千寻披露支持"柔性线束处理"，但供料方式未知。</div>
+          <div class="step-tags"><span class="tag direct">小墨披露</span> <span class="tag unknown">供料方式 UNKNOWN</span></div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">S5</div>
+        <div class="step-body">
+          <div class="step-name"><strong>CONNECTOR HANDLING ⬅ 模块 2 放大</strong></div>
+          <div class="step-detail">这是 Day 2 的核心：定位连接器 → 接近 → 抓取/支撑线束 → 预对准 → 首次接触 → 精细对准 → 插入 → 锁止 → 连接确认。详见下方模块 2。</div>
+          <div class="step-tags"><span class="tag direct">核心任务</span> <span class="tag paper">论文支持</span></div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">S6</div>
+        <div class="step-body">
+          <div class="step-name">Physical connection confirmed</div>
+          <div class="step-detail">确认连接器已完全就位、锁止机构已啮合、电气连续性或状态信号已返回。千寻披露"检查线束连接状态并报告异常"。具体判据（力传感器、终点开关、电信号）未知。</div>
+          <div class="step-tags"><span class="tag direct">小墨披露</span> <span class="tag unknown">判据 UNKNOWN</span></div>
+        </div>
+      </div>
+
+      <div class="phase-label">PHASE 3 — TEST EXECUTION</div>
+
+      <div class="step-row">
+        <div class="step-num">S7</div>
+        <div class="step-body">
+          <div class="step-name">Test permission granted</div>
+          <div class="step-detail">PLC 确认连接完成、安全互锁闭合 → 向测试设备发出测试许可。机器人此时不参与测试，只保持连接状态或退回安全位置。</div>
+          <div class="step-tags"><span class="tag infer">系统推导</span></div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">S8</div>
+        <div class="step-body">
+          <div class="step-name">EoL test executed by test equipment</div>
+          <div class="step-detail">测试设备按配方执行绝缘/耐压、BMS 通信、HVIL、充放电、功能检查等。VDMA、Marposs、RePower 均支持这些测试项目。</div>
+          <div class="step-tags"><span class="tag industry">EoL BASELINE</span></div>
+        </div>
+      </div>
+
+      <div class="phase-label">PHASE 4 — DISCONNECTION &amp; RELEASE</div>
+
+      <div class="step-row">
+        <div class="step-num">S9</div>
+        <div class="step-body">
+          <div class="step-name">Test completed, de-energized, safe-to-disconnect</div>
+          <div class="step-detail">测试设备完成所有测试项 → 去能量 → PLC 确认安全状态 → 发出断开许可。这是 Day 2 重点强调的"测试结束 ≠ 机器人可以立刻拔线"。</div>
+          <div class="step-tags"><span class="tag infer">系统推导</span> <span class="tag unknown">现场时序 UNKNOWN</span></div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">S10</div>
+        <div class="step-body">
+          <div class="step-name"><strong>CONNECTOR REMOVAL ⬅ 模块 2 放大（反向）</strong></div>
+          <div class="step-detail">解锁 → 拔出 → 脱离接口 → 线束归位。与插入过程对称但并非简单逆操作。</div>
+          <div class="step-tags"><span class="tag direct">核心任务</span></div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">S11</div>
+        <div class="step-body">
+          <div class="step-name">Result associated and pack released</div>
+          <div class="step-detail">MES 将测试结果与 Pack ID 关联 → 判定 Pass/Fail → 放行至下一站或转入返修区。</div>
+          <div class="step-tags"><span class="tag industry">EoL BASELINE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note"><strong>阅读提示：</strong>这张图的关键不在于记住每一步，而在于理解整个周期的四段论——Arrival → Connection → Test → Disconnection → Release。其中 S5 和 S10 是机器人承担物理操作的核心段，S3/S7/S9 是 PLC/Safety 控制机器人行为的关键门。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="zoom">
+    <p class="kicker">模块 2 — Day 2 核心</p>
+    <h2>Connector Handling 放大：从看见到插入的每一步</h2>
+    <p>这是 Day 2 最重要的内容。以下把 S5（Connector Handling）和 S10（Connector Removal）拆成 sub-step 级别。每一步标注：物理含义、负责系统、证据来源和当前未知。</p>
+
+    <h3>插入阶段（INSERTION PHASE）</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th style="width:4%">#</th><th style="width:22%">Step</th><th style="width:28%">物理含义</th><th style="width:15%">负责系统</th><th style="width:15%">证据</th><th style="width:16%">关键 Unknown</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>I1</td>
+            <td><strong>Perceive / Locate</strong><br>感知与定位</td>
+            <td>用视觉或传感器找到连接器的空间位置和姿态，以及 Pack 上目标接口的位置和姿态。</td>
+            <td>Robot (vision)</td>
+            <td><span class="tag direct">小墨披露</span><br><span class="tag paper">Wang 2024 综述</span></td>
+            <td>使用何种传感器（2D/3D相机、力传感器）；接口可见性；遮挡与照明条件</td>
+          </tr>
+          <tr>
+            <td>I2</td>
+            <td><strong>Approach</strong><br>接近</td>
+            <td>机器人末端执行器从安全位置移动到连接器附近，同时避免与线束、Pack 或工装发生碰撞。</td>
+            <td>Robot (motion)</td>
+            <td><span class="tag infer">运动规划</span></td>
+            <td>接近路径的约束；线束在接近过程中是否已被支撑</td>
+          </tr>
+          <tr>
+            <td>I3</td>
+            <td><strong>Grasp Connector / Support Harness</strong><br>抓取连接器或支撑线束</td>
+            <td>夹爪或其他末端执行器抓取连接器本体。若线束长且柔软，可能需要另一只手或机构支撑线束，防止重力或弯曲导致连接器姿态不可控。</td>
+            <td>Robot (end effector)</td>
+            <td><span class="tag direct">小墨披露</span><br><span class="tag paper">Gebauer 2024</span></td>
+            <td>连接器几何；抓取点；是否需要双臂；夹爪设计</td>
+          </tr>
+          <tr>
+            <td>I4</td>
+            <td><strong>Pre-align</strong><br>预对准</td>
+            <td>将连接器移动到接口前方大致正确的位置和姿态，使连接器轴线与接口轴线基本重合。这一步通常由视觉引导完成。</td>
+            <td>Robot (vision + motion)</td>
+            <td><span class="tag paper">Wang 2025</span><br><span class="tag direct">KUKA 案例</span></td>
+            <td>允许的初始位姿偏差范围；视觉精度</td>
+          </tr>
+          <tr>
+            <td>I5</td>
+            <td><strong>Approach Mating Interface</strong><br>接近对接接口</td>
+            <td>连接器从预对准位置向接口方向移动，但尚未发生物理接触。这是从"自由空间运动"到"接触运动"的过渡。</td>
+            <td>Robot (motion)</td>
+            <td><span class="tag infer">运动规划</span></td>
+            <td>接近速度；是否在接近过程中实时调整姿态</td>
+          </tr>
+          <tr>
+            <td>I6</td>
+            <td><strong>First Contact</strong><br>首次接触</td>
+            <td>连接器的某个部分（导向销、外壳边缘、端子尖端）首次与接口发生物理接触。此时可能出现单点接触、多点接触或边缘接触，力/力矩信号开始出现。</td>
+            <td>Robot (force sensing)</td>
+            <td><span class="tag paper">Wang 2025</span></td>
+            <td>CATL 现场是否使用力传感器；接触检测策略</td>
+          </tr>
+          <tr>
+            <td>I7</td>
+            <td><strong>Fine Alignment</strong><br>精细对准</td>
+            <td>利用接触力/力矩反馈或几何约束（如导向槽、倒角）将连接器姿态调整到与接口完全对齐。这是插接中最容易出错的阶段——可能发生卡滞（jamming）或楔紧（wedging）。</td>
+            <td>Robot (compliance + force)</td>
+            <td><span class="tag paper">Wang 2025</span><br><span class="tag paper">Gebauer 2024</span></td>
+            <td>目标连接器是否有导向结构；柔顺策略（主动/被动）</td>
+          </tr>
+          <tr>
+            <td>I8</td>
+            <td><strong>Insertion</strong><br>插入</td>
+            <td>连接器沿轴线方向推入接口，端子完成电气接触。插入力可能因摩擦、端子数量和装配公差而变化。此阶段需要力/位置混合控制，不能仅靠位置控制。</td>
+            <td>Robot (force-position hybrid)</td>
+            <td><span class="tag paper">Wang 2025</span><br><span class="tag paper">Gebauer 2024</span></td>
+            <td>插入力/拔出力范围；插入深度；端子数量</td>
+          </tr>
+          <tr>
+            <td>I9</td>
+            <td><strong>Lock / Seating / CPA</strong><br>锁止与就位</td>
+            <td>连接器到达最终就位位置后，执行锁止动作（如推动 CPA 杆、扣合 latch 或旋转 locking ring）。KUKA 邻近案例使用弹簧机构、气缸和终点传感器控制 CPA 锁止。</td>
+            <td>Robot (end effector)</td>
+            <td><span class="tag direct">KUKA 案例</span></td>
+            <td>目标连接器是否有 CPA/锁止机构；锁止是否需要额外动作</td>
+          </tr>
+          <tr>
+            <td>I10</td>
+            <td><strong>Connection Confirmation</strong><br>连接确认</td>
+            <td>验证连接器已完全就位且锁止完成。可能的判据：力传感器检测到就位力峰值、终点开关触发、电气连续性检测、或视觉再次确认。千寻披露"检查线束连接状态"。</td>
+            <td>Robot + PLC</td>
+            <td><span class="tag direct">小墨披露</span></td>
+            <td>具体判据（力/位置/电信号/视觉）；确认失败的恢复策略</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>拔出阶段（REMOVAL PHASE）</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th style="width:4%">#</th><th style="width:22%">Step</th><th style="width:28%">物理含义</th><th style="width:15%">负责系统</th><th style="width:15%">证据</th><th style="width:16%">关键 Unknown</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>R1</td>
+            <td><strong>Safe-to-Disconnect Permission</strong><br>安全断开许可</td>
+            <td>测试完成 → 去能量 → PLC 确认安全状态 → 向机器人发出断开许可。这是 Day 2 重点强调的"process state → robot permission"。</td>
+            <td>PLC / Safety</td>
+            <td><span class="tag infer">系统推导</span></td>
+            <td>CATL 现场安全状态机；断开许可的判据</td>
+          </tr>
+          <tr>
+            <td>R2</td>
+            <td><strong>Unlock / Release</strong><br>解锁</td>
+            <td>执行与锁止相反的动作（如松开 CPA、释放 latch）。如果连接器在测试中受热膨胀或受力变形，解锁可能需要额外力或策略。</td>
+            <td>Robot (end effector)</td>
+            <td><span class="tag infer">锁止的逆操作</span></td>
+            <td>解锁是否需要特殊工具或动作</td>
+          </tr>
+          <tr>
+            <td>R3</td>
+            <td><strong>Extraction</strong><br>拔出</td>
+            <td>沿轴线方向将连接器从接口中拔出。拔出力可能因端子摩擦、真空吸附或热膨胀而不同于插入力。拔出后需确保连接器和端子无损伤。</td>
+            <td>Robot (force-position)</td>
+            <td><span class="tag direct">小墨披露</span></td>
+            <td>拔出力范围；拔出后是否检查连接器/接口状态</td>
+          </tr>
+          <tr>
+            <td>R4</td>
+            <td><strong>Clear Interface</strong><br>脱离接口</td>
+            <td>连接器完全脱离接口区域，避免与 Pack 或其他设备发生碰撞。此时测试设备与 Pack 之间已无物理连接。</td>
+            <td>Robot (motion)</td>
+            <td><span class="tag infer">运动规划</span></td>
+            <td>脱离后的安全位置</td>
+          </tr>
+          <tr>
+            <td>R5</td>
+            <td><strong>Return / Place Harness</strong><br>线束归位</td>
+            <td>将连接器和线束放回存放位置，恢复为下一次连接可用的状态。若线束在操作中发生缠绕或变形，可能需要整理。</td>
+            <td>Robot (manipulation)</td>
+            <td><span class="tag direct">小墨披露</span></td>
+            <td>归位位置；线束是否需要在归位时整理</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="big-claim"><strong>为什么这张表是 Day 2 的核心：</strong>Day 3 要问"这个任务为什么难？需要什么能力？"——如果 Day 2 没有把 insert 拆成 approach → first contact → fine alignment → insertion → lock → confirm，Day 3 就很容易变成"插入需要力控，humanoid 有力控，所以 humanoid 适合"。拆开之后才能看到：视觉解决 I1/I4，力控主要解决 I6/I7/I8，锁止和确认是 I9/I10 的独立需求。每种子能力对应不同的机器人能力要求。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="distinctions">
+    <p class="kicker">模块 3</p>
+    <h2>三个必须区分清楚的概念</h2>
+    <p>这三个概念区分是 Day 2 最重要的学习收获。过去容易把它们混在一起，导致后续分析失去精度。</p>
+
+    <!-- Distinction 1 -->
+    <div class="concept-box">
+      <div class="concept-title"><span class="icon">1</span> Alignment（对准）≠ Insertion（插入）</div>
+      <div class="compare">
+        <div class="col a">
+          <div class="col-title">Alignment 对准</div>
+          <p>连接器姿态大体满足插入条件。视觉可以告诉你"连接器在接口前方，轴线大致重合"。</p>
+          <p><strong>视觉解决"我在哪里"。</strong></p>
+        </div>
+        <div class="col b">
+          <div class="col-title">Insertion 插入</div>
+          <p>连接器沿轴线推入，发生接触、摩擦、可能的卡滞。需要力/力矩反馈来检测和纠正 misalignment。</p>
+          <p><strong>力控解决"我怎样不卡住地进去"。</strong></p>
+        </div>
+      </div>
+      <p style="margin-top: 10px; color: var(--red);"><strong>为什么必须区分：</strong>视觉对准了 ≠ 插接问题就解决了。连接器可能因为 in-hand pose error（Gebauer 2024 的核心发现）、接口公差、线束拉力或摩擦而卡滞。把两者混为一谈，就会错误地认为"有视觉 = 能插好"。</p>
+    </div>
+
+    <!-- Distinction 2 -->
+    <div class="concept-box">
+      <div class="concept-title"><span class="icon">2</span> Physical Insertion（物理插入）≠ Successful Connection（连接成功）</div>
+      <div class="compare">
+        <div class="col a">
+          <div class="col-title">Physical Insertion 物理插入</div>
+          <p>连接器本体已经推入接口。端子可能已经接触，也可能没有完全就位。</p>
+          <p><strong>"插进去了"只是机械动作完成。</strong></p>
+        </div>
+        <div class="col b">
+          <div class="col-title">Successful Connection 连接成功</div>
+          <p>需要额外确认：fully seated? locked? CPA engaged? electrical continuity? state signal returned?</p>
+          <p><strong>"连接成功"需要系统状态确认。</strong></p>
+        </div>
+      </div>
+      <p style="margin-top: 10px; color: var(--red);"><strong>为什么必须区分：</strong>如果只做插入不做确认，可能出现"插进去但没锁止→测试中脱落"或"端子接触不良→测试结果错误"。对于 Pack EoL 高压测试，连接不可靠的后果比普通插头装配严重得多。这就是 Connection Confirmation（I10）是独立步骤的原因。</p>
+    </div>
+
+    <!-- Distinction 3 -->
+    <div class="concept-box">
+      <div class="concept-title"><span class="icon">3</span> Test Complete（测试完成）≠ Robot Can Pull（机器人可以拔线）</div>
+      <div class="compare">
+        <div class="col a">
+          <div class="col-title">Test Complete 测试完成</div>
+          <p>EoL 测试设备完成了所有测试项，产生了测试结果。但 Pack 可能仍处于带电状态，或测试设备尚未切换到安全模式。</p>
+          <p><strong>只是电气测量结束。</strong></p>
+        </div>
+        <div class="col b">
+          <div class="col-title">Robot Can Pull 可以拔线</div>
+          <p>需要 PLC 确认：测试设备已去能量、Pack 接口处于安全状态、工作区域安全 → 发出 Safe-to-Disconnect Permission → 机器人才允许执行拔出动作。</p>
+          <p><strong>需要 process state → robot permission。</strong></p>
+        </div>
+      </div>
+      <p style="margin-top: 10px; color: var(--red);"><strong>为什么必须区分：</strong>这是这个 case 相比普通插头装配更有 battery-manufacturing relevance 的地方。机器人虽然只负责物理 manipulation，却受到 electrical process state 的约束。如果不理解这一点，就会把"机器人拔插头"当成一个纯机械动作，忽略 EoL 的安全互锁要求。</p>
+    </div>
+
+    <div class="finding"><strong>学习要点：</strong>这三个区分构成了 Day 3 需求分析的基础。Day 3 会问"为什么这个任务不能简单等同于插一个插头？"——答案就藏在这三个区分里：因为视觉对准不够（需要力控插入），因为插入不等于成功（需要连接确认），因为测试结束不等于可以拔线（需要安全互锁）。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="swimlane">
+    <p class="kicker">模块 4</p>
+    <h2>Responsibility Swimlane：谁在哪个阶段做什么</h2>
+    <p>Day 1 已经用文字划分了五方责任。Day 2 把它变成<strong>结构化的动作—状态—责任图</strong>。横向是时间阶段，纵向是五个责任主体。</p>
+
+    <div class="swimlane">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:140px">Responsibility</th>
+            <th>ARRIVAL</th>
+            <th>CONNECT</th>
+            <th>TEST</th>
+            <th>DISCONNECT</th>
+            <th>LEAVE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="lane-label">Robot / Connector Automation</td>
+            <td class="empty-cell">—</td>
+            <td class="robot-cell">Locate → Grasp → Align → Insert → Lock → Confirm</td>
+            <td class="empty-cell">(hold or retreat)</td>
+            <td class="robot-cell">Unlock → Extract → Clear → Return harness</td>
+            <td class="empty-cell">—</td>
+          </tr>
+          <tr>
+            <td class="lane-label">Test Equipment</td>
+            <td class="empty-cell">—</td>
+            <td class="empty-cell">(standby)</td>
+            <td class="tester-cell">Execute test recipe<br>Measure voltage/current/communication<br>Generate test result</td>
+            <td class="tester-cell">De-energize<br>Confirm safe state</td>
+            <td class="empty-cell">—</td>
+          </tr>
+          <tr>
+            <td class="lane-label">PLC / Safety</td>
+            <td class="plc-cell">Confirm pack positioned</td>
+            <td class="plc-cell">Safe-to-connect<br>Interlock closed</td>
+            <td class="plc-cell">Test enable<br>Monitor safety</td>
+            <td class="plc-cell">Safe-to-disconnect<br>Fault stop if needed</td>
+            <td class="plc-cell">Release pack</td>
+          </tr>
+          <tr>
+            <td class="lane-label">MES / Traceability</td>
+            <td class="mes-cell">Pack ID<br>Load recipe</td>
+            <td class="empty-cell">—</td>
+            <td class="mes-cell">Record test data</td>
+            <td class="mes-cell">Associate result</td>
+            <td class="mes-cell">Pass / Fail decision<br>Route to next station</td>
+          </tr>
+          <tr>
+            <td class="lane-label">Fixture / Transport</td>
+            <td class="fixture-cell">Receive pack<br>Coarse positioning</td>
+            <td class="empty-cell">(hold pack)</td>
+            <td class="empty-cell">(hold pack)</td>
+            <td class="empty-cell">(hold pack)</td>
+            <td class="fixture-cell">Release pack<br>Transfer out</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top: 16px;">
+      <div class="card">
+        <h4>如何读这张图</h4>
+        <ul>
+          <li><strong>横向读：</strong>每个阶段，五个主体各自在做什么。注意 CONNECT 阶段 Robot 和 PLC 同时活跃——Robot 做物理操作，PLC 做安全门控。</li>
+          <li><strong>纵向读：</strong>每个主体在整个周期中的责任范围。Robot 只在 CONNECT 和 DISCONNECT 阶段有任务，其余阶段等待或被 PLC 约束。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>关键系统交互点</h4>
+        <ul>
+          <li><strong>Robot ↔ PLC：</strong>Safe-to-connect 和 Safe-to-disconnect 是 PLC 对 Robot 的硬约束。Robot 不能自行决定何时插入或拔出。</li>
+          <li><strong>Robot ↔ Tester：</strong>Robot 建立物理连接后，Tester 才能执行测试。两者不直接通信，通过 PLC 中介。</li>
+          <li><strong>PLC ↔ Tester：</strong>Test enable 和 De-energize 确认是 PLC 和 Tester 之间的安全握手。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note"><strong>CATL 现场的实际责任分配仍标记为 UNKNOWN。</strong>这张图是 reference system architecture，来自 VDMA 工序描述、设备商方案和系统工程推理。如果后续获得 CATL 现场资料，应按实际分配修正。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="failures">
+    <p class="kicker">模块 5</p>
+    <h2>4 个关键 Failure Modes（不是 FMEA）</h2>
+    <p>Day 2 只选对后续机器人能力分析最有意义的 4 个 failure modes。不要扩成 BMS fault、thermal runaway 或完整 EoL defect taxonomy。</p>
+
+    <div class="failure-card">
+      <div class="f-title">F1 — Connector not found / pose uncertain</div>
+      <p>连接器不在预期位置，或视觉系统无法可靠确定其空间姿态。可能原因：线束变形导致连接器位置偏移、来料位置变化（小墨披露明确提到）、遮挡或光照变化。</p>
+      <div class="f-impact">
+        <span>影响：Perception / Localization</span>
+        <span>对应步骤：I1</span>
+        <span>Day 3 能力需求：视觉鲁棒性、pose estimation、多模态感知</span>
+      </div>
+    </div>
+
+    <div class="failure-card">
+      <div class="f-title">F2 — Harness deformation causes bad approach</div>
+      <p>线束因重力、弯曲刚度或之前操作的影响而变形，导致连接器姿态偏离预期，或抓取后连接器在手中发生不可预测的位姿变化（Gebauer 2024 的 in-hand pose uncertainty）。</p>
+      <div class="f-impact">
+        <span>影响：Deformable-object handling / Grasp</span>
+        <span>对应步骤：I2, I3</span>
+        <span>Day 3 能力需求：DLO 状态估计、双臂支撑、自适应抓取</span>
+      </div>
+    </div>
+
+    <div class="failure-card">
+      <div class="f-title">F3 — Misalignment / jamming during insertion</div>
+      <p>连接器在插入过程中因初始姿态偏差、接口公差或接触力分布不均而发生卡滞（jamming）或楔紧（wedging）。这是 Wang 2025 论文的核心研究对象。</p>
+      <div class="f-impact">
+        <span>影响：Compliance / Force sensing / Corrective motion</span>
+        <span>对应步骤：I6, I7, I8</span>
+        <span>Day 3 能力需求：力/力矩感知、柔顺控制、搜索与恢复策略</span>
+      </div>
+    </div>
+
+    <div class="failure-card">
+      <div class="f-title">F4 — Connection not confirmed</div>
+      <p>连接器已推入，但未完全就位、锁止未完成或电气连续性检测失败。此时若直接进入测试，可能造成测试结果错误或高压安全隐患。</p>
+      <div class="f-impact">
+        <span>影响：State confirmation / Integration</span>
+        <span>对应步骤：I9, I10</span>
+        <span>Day 3 能力需求：多模态确认、异常检测、与 PLC 的握手协议</span>
+      </div>
+    </div>
+
+    <div class="warning"><strong>不放大的内容：</strong>BMS fault、battery thermal runaway、HV isolation algorithm、完整 EoL defect taxonomy。这些会把研究方向重新拉回 battery testing 本身，而不是 robot task。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="sources">
+    <p class="kicker">精读来源</p>
+    <h2>Day 2 优先使用的 4 组已有文献</h2>
+    <p>Day 2 不新增检索。以下 4 组来源在 Day 1 已被列为任务机理证据，Day 2 是精读而非重新搜。</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h4>第一组：Pack EoL Baseline</h4>
+        <p><strong>来源：</strong>thyssenkrupp, Marposs, Schaeffler, VDMA/PEM 2026</p>
+        <p><strong>Day 2 用途：</strong>回答"真实 EoL station 怎样建立/解除 test connection"。区分人工接线、自动接触机构与机器人方案的接口差异。</p>
+        <p><strong>重点阅读：</strong>thyssenkrupp PDF p.2 的三种上料/接线配置；Marposs 的手动/自动连接版本；Schaeffler 的 automatic plug contacting。</p>
+      </div>
+      <div class="card">
+        <h4>第二组：Connector Insertion Physics</h4>
+        <p><strong>来源：</strong>Wang et al. (2025), IEEE T-ASE</p>
+        <p><strong>Day 2 用途：</strong>提取 approach → first contact → contact state → friction → jamming → force/torque → alignment 的接触阶段序列。</p>
+        <p><strong>重点阅读：</strong>论文中 pose deviation、contact state 和 jamming 的物理描述，不关注具体算法参数。</p>
+      </div>
+      <div class="card">
+        <h4>第三组：Connector Grasp + Mating</h4>
+        <p><strong>来源：</strong>Gebauer et al. (2024), Procedia CIRP</p>
+        <p><strong>Day 2 用途：</strong>理解"抓住 connector 以后，connector 在手中的实际姿态误差怎样继续影响 insertion"。支持 in-hand pose uncertainty 作为独立需求维度。</p>
+        <p><strong>重点阅读：</strong>gripper jaw design、in-hand pose uncertainty、compliant mating 的实验结果。</p>
+      </div>
+      <div class="card">
+        <h4>第四组：Flexible Harness / DLO</h4>
+        <p><strong>来源：</strong>Wang 2024 review, Caporali 2026 review, Malvido Fresnillo 2025</p>
+        <p><strong>Day 2 用途：</strong>解释为什么操作的不是一个"刚性插头"，而是 connector + deformable cable 这个系统。支持线束状态估计作为独立需求维度。</p>
+        <p><strong>重点阅读：</strong>DLO 建模、状态估计、双臂协调的操作范式。</p>
+      </div>
+    </div>
+
+    <div class="note"><strong>KUKA 邻近案例的边界：</strong>KUKA/Liebherr/KOSTAL 案例是 Pack assembly 中的永久连接，不是 EoL 临时测试连接。但二者共享"柔性电缆 + 电连接器 + 位姿偏差 + 接触插入 + 连接确认"的技术结构，因此是有效的邻近工业基线。Day 2 引用它解释 I9（Lock/CPA）和"固定工业机器人也能做柔性 connector insertion"。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="check">
+    <p class="kicker">学习检查</p>
+    <h2>读完本讲义后，请准备回答以下 5 个问题</h2>
+    <p>这些问题不需要你写下来。读完后在心里过一遍，然后我们开始带教式对话。</p>
+
+    <div class="step-flow">
+      <div class="step-row">
+        <div class="step-num">Q1</div>
+        <div class="step-body">
+          <div class="step-name">为什么 EoL tester 和 robot 不是同一个系统角色？</div>
+          <div class="step-detail">提示：想一下 tester 做什么、robot 做什么，两者之间通过谁协调。</div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">Q2</div>
+        <div class="step-body">
+          <div class="step-name">请解释 approach、first contact、alignment、insertion、connection confirmation 五者的差异。</div>
+          <div class="step-detail">提示：不要背书。用你自己的话描述每个阶段发生了什么物理变化，为什么不能跳过。</div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">Q3</div>
+        <div class="step-body">
+          <div class="step-name">为什么"机器人把 connector 插进去了"还不意味着整个连接任务结束？</div>
+          <div class="step-detail">提示：插入之后还需要确认什么？谁来做这些确认？确认失败的后果是什么？</div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">Q4</div>
+        <div class="step-body">
+          <div class="step-name">为什么 test finished 之后 robot 不能默认立即拔线？</div>
+          <div class="step-detail">提示：电气测试结束后 Pack 可能处于什么状态？谁来决定是否可以拔线？这个区别为什么对 battery manufacturing 特别重要？</div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="step-num">Q5</div>
+        <div class="step-body">
+          <div class="step-name">Insertion jamming 是 perception 问题、motion 问题、force/contact 问题还是 tester 问题？</div>
+          <div class="step-detail">提示：想一下卡滞发生在哪个阶段、什么原因导致卡滞、需要什么能力来检测和恢复。再想一下如果视觉已经对准了，为什么仍可能卡滞。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding"><strong>Day 2 最低完成标准：</strong>你能从头讲清楚——一台机器人在 Pack EoL 接线任务里，从看到 connector 到最后安全拔出，到底经历了什么；哪些动作属于机器人，哪些状态由 tester/PLC/MES 决定；并且能清楚区分 locate ≠ align ≠ first contact ≠ insert ≠ connection confirm ≠ test ≠ safe disconnect。达到这个标准，Day 2 即完成。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="references">
+    <p class="kicker">TRACEABLE SOURCES</p>
+    <h2>本讲义引用的来源</h2>
+    <ol class="refs">
+      <li><a href="https://www.vdma.eu/documents/34570/35405938/Production%2BProcess%2Bof%2BBattery%2BModules%2Band%2BBattery%2BPacks%2B%282026-03%29.pdf/c0b5ed59-8713-074d-5db2-fab4fee69410?filename=Production+Process+of+Battery+Modules+and+Battery+Packs+%282026-03%29.pdf">VDMA / PEM RWTH Aachen：Production Process of Battery Modules and Battery Packs (2026)</a>，第 6 页与第 24 页。</li>
+      <li><a href="https://www.spirit-ai.com/en/news/23">Spirit AI：A World First! Embodied AI Robots Achieve Large-Scale Deployment in CATL Battery Production Line</a>。小墨目标案例直接企业披露。</li>
+      <li><a href="https://www.marposs.com/ger/application/electrical-test-battery-pack">Marposs：Electrical testing of battery packs</a>。人工/自动接线版本。</li>
+      <li><a href="https://ucpcdn.thyssenkrupp.com/_legacy/UCPthyssenkruppBAISSystemEngineering/assets.files/automobilindustrie/future-automotive-factory/tech-days/06_testingsolutions.pdf">thyssenkrupp System Engineering：Battery End of Line test</a>，第 2 页。</li>
+      <li><a href="https://www.schaeffler-special-machinery.de/en/business-sectors/e-mobility/battery-systems/battery-pack/">Schaeffler Special Machinery：Assembly and testing of battery packs</a>。automatic plug contacting。</li>
+      <li><a href="https://www.kuka.com/en-us/industries/solutions-database/2023/05/liebherr-battery-pack-assembly%2C-high-voltage-battery">KUKA / Liebherr / KOSTAL：Automated battery pack assembly for high-voltage batteries</a>。固定双工业机器人柔性连接器邻近基线。</li>
+      <li>Wang, Z. et al. (2025). <a href="https://doi.org/10.1109/TASE.2024.3477918">Geometry and Force Guided Robotic Assembly With Large Initial Deviations for Electrical Connectors</a>. <em>IEEE T-ASE</em>, 22, 8095–8107. 用于连接器接触阶段与力引导对准。</li>
+      <li>Gebauer, D. et al. (2024). <a href="https://doi.org/10.1016/j.procir.2024.10.176">Robot-based, sensitive mating of electrical connectors using automatically designed gripper jaws</a>. <em>Procedia CIRP</em>, 130, 861–866. 用于 in-hand pose uncertainty 与柔顺插接。</li>
+      <li>Wang, H. et al. (2024). <a href="https://doi.org/10.1016/j.aei.2024.102596">A systematic literature review of computer vision applications in robotized wire harness assembly</a>. <em>Advanced Engineering Informatics</em>, 62, 102596. 用于线束视觉感知。</li>
+      <li>Caporali, A. et al. (2026). <a href="https://doi.org/10.1177/02783649261432253">Robotic perception and manipulation of deformable linear objects: A survey</a>. <em>IJRR</em>, OnlineFirst. 用于 DLO 建模与操作框架。</li>
+      <li>Malvido Fresnillo, P. et al. (2025). <a href="https://doi.org/10.1016/j.jmsy.2025.10.008">A dual-arm robotic system for automated multi-branch wire harness assembly in automotive industry</a>. <em>J. Manufacturing Systems</em>, 83, 577–596. 用于双臂线束操作。</li>
+    </ol>
+    <div class="note"><strong>证据标签说明：</strong><span class="tag direct">DIRECT</span> 来自小墨或 KUKA 直接披露；<span class="tag industry">EoL BASELINE</span> 来自设备商方案；<span class="tag paper">PAPER</span> 来自同行评审论文；<span class="tag infer">INFERENCE</span> 来自系统工程的合理推导；<span class="tag unknown">UNKNOWN</span> 表示当前来源无法回答，不自动等于 research gap。</div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="qa">
+    <p class="kicker">带教问答记录</p>
+    <h2>2026-08-17 带教提问与回答（含导师点评）</h2>
+    <p>以下记录了 Day 2 学习完成后，学生与导师之间的五轮带教式问答。每道题包含：学生原始回答、导师纠正/补充、以及最终评价。保留此记录用于日后复盘。</p>
+
+    <!-- Q1 -->
+    <div class="concept-box" style="border-color: var(--blue);">
+      <div class="concept-title" style="color: var(--navy);">
+        <span class="icon">Q1</span> 为什么 EoL tester 和 robot 不是同一个系统角色？
+      </div>
+      <div class="compare">
+        <div class="col a">
+          <div class="col-title">学生回答</div>
+          <p>在我看来，eol tester 是电气装置方面，负责对电池的工艺标准做质量检测，robot 只是物理层面，辅助电气装置以及检验设备的一个自动化角色。两者之间应该通过厂间 plc 来协调。</p>
+        </div>
+        <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+          <div class="col-title">导师点评</div>
+          <p>方向正确。补充两点：(1) Robot 不是泛泛的"辅助角色"，它只做一件事——建立和解除物理测试连接（CONNECT + DISCONNECT），测试进行时它不参与；(2) 关键交互链：Robot 插好 → PLC 确认 → Tester 才能开始测试 → Tester 测完 → 去能量 → PLC 确认 → Robot 才能拔。每一步顺序依赖，不是同时各干各的。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="concept-box" style="border-color: var(--blue);">
+      <div class="concept-title" style="color: var(--navy);">
+        <span class="icon">Q2</span> 解释 approach、first contact、alignment、insertion、connection confirmation 五者的差异
+      </div>
+      <div class="compare">
+        <div class="col a">
+          <div class="col-title">学生回答</div>
+          <p>approch 是机器人视觉定位后接近那个目标位置，first contact 是第一次物理交互？然后 alignment 是对齐对准位置，精定位？insertion 是插入，开始执行动作，connect confirmation 应该是机器人跟 plc 交互，向他发送确认请求。</p>
+        </div>
+        <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+          <div class="col-title">导师点评</div>
+          <p>方向对，但五处需要修正：</p>
+          <ol>
+            <li><strong>Approach ≠ 视觉定位。</strong> 视觉定位是 I1（Perceive/Locate），Approach 是 I2——视觉已告知位置，机器人把末端执行器从安全位置移过去，纯运动规划阶段，尚未接触任何物体。</li>
+            <li><strong>First Contact 核心在于控制策略切换：</strong>在此之前是自由空间运动（位置控制），在此之后进入接触运动（需要力/力矩反馈）。</li>
+            <li><strong>Alignment 漏了讲义最关键的两层拆分：</strong>I4 Pre-align（视觉引导，粗对准）和 I7 Fine Alignment（接触力反馈，精对准）。两者解决不同问题，依赖不同传感器。</li>
+            <li><strong>Insertion 不只是"开始执行动作"：</strong>连接器沿轴线推入，端子接触，摩擦力、公差共同决定插入力，可能出现卡滞或楔紧。需要力/位置混合控制，不能只靠位置控制。</li>
+            <li><strong>Connection Confirmation 不只是"跟 PLC 交互"：</strong>首先是机器人自己要验证（完全就位？锁止啮合？电气连续性？），验证通过后才把确认信号发给 PLC。学生只说了通信后半段，漏了物理验证前半段。</li>
+          </ol>
+          <p style="margin-top: 8px;"><strong>核心要点：</strong>这五步对应三种不同的控制模式——自由空间运动（Approach）→ 接触力引导（First Contact + Fine Alignment）→ 力/位置混合（Insertion）→ 状态确认（Confirmation）。不能跳过任何一步，因为每一步依赖不同的传感器和控制策略。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="concept-box" style="border-color: var(--blue);">
+      <div class="concept-title" style="color: var(--navy);">
+        <span class="icon">Q3</span> 为什么"机器人把 connector 插进去了"还不意味着整个连接任务结束？
+      </div>
+      <div class="compare">
+        <div class="col a">
+          <div class="col-title">学生回答</div>
+          <p>因为不管是通讯层面还是物理接触层面，插进去不代表连接任务结束，插入之后需要力反馈等力传感器反馈？然后还要发给 plc 来确认，应该是 robot 做物理层面的确认，然后 plc 是通讯接受确认结果？失败的后果应该是任务放弃？</p>
+        </div>
+        <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+          <div class="col-title">导师点评</div>
+          <p>方向对，三处补充：</p>
+          <ol>
+            <li><strong>确认什么？不止力反馈。</strong>讲义列出的判据包括：力传感器检测就位力峰值、终点开关触发、电气连续性检测、视觉再次确认。力反馈只是其中一种。</li>
+            <li><strong>谁确认？</strong>Robot 是确认的<strong>执行者</strong>（I10 负责方：Robot + PLC），PLC 是确认的<strong>门控者</strong>——Robot 汇报"连好了"，PLC 判断"是否允许 Tester 启动"。</li>
+            <li><strong>失败后果不是"任务放弃"。</strong>对于 Pack EoL 高压测试：锁止未完成 → 测试中脱落 → 高压电弧风险；端子接触不良 → 测试结果错误 → Pass/Fail 误判；电气连续性未建立 → 无法通信 → 产线停摆。这就是 Connection Confirmation 被列为独立步骤 I10 的原因。</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="concept-box" style="border-color: var(--blue);">
+      <div class="concept-title" style="color: var(--navy);">
+        <span class="icon">Q4</span> 为什么 test finished 之后 robot 不能默认立即拔线？
+      </div>
+      <div class="compare">
+        <div class="col a">
+          <div class="col-title">学生回答</div>
+          <p>因为 tester 能量还不一定释放完，要 plc 来决定拔，因为这会影响电池的工艺质量？</p>
+        </div>
+        <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+          <div class="col-title">导师点评</div>
+          <p>核心点"能量没释放完"抓到了，但"影响电池工艺质量"不够精确。真正风险是两层：</p>
+          <ol>
+            <li><strong>安全风险：</strong>Pack 可能仍处于高压带电状态，直接拔线 = 操作人员/设备暴露于高压风险。</li>
+            <li><strong>过程状态风险（讲义核心论点）：</strong>测试设备完成了测量，但尚未完成"去能量 + 安全状态确认"状态转换。若此时 Robot 拔线，PLC 安全互锁链被打破，可能导致：测试数据未完整写入 MES → 记录缺失；安全回路异常断开 → 触发故障停机 → 影响整线节拍。</li>
+          </ol>
+          <p style="margin-top: 8px;"><strong>核心区分：</strong>Robot 只负责物理 manipulation，但受 electrical process state 约束。这不是纯机械的"插拔插头"任务——如果是普通插头装配，测完就拔没问题。但 Pack EoL 测试中，Robot 的拔线动作必须等 PLC 的 Safe-to-Disconnect 信号。这个"process state → robot permission"的依赖关系，是让这个 case 具有 battery-manufacturing 特殊性的关键。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="concept-box" style="border-color: var(--blue);">
+      <div class="concept-title" style="color: var(--navy);">
+        <span class="icon">Q5</span> Insertion jamming 是 perception/motion/force-contact/tester 哪类问题？
+      </div>
+      <div class="compare">
+        <div class="col a">
+          <div class="col-title">学生回答</div>
+          <p>contact 问题吧，视觉对准了但是力传导，以及深度位置都有可能会导致这个卡滞？</p>
+        </div>
+        <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+          <div class="col-title">导师点评</div>
+          <p>正确，核心是 force/contact 问题。但"视觉对准了为什么还会卡"需要更精确的三个原因：</p>
+          <ol>
+            <li><strong>In-hand pose error（Gebauer 2024 核心发现）：</strong>视觉告诉你连接器在空间中的位置，但抓取之后连接器在夹爪里的实际姿态可能和视觉估计不一样。视觉对准了 ≠ 连接器在手里是准的。</li>
+            <li><strong>线束拉力：</strong>连接器不是刚体，连着柔性线束。线束重力、弯曲刚度、缠绕都会给连接器施加不可预测的力/力矩，在插入过程中改变姿态。</li>
+            <li><strong>接触力分布不均 + 接口公差：</strong>即使初始姿态正确，插入过程中端子与接口的接触力分布不均、摩擦系数差异、装配公差累积，都可能导致楔紧或卡滞。</li>
+          </ol>
+          <p style="margin-top: 8px;"><strong>这就是 Alignment ≠ Insertion 的核心含义：</strong>视觉解决"我在哪里"（几何问题），力控解决"我怎样不卡住地进去"（接触力学问题）。两个问题用不同传感器、不同控制策略。把"有视觉 = 能插好"当作理所当然，就是在掩盖这个任务真正的技术难度。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 总结表 -->
+    <h3 style="margin-top: 30px;">五题整体评价</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th style="width:5%">题号</th><th style="width:20%">核心概念</th><th style="width:30%">学生回答要点</th><th style="width:45%">评价</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Q1</strong></td>
+            <td>Tester vs Robot 角色分离</td>
+            <td>Tester 做电气质量检测，Robot 做物理辅助，PLC 协调</td>
+            <td>✅ 正确。补充了 Robot 只在 CONNECT/DISCONNECT 阶段活跃，测试中不参与</td>
+          </tr>
+          <tr>
+            <td><strong>Q2</strong></td>
+            <td>五步子任务差异</td>
+            <td>大致抓到方向，但混淆了 Approach 和视觉定位，合并了 Pre-align 和 Fine Alignment</td>
+            <td>⚠️ 需加强：Approach 是纯运动，First Contact 是控制模式切换点，Alignment 有两层（视觉粗 + 力控精）</td>
+          </tr>
+          <tr>
+            <td><strong>Q3</strong></td>
+            <td>插入 ≠ 连接结束</td>
+            <td>需要力反馈确认 + PLC 接收结果</td>
+            <td>⚠️ 方向对，但漏了确认的多种判据（不止力反馈），失败后果太轻（不是"放弃"，是高压安全风险）</td>
+          </tr>
+          <tr>
+            <td><strong>Q4</strong></td>
+            <td>测试完成 ≠ 可以拔线</td>
+            <td>能量未释放，PLC 决定</td>
+            <td>✅ 核心点抓到了，但"影响工艺质量"不如"安全互锁 + 数据完整性"精准</td>
+          </tr>
+          <tr>
+            <td><strong>Q5</strong></td>
+            <td>Jamming 的本质</td>
+            <td>Force/contact 问题</td>
+            <td>✅ 正确。补充了三个导致"视觉对准了仍卡滞"的物理原因</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding" style="margin-top: 16px;">
+      <strong>整体评价：</strong><br>
+      <strong>掌握了的：</strong>角色分离（Tester/Robot/PLC）、test complete ≠ safe-to-disconnect、jamming 是 contact 问题<br>
+      <strong>需要加固的：</strong>Approach → First Contact → Fine Alignment → Insertion 这条链上每一步的控制模式切换，以及 Connection Confirmation 为什么是独立步骤<br>
+      <strong>Day 3 的关键衔接：</strong>当前理解已足够支撑 Day 3——把每个 sub-step 映射到具体的机器人能力需求（视觉、力控、柔顺、多模态确认）。Day 3 不再问"是什么"，而是问"为什么这个任务需要某种能力，不同机器人架构怎么满足"。
+    </div>
+
+    <div class="note"><strong>记录说明：</strong>本问答记录于 2026-08-17，基于 Day 2 讲义内容。学生回答为原始表述，导师点评为当场纠正。此记录用于日后复盘，追踪学习轨迹。</div>
+  </section>
+
+  <footer>
+    Week 6 Day 2 learning guide · Master Thesis at PEM, RWTH Aachen · Editable HTML source retained in the repository
+  </footer>
+</main>
+</body>
+</html>
