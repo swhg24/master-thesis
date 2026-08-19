@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6D4 — 架构条件适用性比较：哪种机器人方案在什么条件下更合理？</title>
+<style>
+  :root { --navy: #1a365d; --blue: #2b6cb0; --green: #276749; --orange: #c05621; --red: #c53030; --gray: #4a5568; --light: #f7fafc; --border: #e2e8f0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; color: #2d3748; background: #fafafa; max-width: 1100px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 2em; color: var(--navy); border-bottom: 3px solid var(--blue); padding-bottom: 12px; margin-bottom: 8px; }
+  h2 { font-size: 1.5em; color: var(--blue); margin: 48px 0 16px; padding-left: 12px; border-left: 4px solid var(--blue); }
+  h3 { font-size: 1.2em; color: var(--navy); margin: 28px 0 12px; }
+  h4 { font-size: 1.05em; color: var(--gray); margin: 20px 0 8px; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 16px 24px; }
+  li { margin-bottom: 6px; }
+  .kicker { text-transform: uppercase; font-size: 0.8em; letter-spacing: 1.5px; color: var(--blue); font-weight: 600; margin: 0 0 4px; }
+  .note { background: #ebf8ff; border: 1px solid #bee3f8; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 0.95em; }
+  .warning { background: #fffaf0; border: 1px solid #fbd38d; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 0.95em; }
+  .finding { background: #f0fff4; border: 1px solid #9ae6b4; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 0.95em; }
+  .card { background: white; border: 1px solid var(--border); padding: 18px; border-radius: 8px; margin: 12px 0; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 12px 0; }
+  @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.78em; font-weight: 600; margin-right: 4px; }
+  .tag.direct { background: #c6f6d5; color: var(--green); }
+  .tag.industry { background: #bee3f8; color: var(--blue); }
+  .tag.paper { background: #e9d8fd; color: #6b46c1; }
+  .tag.infer { background: #fefcbf; color: var(--orange); }
+  .tag.unknown { background: #fed7d7; color: var(--red); }
+  .req-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.9em; }
+  .req-table th { background: var(--navy); color: white; padding: 10px 12px; text-align: left; font-weight: 600; }
+  .req-table td { padding: 10px 12px; border: 1px solid var(--border); vertical-align: top; }
+  .req-table tr:nth-child(even) { background: #f7fafc; }
+  .req-table .req-col { font-weight: 600; color: var(--navy); }
+  .concept-box { background: white; border: 1px solid var(--border); padding: 20px; border-radius: 8px; margin: 16px 0; }
+  .concept-title { font-size: 1.15em; font-weight: 700; margin-bottom: 12px; }
+  .concept-title .icon { display: inline-block; width: 28px; height: 28px; line-height: 28px; text-align: center; background: var(--navy); color: white; border-radius: 50%; font-size: 0.85em; margin-right: 8px; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+  .col { padding: 16px; border-radius: 6px; }
+  .col-title { font-weight: 700; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: var(--gray); }
+  .a { background: #f7fafc; border: 1px solid var(--border); }
+  .b { background: #f0fff4; border: 1px solid #9ae6b4; }
+  .section-divider { border: none; border-top: 2px dashed var(--border); margin: 48px 0; }
+  .toc { background: white; border: 1px solid var(--border); padding: 20px 24px; border-radius: 8px; margin: 20px 0; }
+  .toc ol { margin: 8px 0 0 20px; }
+  .toc li { margin-bottom: 4px; }
+  .toc a { color: var(--blue); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .refs { font-size: 0.9em; }
+  .refs li { margin-bottom: 8px; }
+  .refs a { color: var(--blue); }
+  .step-flow { margin: 16px 0; }
+  .step-row { display: flex; margin-bottom: 14px; background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .step-num { background: var(--navy); color: white; padding: 14px 16px; font-weight: 700; font-size: 1.1em; min-width: 48px; display: flex; align-items: center; justify-content: center; }
+  .step-body { padding: 14px 18px; flex: 1; }
+  .step-name { font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .step-detail { font-size: 0.9em; color: var(--gray); }
+  .suit-tag { font-size: 0.82em; font-weight: 600; padding: 2px 8px; border-radius: 3px; }
+  .suit-tag.supported { background: #c6f6d5; color: var(--green); }
+  .suit-tag.conditional { background: #fefcbf; color: var(--orange); }
+  .suit-tag.not-supported { background: #fed7d7; color: var(--red); }
+  .suit-tag.unknown { background: #e2e8f0; color: var(--gray); }
+  .arch-card { background: white; border: 2px solid var(--border); padding: 24px; border-radius: 10px; margin: 16px 0; }
+  .arch-card.dedicated { border-left: 5px solid #718096; }
+  .arch-card.industrial { border-left: 5px solid var(--blue); }
+  .arch-card.humanoid { border-left: 5px solid var(--green); }
+  .arch-label { font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .arch-name { font-size: 1.3em; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .hypothesis { background: #fffbeb; border: 1px solid #fbd38d; padding: 14px 18px; border-radius: 6px; margin: 12px 0; font-size: 0.95em; }
+  .hypothesis .h-label { font-weight: 700; color: var(--orange); }
+  .scenario { background: white; border: 1px solid var(--border); padding: 20px; border-radius: 8px; margin: 16px 0; }
+  .scenario .sc-label { font-size: 0.8em; font-weight: 700; color: var(--navy); letter-spacing: 1px; text-transform: uppercase; }
+  .scenario .sc-title { font-size: 1.1em; font-weight: 700; color: var(--navy); margin: 4px 0 8px; }
+  .layer-indicator { display: flex; gap: 4px; margin: 12px 0; flex-wrap: wrap; }
+  .layer { padding: 6px 14px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+  .layer.generic { background: #e2e8f0; color: #4a5568; }
+  .layer.hybrid { background: #fefcbf; color: var(--orange); }
+  .layer.specific { background: #c6f6d5; color: var(--green); }
+  .layer-desc { font-size: 0.82em; color: var(--gray); margin: 4px 0 0; font-style: italic; }
+  .highlight-box { background: #fff5f5; border: 1px solid #fc8181; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 0.95em; }
+  .highlight-box .hl-label { font-weight: 700; color: var(--red); }
+</style>
+</head>
+<body>
+
+<h1>Week 6 Day 4<br>架构条件适用性比较<br>哪种机器人方案在什么条件下更合理？</h1>
+<p><strong>日期：</strong>2026-08-18 | <strong>主题：</strong>Architecture-to-Capability Mapping → Conditional Suitability | <strong>阅读时间：</strong>约 75 分钟</p>
+
+<div class="note"><strong>Day 4 在 Week 06 中的位置：</strong>Day 3 完成了"需求侧"分析——六类 battery-specific task requirements 及其对应的 required capabilities。Day 4 是 Week 06 的"供给侧"——我们不再问"任务需要什么能力"，而是问"dedicated automation、fixed industrial robot、humanoid/mobile dual-arm 三种架构，分别能提供哪些能力？在什么条件下，哪种架构更合理？"<strong>Day 4 是 Week 06 的核心分析日，直接回答本周唯一核心问题。</strong></div>
+
+<!-- ============================================================ -->
+<div class="toc">
+  <p class="kicker">目录</p>
+  <strong>本讲义结构</strong>
+  <ol>
+    <li><a href="#positioning">Day 4 的定位：从需求侧到供给侧</a></li>
+    <li><a href="#architectures">三种架构的企业画像</a></li>
+    <li><a href="#capability-mapping">能力覆盖映射：谁能为六类需求提供什么？</a></li>
+    <li><a href="#progressive">累进约束层级分析：R4 → R1/R2/R5/R6 → R3</a></li>
+    <li><a href="#production">生产条件维度：什么条件改变架构选择？</a></li>
+    <li><a href="#scenarios">场景化条件假设</a></li>
+    <li><a href="#matrix">条件适用性矩阵：Requirement × Production Condition → Architecture</a></li>
+    <li><a href="#evidence-audit">证据审计：每个判断基于什么？</a></li>
+    <li><a href="#antipatterns">Day 4 的论证反模式（来自 Day 3 Q&A 的教训）</a></li>
+    <li><a href="#check">学习检查：7 个问题</a></li>
+    <li><a href="#deliverable">Day 4 最低交付物与成功标准</a></li>
+    <li><a href="#references">参考文献</a></li>
+  </ol>
+</div>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="positioning">
+  <p class="kicker">模块 1</p>
+  <h2>Day 4 的定位：从需求侧到供给侧</h2>
+
+  <div class="finding"><strong>Day 4 核心问题：</strong>面对 Day 3 的六类 battery-specific task requirements，dedicated automation、fixed industrial robot、humanoid/mobile dual-arm 三种架构分别在什么生产条件下更合理？</div>
+
+  <p>Day 3 给了我们一张"需求清单"——六类需求、每类需求对应的 required capabilities。Day 4 的任务是把这张清单翻转过来：</p>
+
+  <div class="compare">
+    <div class="col a" style="background: #f7fafc; border: 1px solid var(--border);">
+      <div class="col-title">Day 3（需求侧）</div>
+      <p>Task requirements → Required capabilities</p>
+      <p style="font-size:0.9em;color:var(--gray);">"这个任务需要什么能力？"</p>
+    </div>
+    <div class="col b" style="background: #ebf8ff; border: 1px solid #bee3f8;">
+      <div class="col-title">Day 4（供给侧）</div>
+      <p>Architecture offerings → Capability matching → Conditional suitability</p>
+      <p style="font-size:0.9em;color:var(--gray);">"哪种架构能提供这些能力？在什么条件下？"</p>
+    </div>
+  </div>
+
+  <h3>Day 4 的核心纪律</h3>
+  <div class="card">
+    <ol>
+      <li><strong>不排名、不评分：</strong>不使用品牌排名、无证据权重或数字总分。只使用 SUPPORTED / CONDITIONALLY SUITABLE / NOT SUPPORTED / UNKNOWN 四种判断。</li>
+      <li><strong>条件驱动、不架构驱动：</strong>不先说"humanoid 更灵活所以更好"。先分析任务条件和生产条件，再判断哪种架构更合理。条件变了，结论可以变。</li>
+      <li><strong>证据透明：</strong>每个判断都标注 evidence type（DIRECT / INDUSTRY / PAPER / INFERENCE / UNKNOWN）。基于 INFERENCE 的判断不能冒充基于 DIRECT 的判断。</li>
+      <li><strong>从 Day 3 Q&A 吸取教训：</strong>不能只说"这个架构精度高所以更合适"（那是 Q3 的错误）。必须说"这个架构在 R1 的 DLO 状态估计方面有 X 能力，证据来自 Y，在 Z 条件下适用"。</li>
+    </ol>
+  </div>
+
+  <div class="highlight-box">
+    <p class="hl-label">Day 3 Q&A 关键教训，Day 4 必须避免：</p>
+    <ul>
+      <li>❌ "这个架构精度高所以更合适" → 这是 Q3 的错误——把"有差异"当成了"适合"</li>
+      <li>❌ "humanoid 更灵活所以适合电池制造" → 这是 Q6 的错误——用 generic 能力论证 battery-specific 适用性</li>
+      <li>❌ "pneumatic gripper 不够好，所以需要更好的机器人" → 这是 Q8 的错误——说"不够好"而不是"物理上不成立"</li>
+      <li>✅ "这个架构在 R3 的 HV 安全握手方面，因为 X 原因（证据 Y），在当前条件下 SUPPORTED"</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="architectures">
+  <p class="kicker">模块 2</p>
+  <h2>三种架构的企业画像</h2>
+  <p>在开始能力映射之前，先建立三种架构的清晰画像。这不是品牌比较，而是架构能力的边界定义。</p>
+
+  <!-- Architecture 1: Dedicated -->
+  <div class="arch-card dedicated">
+    <div class="arch-label" style="color:#718096;">Architecture 1</div>
+    <div class="arch-name">专用连接器/测试线束自动化（Dedicated Connector / Test-Harness Automation）</div>
+    <p style="color:var(--gray); margin-top:4px;">Dedicated automation</p>
+
+    <div class="grid-2">
+      <div>
+        <h4>物理形态</h4>
+        <p>固定工位，连接器由专用夹具或自动接触机构固定。Pack 到达后，自动接触机构（如气动推杆、电动缸）将连接器推入 Pack 接口。连接器是固定在工位上的，不是由机器人拾取的。典型的例子：</p>
+        <ul>
+          <li><strong>Schaeffler 的 automatic plug contacting</strong>：测试连接器固定在工位夹具上，Pack 到位后自动对接</li>
+          <li><strong>thyssenkrupp 的三种 EoL 接线配置</strong>：手动、半自动、全自动接触机构</li>
+          <li><strong>Marposs 的自动连接版本</strong>：电动驱动连接器与 Pack 接口对接</li>
+        </ul>
+      </div>
+      <div>
+        <h4>关键特征</h4>
+        <ul>
+          <li><strong>连接器固定</strong>：连接器不离开工位，通过机械导轨或线性执行器沿固定轴线运动</li>
+          <li><strong>无视觉定位</strong>：Pack 被夹具精确定位，连接器接口位置已知，不需要视觉识别</li>
+          <li><strong>无力反馈</strong>：通常依靠位置控制（推到底即完成），不依赖 F/T 传感器</li>
+          <li><strong>无柔性线束处理</strong>：线束固定在工位上，不参与运动</li>
+          <li><strong>换型能力弱</strong>：连接器类型和接口位置变化需要更换机械夹具</li>
+          <li><strong>高节拍、低灵活性</strong>：专为单一或少数型号优化，节拍高但适应性差</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><strong>核心约束：</strong>Dedicated automation 的"能力"来自机械精度和固定接口，不是来自感知和控制。当连接器类型、接口位置或线束形态发生变化时，它的优势会迅速消失。</p>
+  </div>
+
+  <!-- Architecture 2: Fixed Industrial Robot -->
+  <div class="arch-card industrial">
+    <div class="arch-label" style="color:var(--blue);">Architecture 2</div>
+    <div class="arch-name">固定工业机器人 / 固定双臂机器人（Fixed Industrial Robot / Fixed Dual-Arm Robot）</div>
+    <p style="color:var(--gray); margin-top:4px;">Fixed industrial robot</p>
+
+    <div class="grid-2">
+      <div>
+        <h4>物理形态</h4>
+        <p>一台或多台工业机器人固定安装在工位周围。机器人末端配备专用 gripper（可能是多指手爪、真空吸盘或定制夹爪）。机器人从固定位置拾取连接器，移动到 Pack 接口，执行插入。典型的例子：</p>
+        <ul>
+          <li><strong>KUKA/Liebherr/KOSTAL 的 Pack 装配案例</strong>：两台 KUKA 工业机器人协调操作柔性连接器，执行 CPA lock 步骤</li>
+          <li><strong>Gebauer (2024) 的实验平台</strong>：工业机器人 + 力传感器 + 定制 gripper jaw，执行 connector mating</li>
+          <li><strong>Wang (2025) 的精密装配方案</strong>：力/位置混合控制实现大初始偏差下的连接器插入</li>
+        </ul>
+      </div>
+      <div>
+        <h4>关键特征</h4>
+        <ul>
+          <li><strong>可编程</strong>：通过修改程序适应不同型号，不需要更换机械硬件</li>
+          <li><strong>可配备力传感器</strong>：6-DOF F/T 传感器可实现力/位置混合控制</li>
+          <li><strong>可配备视觉</strong>：2D/3D 视觉系统可实现在线定位</li>
+          <li><strong>固定工作空间</strong>：受限于机械臂工作半径，不能跨工位操作</li>
+          <li><strong>单臂或双臂</strong>：双臂可协调处理线束（一手持线束、一手操作连接器）</li>
+          <li><strong>与 PLC 集成</strong>：工业机器人天然支持 Profinet/EtherCAT 等工业通信协议</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><strong>核心约束：</strong>Fixed industrial robot 的"能力"来自可编程控制、传感器集成和工业通信。但它固定在工位上，不能跨工位操作。连接器需要在工位附近可获取。</p>
+  </div>
+
+  <!-- Architecture 3: Humanoid / Mobile Dual-Arm -->
+  <div class="arch-card humanoid">
+    <div class="arch-label" style="color:var(--green);">Architecture 3</div>
+    <div class="arch-name">人形机器人 / 移动双臂操作机器人（Humanoid / Mobile Dual-Arm Manipulator）</div>
+    <p style="color:var(--gray); margin-top:4px;">Humanoid / mobile dual-arm</p>
+
+    <div class="grid-2">
+      <div>
+        <h4>物理形态</h4>
+        <p>具有移动底盘和双臂操作能力的机器人。可以是双足人形（如 CATL 小墨）或轮式移动底盘 + 双臂。机器人可自主导航到不同工位，用双臂操作连接器和线束。典型的例子：</p>
+        <ul>
+          <li><strong>CATL 小墨（Spirit AI）</strong>：人形机器人，在 Pack 产线上操作柔性线束和连接器，声称 99% 成功率，3x 日工作量</li>
+          <li><strong>Malvido Fresnillo et al. (2025)</strong>：双臂机器人系统，一手持线束分支、一手操作连接器，用于汽车线束装配</li>
+        </ul>
+      </div>
+      <div>
+        <h4>关键特征</h4>
+        <ul>
+          <li><strong>移动性</strong>：可在工位间自主导航，不绑定固定工位</li>
+          <li><strong>双臂协调</strong>：天然支持双臂操作（一手持线束、一手操作连接器）</li>
+          <li><strong>类人工作空间</strong>：适用于为人类操作员设计的工位布局（brownfield）</li>
+          <li><strong>多传感器融合</strong>：视觉 + 力觉 + 触觉，理论上可实现更复杂的感知-控制闭环</li>
+          <li><strong>高度可编程</strong>：理论上可适应任何连接器类型和接口位置</li>
+          <li><strong>技术成熟度低</strong>：工业部署案例极少，长期可靠性未验证</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><strong>核心约束：</strong>Humanoid/mobile dual-arm 的"能力"来自移动性、双臂协调和感知-控制闭环。但所有证据都处于早期阶段——CATL 小墨是企业自报（未同行评审），Malvido Fresnillo 是实验室原型。技术成熟度、长期可靠性、成本效益都是 UNKNOWN。</p>
+  </div>
+
+  <div class="note"><strong>为什么比较这三种架构？</strong>根据 Week 06 工作计划，这三种架构代表了电池制造自动化中从"低灵活性高成熟度"到"高灵活性低成熟度"的连续谱。不是比较品牌，而是比较<strong>架构能力边界</strong>如何匹配<strong>任务需求和生产条件</strong>。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="capability-mapping">
+  <p class="kicker">模块 3</p>
+  <h2>能力覆盖映射：谁能为六类需求提供什么？</h2>
+  <p>这是 Day 4 的核心分析。从 Day 3 主表中提取的 required capabilities，逐一评估三种架构能提供什么。</p>
+
+  <div style="overflow-x: auto;">
+    <table class="req-table" style="min-width: 1100px;">
+      <thead>
+        <tr>
+          <th style="width:6%">需求</th>
+          <th style="width:14%">Day 3 Required Capability</th>
+          <th style="width:14%">Dedicated Automation</th>
+          <th style="width:14%">Fixed Industrial Robot</th>
+          <th style="width:14%">Humanoid / Mobile Dual-Arm</th>
+          <th style="width:38%">判断依据</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="req-col" rowspan="5">R1<br>Flexible-Harness Handling</td>
+          <td>DLO 状态估计（3D 形状 + 张力）</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：线束固定在工位上，不参与运动，DLO 状态估计不需要也不具备。Fixed：可通过 3D 视觉实现（Wang H. 2024 综述），但张力估计仍需要 learning-based 方法（Zhang Y. 2025）。Humanoid：理论上具备多视角感知，但 Zhang Y. 2025 的张力估计方法尚未在工业部署中验证。</td>
+        </tr>
+        <tr>
+          <td>自适应抓取（vary applied force）</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td>Dedicated：气动或电动执行器通常固定力/行程，无自适应。Fixed：Gebauer (2024) 的 gripper jaw 设计 + F/T 传感器可实现力控抓取。Humanoid：CATL 小墨声称"vary its applied force"。</td>
+        </tr>
+        <tr>
+          <td>张力感知与控制</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td class="req-col"><span class="suit-tag unknown">UNKNOWN</span></td>
+          <td>Dedicated：线束张力由固定夹具管理，无主动感知。Fixed：F/T 传感器可间接感知张力变化，但 DLO 张力直接测量仍困难。Humanoid：双臂理论上可感知双手间张力差，但无公开验证。</td>
+        </tr>
+        <tr>
+          <td>双臂协调或替代策略</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td>Dedicated：单执行器，无双臂概念。Fixed：KUKA/Liebherr 案例使用两台 KUKA 机器人协调（双机器人，非双臂）。Humanoid：Malvido Fresnillo (2025) 双臂方案验证了"一手持线束、一手操作连接器"的有效性。</td>
+        </tr>
+        <tr>
+          <td>视觉鲁棒性（线束遮挡、光照变化）</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：不需要视觉。Fixed：Wang H. (2024) 综述指出线束视觉感知受遮挡、混乱背景影响，但可控光照下可工作。Humanoid：移动平台带来视角变化，可能增加视觉鲁棒性，但增加定位不确定性。</td>
+        </tr>
+
+        <tr>
+          <td class="req-col" rowspan="5">R2<br>Contact-Rich Insertion</td>
+          <td>6-DOF F/T 感知</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td>Dedicated：通常无 F/T 传感器。Fixed：工业机器人标配腕部 F/T 传感器（Gebauer 2024, Wang 2025）。Humanoid：理论上可集成 F/T 传感器，但小墨的传感器配置未公开。</td>
+        </tr>
+        <tr>
+          <td>力/位置混合控制</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：纯位置控制，无混合控制。Fixed：Wang (2025) 已实现，IEEE T-ASE 发表。Humanoid：同类算法可迁移，但人形机器人基座不固定（移动底盘），力控精度受基座稳定性影响。</td>
+        </tr>
+        <tr>
+          <td>接触状态检测</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：无接触感知。Fixed：Wang (2025) 的接触状态检测方法已发表在 IEEE T-ASE。Humanoid：算法可迁移，但移动基座引入的振动可能干扰接触力信号。</td>
+        </tr>
+        <tr>
+          <td>搜索与恢复策略（卡滞时回退-重试）</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：卡滞时只能推到底或报警，无回退-重试。Fixed：Wang (2025) 的搜索策略可处理初始偏差。Wu (2025) 的 curriculum learning 可提升插入成功率。Humanoid：算法可迁移，但工业部署验证缺失。</td>
+        </tr>
+        <tr>
+          <td>力曲线异常检测</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：无 F/T 传感器，无异常检测。Fixed：F/T 传感器可记录力曲线，在线异常检测可实现。Humanoid：理论可行，但基准力曲线需要针对每种连接器标定，目前无公开数据。</td>
+        </tr>
+
+        <tr>
+          <td class="req-col" rowspan="4">R3<br>HV Safety Interface</td>
+          <td>PLC 实时安全握手</td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：通过 PLC 控制，天然支持安全握手。Fixed：工业机器人通过 Profinet/EtherCAT 与 PLC 通信，安全握手是标配。Humanoid：小墨的 PLC 通信协议未公开（UNKNOWN）。理论上可通过工业网关实现，但人形机器人通常不标配 Profinet 接口。</td>
+        </tr>
+        <tr>
+          <td>HVIL 状态感知</td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag unknown">UNKNOWN</span></td>
+          <td>Dedicated：连接器固定线束中可集成 HVIL 检测。Fixed：可通过数字 I/O 或 PLC 读取 HVIL 状态。Humanoid：Robot 自身不直接读取 HVIL 状态，需通过 PLC 间接获取。小墨的 HVIL 接入方式未公开。</td>
+        </tr>
+        <tr>
+          <td>异常安全响应</td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：紧急停止和安全回路是工业标配。Fixed：工业机器人有成熟的安全控制器。Humanoid：安全响应能力取决于集成深度，人形机器人的安全标准（如 ISO 10218）仍在发展中。</td>
+        </tr>
+        <tr>
+          <td>动作时序管理（不能自主决定插拔时机）</td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：PLC 直接控制动作时序。Fixed：工业机器人通过 PLC 信号控制插拔时序。Humanoid：需要与 PLC 建立安全握手，但人形机器人的自主决策架构可能与工业安全逻辑冲突——如果人形机器人"自主决定"在非安全时机插拔，后果是电弧风险。</td>
+        </tr>
+
+        <tr>
+          <td class="req-col" rowspan="4">R4<br>Variation & Changeover</td>
+          <td>连接器类型识别</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td>Dedicated：夹具设计为固定接口，不能识别不同连接器。Fixed：视觉 + MES 信息可识别连接器类型。Humanoid：CATL 小墨声称"shifts between different battery models without interruption"。Dedicated 的 NOT SUPPORTED 可以通过 human intervention 局部缓解（人工换型）。</td>
+        </tr>
+        <tr>
+          <td>自适应运动规划</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td>Dedicated：固定轨迹，无自适应。Fixed：可编程轨迹 + 视觉引导调整。Humanoid：移动平台 + 双臂提供更大的运动规划空间，但定位精度受基座影响。</td>
+        </tr>
+        <tr>
+          <td>参数化操作策略</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td>Dedicated：固定参数，换型需更换硬件。Fixed：可通过 MES 下发参数（插入力阈值、运动轨迹、确认判据）。Humanoid：高度可编程，但参数化策略需要针对每种连接器标定，标定数据目前缺失。</td>
+        </tr>
+        <tr>
+          <td>Gripper 兼容性</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：Gripper 为固定接口设计，换型需更换。Fixed：Gebauer (2024) 的 gripper jaw 设计可自动优化，但极端连接器类型变化可能超出 gripper 兼容范围。Humanoid：多指手爪理论上兼容更多连接器类型，但实际抓取可靠性未在工业环境中验证。</td>
+        </tr>
+
+        <tr>
+          <td class="req-col" rowspan="4">R5<br>Connection-Quality Confirmation</td>
+          <td>多模态确认融合（力+位置+视觉+电气）</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：最多提供位置确认（推到底），无力和电气确认。Fixed：F/T 传感器 + 视觉 + 位置编码器可实现多模态融合。Humanoid：CATL 小墨声称"actively monitors connections, flags irregularities"，但确认判据组合未公开。Dedicated 的 NOT SUPPORTED 可以通过 external sensor integration 局部缓解。</td>
+        </tr>
+        <tr>
+          <td>锁止/CPA 操作</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：通常无 CPA 操作能力。Fixed：KUKA/Liebherr 案例有专门的 CPA lock 步骤，证明工业机器人可执行 CPA 操作。Humanoid：理论可行，但灵巧度要求高，小墨的 CPA 操作能力未公开。</td>
+        </tr>
+        <tr>
+          <td>异常检测与恢复</td>
+          <td class="req-col"><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：异常时只能报警。Fixed：F/T 传感器可检测异常，程序可执行回退-重试。Humanoid：小墨声称"flags irregularities immediately"，但重试策略未公开。</td>
+        </tr>
+        <tr>
+          <td>与 Tester 电气确认握手</td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：通过 PLC 与 Tester 握手，这是标准 EoL 集成。Fixed：工业机器人通过 PLC 与 Tester 握手。Humanoid：需通过 PLC 间接握手，集成复杂度更高。</td>
+        </tr>
+
+        <tr>
+          <td class="req-col" rowspan="4">R6<br>Traceability & System Integration</td>
+          <td>MES 双向数据接口</td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：通过 PLC 与 MES 集成，标准工业方案。Fixed：工业机器人通过 PLC/MES 中间件集成。Humanoid：人形机器人通常不标配 MES 接口，需要定制集成。</td>
+        </tr>
+        <tr>
+          <td>PLC 实时安全握手</td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated 和 Fixed：工业级安全通信是标配。Humanoid：需要额外集成，目前无公开的 PLC 安全握手实现案例。</td>
+        </tr>
+        <tr>
+          <td>操作数据记录与追溯</td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：可记录基本操作数据（时间、位置），但缺乏力曲线等丰富数据。Fixed：F/T 传感器 + 视觉 + 位置编码器可记录丰富操作数据。Humanoid：理论上可记录更多模态数据，但数据格式和 MES 集成方案未标准化。</td>
+        </tr>
+        <tr>
+          <td>多协议通信</td>
+          <td class="req-col"><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td class="req-col"><span class="suit-tag supported">SUPPORTED</span></td>
+          <td class="req-col"><span class="suit-tag unknown">UNKNOWN</span></td>
+          <td>Dedicated：通常支持 Profinet 或数字 I/O，但协议种类有限。Fixed：工业机器人控制器支持多种工业协议（Profinet、EtherCAT、EtherNet/IP 等）。Humanoid：人形机器人的通信协议栈通常不针对工业环境设计。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="finding">
+    <strong>快速统计：</strong>26 个 capability 维度中，Dedicated Automation 有 6 个 SUPPORTED、3 个 CONDITIONAL、17 个 NOT SUPPORTED；Fixed Industrial Robot 有 18 个 SUPPORTED、8 个 CONDITIONAL、0 个 NOT SUPPORTED；Humanoid 有 4 个 SUPPORTED、16 个 CONDITIONAL、0 个 NOT SUPPORTED、6 个 UNKNOWN。
+    <br><br>
+    <strong>但这不是"Fixed Industrial Robot 得分最高所以最好"——</strong>这是 Q3 的错误。SUPPORTED 只表示"该架构在技术上具备这项能力"，不等同于"该架构在给定生产条件下更合理"。一个架构在技术上具备某项能力，但生产条件（如多工位移动需求）可能使该架构的成本或可行性不可接受。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="progressive">
+  <p class="kicker">模块 4</p>
+  <h2>累进约束层级分析：R4 → R1/R2/R5/R6 → R3</h2>
+  <p>Day 3 建立了"累进约束"层级。Day 4 用这个层级来分析：每种架构在哪一层开始"失效"。</p>
+
+  <div class="card">
+    <h3>累进约束层级回顾</h3>
+    <div class="layer-indicator">
+      <div class="layer generic">R4：Generic</div>
+      <span style="font-size:1.2em;color:var(--gray);">→</span>
+      <div class="layer hybrid">R1/R2/R5/R6：Hybrid</div>
+      <span style="font-size:1.2em;color:var(--gray);">→</span>
+      <div class="layer specific">R3：Battery-Specific</div>
+    </div>
+    <p class="layer-desc">每一层都是上一层的累加约束。如果一个架构连 R4（通用换型）都做不好，那它根本不适合这个任务。如果它能处理 R4+R1+R2 但处理不了 R3（HV 安全），那它在 battery manufacturing 中就是不可用的——因为安全是硬约束。</p>
+  </div>
+
+  <h3>每种架构的"失效层级"</h3>
+
+  <div class="grid-3">
+    <div class="card" style="border-left:4px solid #718096;">
+      <h4>Dedicated Automation</h4>
+      <div class="layer-indicator">
+        <div class="layer generic" style="opacity:0.4;">R4</div>
+        <span style="color:var(--red);">✕</span>
+      </div>
+      <p style="font-size:0.9em;">失效在最底层（R4 Generic）。多型号换型需求直接让 dedicated automation 不适用——因为它需要更换机械夹具，换型时间不可接受。</p>
+      <p style="font-size:0.85em;color:var(--gray);"><strong>例外：</strong>如果产品型号只有 1-2 种且长期不换型，dedicated automation 在 R4 层是可用的。此时它甚至不需要处理 R1-R3 的复杂能力——它的机械精度和固定接口绕过了这些需求。</p>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--blue);">
+      <h4>Fixed Industrial Robot</h4>
+      <div class="layer-indicator">
+        <div class="layer generic">R4 ✓</div>
+        <span style="color:var(--green);">→</span>
+        <div class="layer hybrid">R1/R2/R5/R6 ✓</div>
+        <span style="color:var(--green);">→</span>
+        <div class="layer specific">R3 ✓</div>
+      </div>
+      <p style="font-size:0.9em;">不漏层。R4 通过可编程应对，R1/R2 通过视觉+F/T+力控应对，R5 通过多模态确认应对，R6 通过工业通信协议应对，R3 通过 PLC 安全握手应对。</p>
+      <p style="font-size:0.85em;color:var(--gray);"><strong>约束：</strong>固定在工位上。如果生产条件需要多工位移动操作，fixed robot 的 R1（线束处理）和 R5（连接确认）可能因工作空间受限而无法覆盖所有场景。</p>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--green);">
+      <h4>Humanoid / Mobile Dual-Arm</h4>
+      <div class="layer-indicator">
+        <div class="layer generic">R4 ✓</div>
+        <span style="color:var(--orange);">→</span>
+        <div class="layer hybrid">R1/R2/R5/R6 ~</div>
+        <span style="color:var(--orange);">→</span>
+        <div class="layer specific">R3 ?</div>
+      </div>
+      <p style="font-size:0.9em;">R4 通过高度可编程应对（CATL 小墨声称多型号换型）。R1/R2/R5/R6 在理论上可行，但大部分是 CONDITIONAL——因为工业部署验证缺失。R3 是最大风险——人形机器人的安全握手和工业通信协议集成是 UNKNOWN。</p>
+      <p style="font-size:0.85em;color:var(--gray);"><strong>风险：</strong>如果 R3 层无法满足（人形机器人不能与 PLC 建立可靠的安全握手），那么无论 R1/R2/R4/R5/R6 多么灵活，该架构在 battery manufacturing 中都是不可用的——因为安全是硬约束。</p>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <p class="hl-label">关键论证：</p>
+    <p>如果一个架构声称适合 battery manufacturing，但它的论证只依赖 generic 能力（如"力控精度高"、"灵活性好"），那论证是不充分的。它必须证明自己能处理 R3（HV 安全接口）。这是 Day 3 Q6 的核心教训——不是"这个机器人精度高所以适合电池制造"，而是"这个机器人能处理电池制造特有的安全约束"。</p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="production">
+  <p class="kicker">模块 5</p>
+  <h2>生产条件维度：什么条件改变架构选择？</h2>
+  <p>能力映射告诉我们"谁能做什么"，但架构选择还取决于生产条件。同一个架构，在条件 A 下合理，在条件 B 下可能不合理。以下是 Day 4 分析的十个生产条件维度。</p>
+
+  <div class="card">
+    <table class="req-table">
+      <thead>
+        <tr><th style="width:5%">#</th><th style="width:18%">生产条件维度</th><th style="width:30%">为什么影响架构选择</th><th style="width:22%">有利于 Dedicated</th><th style="width:25%">有利于 Fixed Robot / Humanoid</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="req-col">C1</td>
+          <td class="req-col">产品与连接器多样性<br><span style="font-weight:400;font-size:0.9em;">Product & Connector Variety</span></td>
+          <td>连接器类型越多、接口位置差异越大，dedicated automation 的硬件换型成本越高</td>
+          <td>1-2 种 Pack 型号，连接器类型固定</td>
+          <td>3+ 种 Pack 型号或连接器类型变化频繁</td>
+        </tr>
+        <tr>
+          <td class="req-col">C2</td>
+          <td class="req-col">柔性线束复杂度<br><span style="font-weight:400;font-size:0.9em;">Flexible-Harness Complexity</span></td>
+          <td>线束越粗重、越复杂，DLO 状态估计和自适应抓取的需求越强。Dedicated 通过固定线束来绕过这个问题，但只适用于线束可固定的场景</td>
+          <td>线束可固定在工位上，或线束直径小、刚度低</td>
+          <td>线束粗重、多分支、不可固定，需要主动线束管理</td>
+        </tr>
+        <tr>
+          <td class="req-col">C3</td>
+          <td class="req-col">产量与节拍<br><span style="font-weight:400;font-size:0.9em;">Volume & Takt</span></td>
+          <td>高产量要求高节拍。Dedicated 的节拍最优（无视觉定位和力控延迟），但换型时失去优势</td>
+          <td>单型号高产量，无换型需求</td>
+          <td>中低产量或混合型号生产，可接受较低节拍</td>
+        </tr>
+        <tr>
+          <td class="req-col">C4</td>
+          <td class="req-col">换型频率<br><span style="font-weight:400;font-size:0.9em;">Changeover Frequency</span></td>
+          <td>换型越频繁，专用自动化越不适用。CATL 小墨的"3x daily workload"暗示换型是日频操作</td>
+          <td>月频或更低的换型频率</td>
+          <td>日频或班频换型（CATL 小墨场景）</td>
+        </tr>
+        <tr>
+          <td class="req-col">C5</td>
+          <td class="req-col">固定工位 vs 多工位操作<br><span style="font-weight:400;font-size:0.9em;">Fixed vs Multi-Station</span></td>
+          <td>这是 Fixed Robot 和 Humanoid 的核心分界线。Fixed Robot 绑定工位，Humanoid 可跨工位操作</td>
+          <td>单工位操作</td>
+          <td>多工位操作（Fixed Robot 需多台；Humanoid 一台可覆盖多工位）</td>
+        </tr>
+        <tr>
+          <td class="req-col">C6</td>
+          <td class="req-col">Brownfield / 人类导向布局<br><span style="font-weight:400;font-size:0.9em;">Brownfield / Human-Oriented Layout</span></td>
+          <td>在已有产线中，工位为人类操作员设计——空间狭小、通道狭窄。Dedicated 和 Fixed Robot 需要改造工位，Humanoid 可在不改造的工位上工作</td>
+          <td>Greenfield 新产线，工位可自由设计</td>
+          <td>Brownfield 改造产线，工位为人类设计（Humanoid 的优势场景）</td>
+        </tr>
+        <tr>
+          <td class="req-col">C7</td>
+          <td class="req-col">安全与集成<br><span style="font-weight:400;font-size:0.9em;">Safety & Integration</span></td>
+          <td>R3 高压安全是所有架构的硬约束。Dedicated 和 Fixed Robot 的工业安全集成是成熟的，Humanoid 的 R3 集成是 UNKNOWN</td>
+          <td>PLC 安全集成成熟，无额外安全认证需求</td>
+          <td>Humanoid 的 R3 集成是 UNKNOWN——这是该架构的最大风险</td>
+        </tr>
+        <tr>
+          <td class="req-col">C8</td>
+          <td class="req-col">质量机制<br><span style="font-weight:400;font-size:0.9em;">Quality Mechanism</span></td>
+          <td>连接确认的多模态需求（R5）——Dedicated 只能做位置确认，Fixed Robot 和 Humanoid 可做多模态确认</td>
+          <td>质量要求低，位置确认即可</td>
+          <td>需要多模态确认（力+位置+视觉+电气）</td>
+        </tr>
+        <tr>
+          <td class="req-col">C9</td>
+          <td class="req-col">可扩展性<br><span style="font-weight:400;font-size:0.9em;">Scalability</span></td>
+          <td>产量增长时如何扩展？Dedicated 需要复制整条线，Fixed Robot 需要增加机器人，Humanoid 可增加台数</td>
+          <td>单一产线，不需要扩展</td>
+          <td>需要灵活扩展的产线</td>
+        </tr>
+        <tr>
+          <td class="req-col">C10</td>
+          <td class="req-col">成本证据与成熟度<br><span style="font-weight:400;font-size:0.9em;">Cost Evidence & Maturity</span></td>
+          <td>可用成本证据和长期可靠性数据</td>
+          <td>成本可预测，可靠性已验证（数十年工业部署）</td>
+          <td>Humanoid 的成本和长期可靠性是 UNKNOWN</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <strong>这十个维度的层次：</strong>C1-C6 是任务/生产直接相关的条件（what the factory needs），C7-C10 是实施/部署相关的条件（what the factory can afford and risk）。在 Day 4 的分析中，C1-C6 决定"哪种架构在技术上更合理"，C7-C10 决定"哪种架构在实施上更可行"。两者需要同时考虑。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="scenarios">
+  <p class="kicker">模块 6</p>
+  <h2>场景化条件假设</h2>
+  <p>根据 Week 06 工作计划，Day 4 需要形成"可由证据检验的条件假设"。以下是三个场景——注意这些是假设，不是 CATL 现场描述。每个场景都需要标出哪些假设有证据支持、哪些是 INFERENCE。</p>
+
+  <!-- Scenario A -->
+  <div class="scenario">
+    <div class="sc-label">Scenario A</div>
+    <div class="sc-title">低多样性 + 高产量 + 固定接口</div>
+    <div class="layer-indicator">
+      <div class="layer generic">C1: 1-2 型号</div>
+      <div class="layer generic">C3: 高产量</div>
+      <div class="layer generic">C4: 低换型频率</div>
+      <div class="layer generic">C5: 单工位</div>
+    </div>
+    <div class="hypothesis">
+      <span class="h-label">条件假设：</span>当 Pack 型号只有 1-2 种、产量高、换型频率低（月频或更低）、单工位操作时，<strong>dedicated automation 可能是最合理的选择</strong>。
+    </div>
+    <p><strong>论证：</strong>在这种条件下，R4（换型）的需求极弱——dedicated automation 不需要应对型号变化。R1（线束处理）通过固定线束到工位夹具上绕过。R2（力控插入）通过机械精度和固定接口替代。R3（安全）通过 PLC 集成实现。R5（确认）通过位置终点开关简化。dedicated automation 的核心约束（换型不灵活）在这个场景中不构成问题。</p>
+    <p style="font-size:0.85em;color:var(--gray);"><strong>证据状态：</strong>thyssenkrupp、Marposs、Schaeffler 的 EoL 方案均属于 dedicated 或半自动化方案。<span class="tag industry">INDUSTRY</span> 但 CATL 的具体 EoL 型号数量是 UNKNOWN。<span class="tag unknown">UNKNOWN</span> 如果有人操作基线，dedicated 的"最合理"可能存在偏见——人工操作可能比 dedicated 更灵活且成本更低，这在低产量场景中尤其重要。中低产量 + 人工 vs dedicated 的比较不在 Day 4 范围内。</p>
+  </div>
+
+  <!-- Scenario B -->
+  <div class="scenario">
+    <div class="sc-label">Scenario B</div>
+    <div class="sc-title">中等多样性 + 固定工位 + 中高产量</div>
+    <div class="layer-indicator">
+      <div class="layer hybrid">C1: 3-5 型号</div>
+      <div class="layer hybrid">C3: 中高产量</div>
+      <div class="layer hybrid">C4: 中频换型</div>
+      <div class="layer hybrid">C5: 单工位</div>
+    </div>
+    <div class="hypothesis">
+      <span class="h-label">条件假设：</span>当 Pack 型号有 3-5 种、中高产量、换型频次为日频或班频、但仍在单工位操作时，<strong>fixed industrial robot 可能是最合理的选择</strong>。
+    </div>
+    <p><strong>论证：</strong>在这种条件下，R4（换型）需求上升——dedicated 的硬件换型成本不可接受。Fixed industrial robot 通过可编程软件换型应对。R1/R2 通过视觉+F/T+力控应对（Gebauer 2024, Wang 2025 已有论文验证）。R3 通过工业级 PLC 安全握手应对。R5 通过多模态确认应对。R6 通过工业通信协议应对。KUKA/Liebherr 的 Pack 装配案例证明固定工业机器人可操作柔性连接器并执行 CPA lock。</p>
+    <p style="font-size:0.85em;color:var(--gray);"><strong>证据状态：</strong>R1/R2/R5 的能力有同行评审论文支持（Gebauer 2024, Wang 2025, Wu 2025）。<span class="tag paper">PAPER</span> KUKA/Liebherr 是邻近工业基线。<span class="tag industry">INDUSTRY</span> 但 KUKA 案例是 Pack assembly（永久连接），不是 EoL testing（临时连接），两者的安全约束和连接确认需求不同。<span class="tag infer">INFERENCE</span></p>
+  </div>
+
+  <!-- Scenario C -->
+  <div class="scenario">
+    <div class="sc-label">Scenario C</div>
+    <div class="sc-title">高多样性 + 多工位 + Brownfield 布局</div>
+    <div class="layer-indicator">
+      <div class="layer specific">C1: 5+ 型号</div>
+      <div class="layer specific">C4: 高频换型</div>
+      <div class="layer specific">C5: 多工位</div>
+      <div class="layer specific">C6: Brownfield</div>
+    </div>
+    <div class="hypothesis">
+      <span class="h-label">条件假设：</span>当 Pack 型号多、换型频繁、需要在多个工位间操作、且工位为人类操作员设计（brownfield）时，<strong>humanoid/mobile dual-arm 值得评估</strong>——但当前证据不足以支持"最合理"的结论。
+    </div>
+    <p><strong>论证：</strong>在这种条件下，dedicated 在 R4 层失效，fixed robot 在 C5（多工位）和 C6（brownfield）层面受限——需要多台机器人覆盖多工位，成本高且需要改造工位。Humanoid 的移动性和类人工作空间在这些条件下有独特优势：一台机器人可覆盖多工位，不需要改造工位。CATL 小墨的报道声称"shifts between different battery models without interruption"和"3x daily workload"，暗示了换型和多工位场景。</p>
+    <p style="font-size:0.85em;color:var(--gray);"><strong>证据状态：</strong>CATL 小墨的报道是唯一的企业自报证据。<span class="tag direct">DIRECT</span> 但技术成熟度、长期可靠性、R3 安全集成、成本效益都是 UNKNOWN。<span class="tag unknown">UNKNOWN</span> 当前证据等级为"企业自报"，不能得出"humanoid 最合理"的结论。只能得出"humanoid 在 Scenario C 条件下值得评估，但 R3 安全集成必须首先解决"。</p>
+  </div>
+
+  <div class="warning">
+    <strong>场景假设的边界：</strong>这三个场景是 illustrative scenarios，不是 CATL 现场描述。CATL 的具体 Pack 型号数量、换型频率、工位布局都是 UNKNOWN。场景的作用是展示"条件变了，结论可以变"——这是 Week 06 核心方法：conditional suitability，不是 architecture ranking。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="matrix">
+  <p class="kicker">模块 7</p>
+  <h2>条件适用性矩阵：Requirement × Production Condition → Architecture</h2>
+  <p>这是 Day 4 的最低交付物。将能力映射和场景分析浓缩为一张矩阵。</p>
+
+  <div class="note" style="margin-bottom:16px;"><strong>矩阵的读法：</strong>每一行是一个条件组合。三种架构在每种条件下的适用性判断。绿色=SUPPORTED，黄色=CONDITIONALLY SUITABLE，红色=NOT SUPPORTED，灰色=UNKNOWN。这不是"得分表"——不要比较 SUPPORTED 的数量。一个 RED 在 R3 层可以让整个架构不可用，不论其他维度有多少 GREEN。</div>
+
+  <div style="overflow-x: auto;">
+    <table class="req-table" style="min-width: 1000px;">
+      <thead>
+        <tr>
+          <th style="width:12%">条件组合</th>
+          <th style="width:18%">Dedicated Automation</th>
+          <th style="width:18%">Fixed Industrial Robot</th>
+          <th style="width:18%">Humanoid / Mobile Dual-Arm</th>
+          <th style="width:34%">关键证据与论证</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="req-col">C1: 低多样性<br>(1-2 型号)</td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：固定夹具足够，不需要换型。Humanoid：多型号是它的优势，但低多样性场景下这个优势不产生价值，反而引入成熟度风险。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C1: 高多样性<br>(5+ 型号)</td>
+          <td><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：硬件换型成本不可接受。Fixed：软件换型可行。Humanoid：CATL 小墨声称多型号，但 5+ 型号的具体验证缺失。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C2: 低线束复杂度</td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：线束固定到工位，绕过 R1。Fixed：视觉+F/T 足够。Humanoid：过度设计——低复杂度不需要移动性和双臂。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C2: 高线束复杂度</td>
+          <td><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：线束不可固定时，DLO 状态估计和自适应抓取能力缺失。Fixed：Gebauer 2024 的 in-hand pose error 和 Malvido Fresnillo 2025 的双臂方案可部分缓解。Humanoid：双臂协调天然优势，但工业部署验证缺失。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C3: 高产量 + 高节拍</td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td>Dedicated：无视觉定位和力控延迟，节拍最高。Fixed：视觉+力控增加 cycle time。Humanoid：移动导航+双臂协调进一步增加 cycle time，且节拍数据缺失。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C3: 中低产量</td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：固定成本摊销到低产量，单位成本高。但人工操作可能比 dedicated 更经济——这不在 Day 4 的比较范围内。Humanoid：中低产量下成熟度风险更可接受。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C4: 高频换型<br>(日频/班频)</td>
+          <td><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：硬件换型时间不可接受。Fixed：软件换型秒级完成。Humanoid：CATL 小墨声称"cope without interruption"，但换型策略未公开。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C5: 多工位操作</td>
+          <td><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：绑定单工位。Fixed：需要多台机器人，成本高。Humanoid：移动性优势，但 CATL 小墨的操作范围未公开。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C6: Brownfield 布局</td>
+          <td><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated 和 Fixed：需要改造工位（安全围栏、底座安装）。Humanoid：类人工作空间，理论上不改造工位——但 CATL 现场是否改造了工位是 UNKNOWN。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C7: R3 安全集成</td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag unknown">UNKNOWN</span></td>
+          <td>Dedicated 和 Fixed：工业级安全握手是标配。Humanoid：PLC 安全握手是 UNKNOWN。<strong>如果 UNKNOWN 无法解决，R3 层是 humanoid 的硬性不可用条件。</strong></td>
+        </tr>
+        <tr>
+          <td class="req-col">C8: 多模态质量确认</td>
+          <td><span class="suit-tag not-supported">NOT SUPPORTED</span></td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag conditional">CONDITIONAL</span></td>
+          <td>Dedicated：最多位置确认，无力/电气确认。Fixed：F/T+视觉+位置可实现多模态。Humanoid：CATL 小墨声称"actively monitors"，但判据组合未公开。</td>
+        </tr>
+        <tr>
+          <td class="req-col">C10: 成本与成熟度</td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag supported">SUPPORTED</span></td>
+          <td><span class="suit-tag unknown">UNKNOWN</span></td>
+          <td>Dedicated 和 Fixed：数十年工业部署，成本可预测。Humanoid：CATL 小墨的 TCO 和长期可靠性是 UNKNOWN。当前 evidence 不足以支持成本比较。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="finding" style="margin-top: 16px;">
+    <strong>矩阵的核心结论：</strong><br>
+    <strong>1. Dedicated Automation：</strong>在低多样性、高产量、低换型频率、低线束复杂度的狭隘条件下 SUPPORTED。一旦条件改变（C1 多样性增加、C4 换型频繁、C2 线束不可固定），在多个维度上 NOT SUPPORTED。它的"强"来自机械精度和固定接口，但"弱"也来自固定接口——条件一变，优势就消失。<br><br>
+    <strong>2. Fixed Industrial Robot：</strong>在大多数条件组合下 SUPPORTED 或 CONDITIONALLY SUITABLE。没有 NOT SUPPORTED 的维度。它的"弱"不在能力层面，而在生产条件层面——C5（多工位）和 C6（brownfield）条件下，需要多台机器人或工位改造。这是 fixed robot 的边界，不是它的缺陷。<br><br>
+    <strong>3. Humanoid / Mobile Dual-Arm：</strong>在所有维度上都是 CONDITIONAL 或 UNKNOWN。没有 SUPPORTED——因为所有能力要么缺乏工业部署验证，要么集成方案未公开。C7（R3 安全集成）和 C10（成本与成熟度）是 UNKNOWN——这意味着即使 humanoid 在 C1-C6 上具有潜在优势，如果 R3 安全集成无法解决，它作为 battery manufacturing 的架构是不可用的。它的"潜在价值"集中在 C5（多工位）和 C6（brownfield），但当前证据不足以支持"部署就绪"的结论。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="evidence-audit">
+  <p class="kicker">模块 8</p>
+  <h2>证据审计：每个判断基于什么？</h2>
+  <p>Day 4 的每个 SUPPORTED / CONDITIONAL / NOT SUPPORTED / UNKNOWN 判断都依赖特定类型的证据。以下是对三种架构证据基础的审计。</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h4>Dedicated Automation 证据</h4>
+      <ul style="font-size:0.9em;">
+        <li><span class="tag industry">INDUSTRY</span> thyssenkrupp EoL 三种接线配置（手动/半自动/全自动）</li>
+        <li><span class="tag industry">INDUSTRY</span> Schaeffler automatic plug contacting</li>
+        <li><span class="tag industry">INDUSTRY</span> Marposs 手动/自动连接版本</li>
+        <li><span class="tag infer">INFERENCE</span> 力控、视觉、抓取能力的缺失基于 dedicated automation 的通用架构特征推断</li>
+      </ul>
+      <p style="font-size:0.85em;color:var(--gray);"><strong>证据强度：</strong>中。Dedicated 方案的存在性有设备商公开资料支持。但能力边界的论证主要基于 INFERENCE，而非直接的性能测试数据。</p>
+    </div>
+    <div class="card">
+      <h4>Fixed Industrial Robot 证据</h4>
+      <ul style="font-size:0.9em;">
+        <li><span class="tag paper">PAPER</span> Wang (2025) IEEE T-ASE：力/位置混合控制 + 接触状态检测</li>
+        <li><span class="tag paper">PAPER</span> Gebauer (2024) Procedia CIRP：gripper design + in-hand pose + compliant mating</li>
+        <li><span class="tag paper">PAPER</span> Wu (2025)：curriculum learning for cable insertion</li>
+        <li><span class="tag industry">INDUSTRY</span> KUKA/Liebherr/KOSTAL：双工业机器人柔性连接器操作 + CPA lock</li>
+        <li><span class="tag infer">INFERENCE</span> 力曲线异常检测、多模态确认融合基于工业机器人通用能力推断</li>
+      </ul>
+      <p style="font-size:0.85em;color:var(--gray);"><strong>证据强度：</strong>高。关键能力有同行评审论文支持。但 KUKA 案例是 Pack assembly（永久连接），不是 EoL testing（临时连接），两者的安全约束和过程状态不同——这是当前证据的 transfer limit。</p>
+    </div>
+    <div class="card">
+      <h4>Humanoid / Mobile Dual-Arm 证据</h4>
+      <ul style="font-size:0.9em;">
+        <li><span class="tag direct">DIRECT</span> CATL 小墨（Spirit AI）：企业自报，声称 99% 成功率、3x 日工作量、多型号换型</li>
+        <li><span class="tag paper">PAPER</span> Malvido Fresnillo (2025)：双臂线束装配，实验室原型</li>
+        <li><span class="tag unknown">UNKNOWN</span> 力控精度、传感器配置、安全状态机、PLC 通信、MES 集成、节拍、成本、长期可靠性</li>
+      </ul>
+      <p style="font-size:0.85em;color:var(--gray);"><strong>证据强度：</strong>低。核心证据来自企业自报（未同行评审）和实验室原型。关键维度（R3 安全集成、C10 成本）是 UNKNOWN。这是当前证据的硬性限制。</p>
+    </div>
+  </div>
+
+  <div class="warning">
+    <strong>证据的不对称性：</strong>三种架构的证据强度不对称——Fixed Industrial Robot 有同行评审论文和工业案例，Dedicated Automation 有设备商方案，Humanoid 只有企业自报和实验室原型。这<strong>不是</strong>说 Humanoid 能力差——它只是说 Humanoid 的证据基础弱。在证据不对称的情况下，Day 4 对 Humanoid 的判断必须更保守（CONDITIONAL 或 UNKNOWN），而不是因为证据弱就推断它"不行"。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="antipatterns">
+  <p class="kicker">模块 9</p>
+  <h2>Day 4 的论证反模式（来自 Day 3 Q&A 的教训）</h2>
+  <p>Day 3 的八轮 Q&A 暴露了学生在论证中的系统性弱点。Day 4 是 Week 06 的核心分析日，必须避免这些错误。以下是四个反模式及其纠正。</p>
+
+  <div class="concept-box" style="border-color: var(--red);">
+    <div class="concept-title" style="color: var(--red);">
+      <span class="icon">❌</span>反模式 1：用 generic 能力论证 battery-specific 适用性
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">错误论证</div>
+        <p>"这个架构力控精度高，所以适合电池制造。"</p>
+      </div>
+      <div class="col b" style="background: #f0fff4; border-color: #9ae6b4;">
+        <div class="col-title">正确论证</div>
+        <p>"这个架构的力控精度高（证据：Wang 2025），这对于 R2（接触插接）是 SUPPORTED。但 R3（HV 安全）是 battery-specific 的硬约束——该架构必须同时证明它能与 PLC 建立安全握手，而不能只靠力控论证。如果 R3 是 CONDITIONAL 或 UNKNOWN，则整体适用性为 CONDITIONAL。"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept-box" style="border-color: var(--red);">
+    <div class="concept-title" style="color: var(--red);">
+      <span class="icon">❌</span>反模式 2：用"复杂"、"不够好"代替物理事实论证
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">错误论证</div>
+        <p>"Dedicated automation 不够灵活，所以不适合多型号场景。"</p>
+      </div>
+      <div class="col b" style="background: #f0fff4; border-color: #9ae6b4;">
+        <div class="col-title">正确论证</div>
+        <p>"Dedicated automation 在 R4（换型）层 NOT SUPPORTED，因为：连接器夹具为固定接口设计，换型需更换硬件夹具（证据：thyssenkrupp 的三种接线配置中，全自动接触机构绑定特定 Pack 接口）。换型时间不可接受——而这在 C4（高频换型）条件下是硬性约束。"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept-box" style="border-color: var(--red);">
+    <div class="concept-title" style="color: var(--red);">
+      <span class="icon">❌</span>反模式 3：把证据不足当成"不适用"
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">错误论证</div>
+        <p>"Humanoid 的 R3 安全集成没有证据，所以它不适合电池制造。"</p>
+      </div>
+      <div class="col b" style="background: #f0fff4; border-color: #9ae6b4;">
+        <div class="col-title">正确论证</div>
+        <p>"Humanoid 的 R3 安全集成是 UNKNOWN——因为小墨的 PLC 通信协议和安全状态机未公开。这不等同于 humanoid 不能做 R3。它意味着：在 UNKNOWN 被解决之前，humanoid 的 R3 适用性为 UNKNOWN。如果 R3 是 battery manufacturing 的硬约束，这对 humanoid 是一个关键风险点——但风险点 ≠ 不适用。"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept-box" style="border-color: var(--red);">
+    <div class="concept-title" style="color: var(--red);">
+      <span class="icon">❌</span>反模式 4：把能力映射表当成得分表
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">错误论证</div>
+        <p>"Fixed Robot 有 18 个 SUPPORTED，Humanoid 只有 4 个，所以 Fixed Robot 更好。"</p>
+      </div>
+      <div class="col b" style="background: #f0fff4; border-color: #9ae6b4;">
+        <div class="col-title">正确论证</div>
+        <p>"SUPPORTED 数量不是决策依据。不同条件组合下，不同 SUPPORTED 维度的权重不同。如果 C5（多工位）和 C6（brownfield）是主导条件，Fixed Robot 的多个 SUPPORTED 在这些条件下的权重降低——因为需要多台机器人或工位改造。正确的判断是：在 Scenario A 条件下，Dedicated 的少数 SUPPORTED 恰好覆盖关键需求；在 Scenario C 条件下，Humanoid 的 CONDITIONAL 可能在关键维度上提供独特价值——但证据不足。"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="check">
+  <p class="kicker">学习检查</p>
+  <h2>读完本讲义后，请准备回答以下 7 个问题</h2>
+  <p>这些问题不需要你写下来。读完后在心里过一遍，然后我们开始带教式对话。Day 4 的问题比 Day 3 更难——不是记忆题，是论证题。</p>
+
+  <div class="step-flow">
+    <div class="step-row">
+      <div class="step-num">Q1</div>
+      <div class="step-body">
+        <div class="step-name">为什么能力映射表（模块 3）中 SUPPORTED 的数量不能用来"排名"三种架构？</div>
+        <div class="step-detail">提示：想一下 SUPPORTED 在不同生产条件组合下的权重变化。再想一下一个 RED 在 R3 层的后果。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q2</div>
+      <div class="step-body">
+        <div class="step-name">为什么 Dedicated Automation 在 Scenario A 中"最合理"，但在 Scenario C 中"不适用"？</div>
+        <div class="step-detail">提示：条件变了，结论可以变。从 R4（换型）和 C5（多工位）两个维度展开。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q3</div>
+      <div class="step-body">
+        <div class="step-name">为什么 Fixed Industrial Robot 在能力映射中没有 NOT SUPPORTED，但在 Scenario C 中不是"最合理"的？</div>
+        <div class="step-detail">提示：能力 ≠ 适用性。C5（多工位）和 C6（brownfield）在 Scenario C 中的权重。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q4</div>
+      <div class="step-body">
+        <div class="step-name">为什么 Humanoid 的 R3（HV 安全）是 UNKNOWN 如此关键？如果 R3 是 UNKNOWN，Humanoid 还能在 battery manufacturing 中"可用"吗？</div>
+        <div class="step-detail">提示：R3 是硬约束。UNKNOWN 不是"不适用"——但硬约束上的 UNKNOWN 意味着什么？</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q5</div>
+      <div class="step-body">
+        <div class="step-name">三种架构的证据强度不对称。为什么我们不能因为 Humanoid 证据弱就推断它"不行"？</div>
+        <div class="step-detail">提示：区分"证据不足"和"不适用"。Day 3 Q7 的教训——"没啥证据"和"没有证据"是两个判断。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q6</div>
+      <div class="step-body">
+        <div class="step-name">如果一个架构的论证只依赖"力控精度高"、"灵活性好"这些 generic 能力，为什么这个论证对于 battery manufacturing 是不充分的？</div>
+        <div class="step-detail">提示：Day 3 Q6 的教训——R3 是唯一完全 battery-specific 的。如果论证不涉及 R3，它就是在论证"适用于精密装配"，而不是"适用于电池制造"。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q7</div>
+      <div class="step-body">
+        <div class="step-name">请用一句话回答 Week 06 的核心问题："What task and production requirements determine the suitability of dedicated automation, fixed industrial robots, and humanoid/mobile dual-arm systems?"</div>
+        <div class="step-detail">提示：这不是让你选一个"最好的"。是让你说：在什么条件下哪个更合理。你的回答必须包含至少一个 production condition 和至少一个 requirement 维度。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding"><strong>Day 4 最低完成标准：</strong>你能区分"能力映射"和"条件适用性"——前者是技术上的"能做"，后者是生产条件下的"合理"。你能解释为什么同一个架构在 Scenario A 中合理但在 Scenario C 中不合理。你能用一句话回答 Week 06 的核心问题，且这句话包含了 production condition 和 battery-specific requirement 两个维度。达到这个标准，Day 4 即完成。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="deliverable">
+  <p class="kicker">最低交付物</p>
+  <h2>Day 4 最低交付物与成功标准</h2>
+
+  <div class="card">
+    <h3>最低交付物</h3>
+    <ol>
+      <li><strong>能力覆盖映射表（模块 3）：</strong>26 个 capability 维度 × 3 种架构，每个判断标注 evidence type</li>
+      <li><strong>累进约束层级分析（模块 4）：</strong>每种架构的"失效层级"和关键风险</li>
+      <li><strong>条件适用性矩阵（模块 7）：</strong>12 行条件组合 × 3 种架构，每个判断标注 evidence type</li>
+      <li><strong>三个场景化条件假设（模块 6）：</strong>Scenario A/B/C 及其证据边界</li>
+    </ol>
+  </div>
+
+  <div class="card" style="margin-top: 12px;">
+    <h3>成功标准</h3>
+    <ul>
+      <li>能区分"能力映射"（技术上的"能做"）和"条件适用性"（生产条件下的"合理"）</li>
+      <li>能解释 Dedicated Automation 在什么条件下合理、在什么条件下不适用</li>
+      <li>能解释 Fixed Industrial Robot 的边界不在能力层面，而在生产条件层面</li>
+      <li>能解释 Humanoid 的 CONDITIONAL 和 UNKNOWN 意味着什么——不是"不行"，而是"证据不足"</li>
+      <li>能识别"反模式 1-4"并避免在 thesis 论证中重犯</li>
+      <li>能用一句话回答 Week 06 核心问题</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="references">
+  <p class="kicker">TRACEABLE SOURCES</p>
+  <h2>本讲义引用的来源</h2>
+  <p>Day 4 不新增文献检索。所有来源来自 Day 1-3 已引用的文献。但 Day 4 对每篇文献的引用方式不同——Day 1-3 是"描述任务"，Day 4 是"评估架构能力"。</p>
+  <ol class="refs">
+    <li>Wang, Z. et al. (2025). <a href="https://doi.org/10.1109/TASE.2024.3477918">Geometry and Force Guided Robotic Assembly With Large Initial Deviations for Electrical Connectors</a>. <em>IEEE T-ASE</em>, 22, 8095–8107. <span class="tag paper">PAPER</span> Day 4 用途：支持 Fixed Robot 的力/位置混合控制、接触状态检测能力。</li>
+    <li>Gebauer, D. et al. (2024). <a href="https://doi.org/10.1016/j.procir.2024.10.176">Robot-based, sensitive mating of electrical connectors using automatically designed gripper jaws</a>. <em>Procedia CIRP</em>, 130, 861–866. <span class="tag paper">PAPER</span> Day 4 用途：支持 Fixed Robot 的自适应抓取和 in-hand pose error 量化。</li>
+    <li>Wu, Y. et al. (2025). <a href="https://doi.org/10.48550/arXiv.2502.14906">Learning to Insert Flexible Cables with Visual and Force Feedback</a>. <em>arXiv:2502.14906</em>. <span class="tag paper">PAPER</span> Day 4 用途：支持 Fixed Robot 的柔性线缆插入策略和 curriculum learning。</li>
+    <li>Malvido Fresnillo, P. et al. (2025). <a href="https://doi.org/10.1016/j.jmsy.2025.10.008">A dual-arm robotic system for automated multi-branch wire harness assembly in automotive industry</a>. <em>J. Manufacturing Systems</em>, 83, 577–596. <span class="tag paper">PAPER</span> Day 4 用途：支持 Humanoid 的双臂线束操作范式。</li>
+    <li>Caporali, A. et al. (2026). <a href="https://doi.org/10.1177/02783649261432253">Robotic perception and manipulation of deformable linear objects: A survey</a>. <em>IJRR</em>, OnlineFirst. <span class="tag paper">PAPER</span> Day 4 用途：DLO 状态估计的通用能力框架。</li>
+    <li>Zhang, Y. et al. (2025). <a href="https://doi.org/10.48550/arXiv.2503.03268">A Benchmark for DLO Manipulation: Tension Tracking via Learning-based Methods</a>. <em>arXiv:2503.03268</em>. <span class="tag paper">PAPER</span> Day 4 用途：DLO 张力估计的 learning-based 方法，当前工业部署验证缺失。</li>
+    <li>Wang, H. et al. (2024). <a href="https://doi.org/10.1016/j.aei.2024.102596">A systematic literature review of computer vision applications in robotized wire harness assembly</a>. <em>Advanced Engineering Informatics</em>, 62, 102596. <span class="tag paper">PAPER</span> Day 4 用途：线束视觉感知能力的综述。</li>
+    <li><span class="tag direct">DIRECT</span> <a href="https://www.piston.my/2025/06/30/catl-deploys-humanoid-robots-for-battery-production/">CATL / Spirit AI（Piston.my 2025）：小墨人形机器人在电池产线部署</a>。</li>
+    <li><span class="tag industry">EoL BASELINE</span> <a href="https://ucpcdn.thyssenkrupp.com/_legacy/UCPthyssenkruppBAISSystemEngineering/assets.files/automobilindustrie/future-automotive-factory/tech-days/06_testingsolutions.pdf">thyssenkrupp System Engineering：Battery End of Line test</a>。</li>
+    <li><span class="tag industry">EoL BASELINE</span> <a href="https://www.schaeffler-special-machinery.de/en/business-sectors/e-mobility/battery-systems/battery-pack/">Schaeffler Special Machinery：Assembly and testing of battery packs</a>。</li>
+    <li><span class="tag industry">EoL BASELINE</span> <a href="https://www.marposs.com/ger/application/electrical-test-battery-pack">Marposs：Electrical testing of battery packs</a>。</li>
+    <li><span class="tag industry">EoL BASELINE</span> <a href="https://www.kuka.com/en-us/industries/solutions-database/2023/05/liebherr-battery-pack-assembly%2C-high-voltage-battery">KUKA / Liebherr / KOSTAL：Automated battery pack assembly</a>。</li>
+    <li><span class="tag industry">INDUSTRY</span> SAE USCAR-2 (2024). Performance Standard for Automotive Electrical Connection Systems.</li>
+    <li><span class="tag industry">INDUSTRY</span> HVIL 专利：CN201910271326.0.</li>
+    <li><span class="tag industry">INDUSTRY</span> WinAck WA-EOL-520 电池包 EOL 测试系统。</li>
+    <li><span class="tag industry">INDUSTRY</span> 迈斯 MES 电池 PACK 生产执行系统方案。</li>
+    <li><span class="tag industry">INDUSTRY</span> 万界星空 MES 新能源电池 PACK 行业解决方案。</li>
+    <li><span class="tag industry">INDUSTRY</span> 海维激光：方形铝壳电池模组 PACK 生产线。</li>
+  </ol>
+  <div class="note"><strong>证据标签说明：</strong><span class="tag direct">DIRECT</span> 来自 CATL 小墨或 KUKA 直接披露；<span class="tag industry">INDUSTRY</span> 来自行业标准、专利、设备商方案；<span class="tag paper">PAPER</span> 来自同行评审论文；<span class="tag infer">INFERENCE</span> 来自系统工程合理推导；<span class="tag unknown">UNKNOWN</span> 表示当前来源无法回答，不自动等于 research gap。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- 带教问答记录 -->
+<!-- ============================================================ -->
+<section id="qa">
+  <p class="kicker">带教问答记录</p>
+  <h2>2026-08-19 带教提问与回答（含导师点评）</h2>
+  <p>以下记录了 Day 4 学习完成后，学生与导师之间的七轮带教式问答。每道题对应讲义中的学习检查 Q1-Q7。Day 4 的问题是论证题而非记忆题，学生的进步体现在从"形容词论证"向"编号论证"的转变过程。保留此记录用于日后复盘。</p>
+
+  <!-- Q1 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q1</span> 为什么能力映射表中 SUPPORTED 的数量不能用来"排名"三种架构？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>因为 SUPPORTED 只是对各项指标的支持，并不代表一定好，要结合具体情况。比如多工位、高产量上，SUPPORTED 多的 Fixed 工业机器人并不一定此时就是最好的了。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p><strong>正确。</strong>学生精准抓住了 Day 4 最核心的论证方法——SUPPORTED 是必要条件，不是充分条件。用自己的语言说出了"SUPPORTED 多的不一定最好"，这是质的进步。收紧两点：</p>
+        <ol>
+          <li><strong>SUPPORTED 的权重随生产条件变化。</strong>Fixed Robot 有 18 个 SUPPORTED，但在 Scenario C（多工位+brownfield+高频换型）中，C5（多工位）和 C6（brownfield）是主导条件——Fixed Robot 在这些维度上是 CONDITIONAL（需要多台机器人、工位改造），18 个 SUPPORTED 在这些维度上没有帮助。</li>
+          <li><strong>一个 RED 在 R3 层可以否定整个架构。</strong>如果 Humanoid 在 R3（HV 安全）上是 NOT SUPPORTED（而非 UNKNOWN），那么不论其他维度有多少 SUPPORTED，它作为 battery manufacturing 的架构都不可用。R3 是硬约束——权重等于 1 或 0。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>架构选择 = 能力覆盖 ∩ 生产条件匹配。SUPPORTED 数量是"能做"的证明，但"合理"取决于条件权重。学生已经掌握了这个核心思维。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q2</span> 为什么 Dedicated Automation 在 Scenario A 中"最合理"，但在 Scenario C 中"不适用"？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答（第一轮）</div>
+        <p>因为场景 A 比较固定死板，只有一两种型号生产而且工位固定，且高节拍，属于固定重复的工艺任务，不复杂，所以更适用固定自动化。而场景 C 对生产型号的要求更多样，且执行的工艺跨工位，复杂度较高，而且频繁换型号，所以不适合固定的自动化设备。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>方向正确，但犯了 Day 3 的老毛病——用"固定死板"、"不复杂"、"复杂度较高"这些形容词代替物理事实。学生需要从"感觉"论证转向"编号"论证。收紧后：</p>
+        <p>Dedicated Automation 在 Scenario A 中合理，因为 C1（低多样性，1-2 型号）、C3（高产量+高节拍）、C4（低频换型）、C5（单工位）恰好匹配它的 SUPPORTED 维度——机械精度、固定接口、高节拍。在 Scenario C 中 NOT SUPPORTED，因为 R4（换型）要求硬件夹具更换（证据：thyssenkrupp），与 C4（高频换型）和 C5（多工位）冲突——条件变了，它的"固定接口"优势变成劣势。</p>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>论证时用 requirement 编号（R4）和 condition 编号（C1、C4、C5）代替形容词。这是 thesis 写作的纪律。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q3</span> 为什么 Fixed Industrial Robot 在能力映射中没有 NOT SUPPORTED，但在 Scenario C 中不是"最合理"的？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答（第一轮）</div>
+        <p>因为场景 C 里条件里面对工位的灵活性要求是最高的，权重占比很大，而固定工业机器人不满足这个条件。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>方向对，但"不满足"不准确。Fixed Robot 在 C5（多工位）不是 NOT SUPPORTED——它可以用多台机器人覆盖多工位。区别是 CONDITIONAL（技术上能做到，但成本/占地不可接受）vs NOT SUPPORTED（技术上做不到）。收紧后：</p>
+        <p>Fixed Industrial Robot 在能力映射中没有 NOT SUPPORTED，但在 Scenario C 中不是最合理的，因为 C5（多工位）和 C6（brownfield）条件下是 CONDITIONAL——需要多台机器人覆盖多工位（成本高），且需要改造为人类操作员设计的现有工位（安全围栏、底座安装）。能力不缺失，但生产条件不匹配。学生说的"权重占比很大"——这就是 Day 4 的核心理念：不是 SUPPORTED 数量决定选择，是主导条件的权重决定选择。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q4</span> 为什么 Humanoid 的 R3（HV 安全）是 UNKNOWN 如此关键？如果 R3 是 UNKNOWN，Humanoid 还能在 battery manufacturing 中"可用"吗？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>因为这是决定 Humanoid 能否进入工位工作的关键，确定了它在电池生产中和 PLC 的通讯连接，如果没有对电池制造的工艺状态信息，Humanoid 不能说它可用。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>方向正确——识别了 R3 是"进入工位工作的关键"和"与 PLC 通讯"的重要性。但需要区分 UNKNOWN 和"不可用"：</p>
+        <ol>
+          <li><strong>UNKNOWN ≠ 不可用。</strong>如果 Humanoid 在 R3 上是 NOT SUPPORTED，意味着我们有证据证明它做不到。但当前是 UNKNOWN——CATL 没公开 PLC 通信协议，它可能做了但没公开，也可能没做。学生说"不能说它可用"是对的，但应该说：不是"不可用"，是"还不知道能不能用"。</li>
+          <li><strong>为什么在 R3 上写 UNKNOWN 而不是 NOT SUPPORTED？</strong>NOT SUPPORTED = "已知做不到"（如 Dedicated 在 R4：硬件夹具绑定特定接口，换型必须换硬件——这是已知的物理限制）。UNKNOWN = "不知道能不能做到"（Humanoid 的 R3 安全集成缺失公开证据）。把证据不足当成不适用，是反模式 3。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>对 thesis 的影响——如果写"Humanoid 不适合电池制造，因为 R3 没有证据"，审稿人会问"没有证据不等于不适合——你证明它不适合了吗？"。正确写法：<strong>"Humanoid 在 R3 上的适用性为 UNKNOWN，在 UNKNOWN 被解决之前，R3 构成 Humanoid 部署的关键风险点。"</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q5</span> 三种架构的证据强度不对称。为什么我们不能因为 Humanoid 证据弱就推断它"不行"？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>证据不足不代表不行，Humanoid 很多都是 UNKNOWN，如果解决了 UNKNOWN 它未来的成长空间会很大的。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>核心判断"证据不足不代表不行"完全正确——抓住了反模式 3。但"未来成长空间会很大"是个人判断，没有证据支持。收紧：</p>
+        <ol>
+          <li><strong>正确部分：</strong>"证据不足不代表不行"——Day 3 Q7 的教训：区分"证据有限"和"没有证据"。证据不足 = UNKNOWN，证据证明做不到 = NOT SUPPORTED。学术上这是两个不同的判断。</li>
+          <li><strong>需要收紧：</strong>"成长空间会很大"是推测。CATL 小墨的报道没提供成长空间数据。正确说法：如果 Humanoid 的 R3 安全集成和 C10 成本被解决，它在 C5（多工位）和 C6（brownfield）上的潜在优势可能被释放——但当前 UNKNOWN 的规模和数量决定了这需要时间验证。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>在 thesis 里，永远用证据支持的结论（"当前 UNKNOWN 需要时间验证"），不用个人判断（"成长空间很大"）。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q6</span> 如果一个架构的论证只依赖"力控精度高"、"灵活性好"这些 generic 能力，为什么这个论证对于 battery manufacturing 是不充分的？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>因为没有具体进入电池制造环节，比如电池制造的和 Pack 通讯？线束的管理等？这些都非常重要，值得去论证。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>方向正确——识别了"没有具体进入电池制造环节"和"Pack 通讯"、"线束管理"的重要性。但线束管理（R1）是 hybrid 的（其他制造业也有线束），不是完全 battery-specific 的。Day 3 的结论是：R3（HV 安全接口）是唯一完全 battery-specific 的需求。收紧：</p>
+        <p>只依赖"力控精度高"、"灵活性好"这些 generic 能力的论证是不充分的，因为它没有涉及 R3（HV 安全）——唯一完全 battery-specific 的硬约束。力控精度高可以论证它适合精密装配，但精密装配 ≠ 电池制造。电池制造额外要求机器人与 PLC 建立安全握手、获取 Pack 高压状态、在故障时安全断电。如果一个论证不涉及 R3，它就是在论证"适用于精密装配"，而不是"适用于电池制造"。这是反模式 1。</p>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>"力控精度高" → 论证了"能做精密插接"。"力控精度高" + 没有 R3 → 论证不了"能做电池制造"。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q7</span> 请用一句话回答 Week 06 的核心问题："What task and production requirements determine the suitability of dedicated automation, fixed industrial robots, and humanoid/mobile dual-arm systems?"
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>在我看来不就是看固定工位，生产节拍，工件型号更换的频率。比如固定工位，生产节拍快，工件型号频率低，那么就适合固定自动化的架构选择。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>学生抓住了核心逻辑——用生产条件推架构选择，完全正确。两个需要补充：</p>
+        <ol>
+          <li><strong>缺少 Task Requirements 维度。</strong>Week 06 核心问题问的是"task and production requirements"——两个维度，学生只说了 production conditions（C1-C6）。Task requirements（R1-R6）没有提及。R3（HV 安全）是 battery-specific 的硬约束——没有 R3，Humanoid 不可部署，不论生产条件多匹配。</li>
+          <li><strong>只覆盖了 Dedicated，没覆盖 Fixed Robot 和 Humanoid。</strong>学生用一组条件（固定工位+高节拍+低换型）推 Dedicated，逻辑正确。但 Week 06 的问题要求覆盖三种架构。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>合成一周答案：</strong>Dedicated automation 适用于 C1 低多样性、C3 高产量、C5 单工位的条件，但在 R4（换型）和 C5（多工位）条件下 NOT SUPPORTED。Fixed industrial robot 在能力维度上没有 NOT SUPPORTED，但在 C5（多工位）和 C6（brownfield）条件下 CONDITIONAL。Humanoid 在 C5 和 C6 上有潜在优势，但 R3（HV 安全接口）是 UNKNOWN——这是 battery-specific 的硬约束，在 UNKNOWN 解决前 Humanoid 不可部署。</p>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>从 Day 1 到 Day 4，学生从"不知道电池产线有什么"到能说出"固定工位+高节拍+低换型→Dedicated"。这是质的进步。Day 5 将把这个框架抽象为可迁移的分析方法——不只是 Pack EoL，而是可以应用到其他 battery manufacturing tasks。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 总结表 -->
+  <h3 style="margin-top: 30px;">七题整体评价</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th style="width:5%">题号</th><th style="width:20%">核心概念</th><th style="width:30%">学生回答要点</th><th style="width:45%">评价</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Q1</strong></td>
+          <td>SUPPORTED 数量 ≠ 排名</td>
+          <td>"SUPPORTED 多的不一定最好，要结合具体条件"</td>
+          <td>✅ 精准抓住核心方法。用自己的语言说出了 Day 4 最关键的论证原则——架构选择 = 能力覆盖 ∩ 生产条件匹配。</td>
+        </tr>
+        <tr>
+          <td><strong>Q2</strong></td>
+          <td>Dedicated 在 Scenario A vs C</td>
+          <td>方向正确，但用"死板"、"不复杂"、"复杂度高"等形容词代替物理事实</td>
+          <td>⚠️ 直觉正确，但论证方式回到 Day 3 的老问题。需要从"形容词论证"转向"编号论证"（R4、C1、C4、C5）。</td>
+        </tr>
+        <tr>
+          <td><strong>Q3</strong></td>
+          <td>Fixed Robot 的 CONDITIONAL vs NOT SUPPORTED</td>
+          <td>"工位灵活性要求高，权重占比大，Fixed Robot 不满足"</td>
+          <td>⚠️ "不满足"不准确——应该是 CONDITIONAL（技术上能做但成本高），不是 NOT SUPPORTED（技术上做不到）。但"权重"概念抓住了核心。</td>
+        </tr>
+        <tr>
+          <td><strong>Q4</strong></td>
+          <td>R3 UNKNOWN 的关键性</td>
+          <td>"决定能否进入工位，与 PLC 通讯连接，没有工艺状态信息不能说可用"</td>
+          <td>⚠️ 方向正确，但需要区分 UNKNOWN（不知道能不能）和 NOT SUPPORTED（已知不能）。R3 的 UNKNOWN 是"当前不可部署"而非"不可用"。</td>
+        </tr>
+        <tr>
+          <td><strong>Q5</strong></td>
+          <td>证据不足 ≠ 不适用</td>
+          <td>"证据不足不代表不行，UNKNOWN 解决了成长空间很大"</td>
+          <td>✅ 核心判断正确。但"成长空间很大"是个人推测，需要收紧为"UNKNOWN 需要时间验证"。</td>
+        </tr>
+        <tr>
+          <td><strong>Q6</strong></td>
+          <td>Generic 能力论证不充分</td>
+          <td>"没有具体进入电池制造环节，Pack 通讯、线束管理值得论证"</td>
+          <td>⚠️ 方向正确，但线束管理（R1）是 hybrid，R3 是唯一完全 battery-specific 的。论证不涉及 R3 = 论证"精密装配"而非"电池制造"。</td>
+        </tr>
+        <tr>
+          <td><strong>Q7</strong></td>
+          <td>Week 06 核心问题一句话回答</td>
+          <td>"固定工位+高节拍+低换型→Dedicated"</td>
+          <td>⚠️ 逻辑正确，但缺了 Task Requirements 维度和 Fixed Robot/Humanoid 两种架构。Day 5 将继续训练完整框架。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="finding" style="margin-top: 16px;">
+    <strong>Day 4 整体评估：</strong>学生从 Day 3 的"直觉猜测"阶段进入了 Day 4 的"条件推理"阶段。核心进步：能用自己的语言说出"SUPPORTED 多的不一定好，要结合具体条件"——这是 Day 4 要教的核心思维。主要弱项：（1）论证时仍依赖形容词（"死板"、"复杂"）而非编号（R4、C5）；（2）对 Task Requirements 维度（R1-R6）的整合不足；（3）写 thesis 时容易把个人判断（"成长空间很大"）当作证据支持结论。Day 5 将重点训练这两个弱项。
+  </div>
+
+  <div class="note" style="margin-top: 12px;">
+    <strong>记录说明：</strong>以上 7 轮问答记录于 2026-08-19 Day 4 带教完成后。学生回答尽量保留原话以反映真实理解水平。导师点评包含对论证方式的纠正和对 thesis 写作纪律的指导。此记录供后续复盘使用——特别是 Day 5 的框架训练和 thesis 写作阶段。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- Day 4 → Day 5 过渡 -->
+<!-- ============================================================ -->
+<section>
+  <p class="kicker">前向指针</p>
+  <h2>Day 4 → Day 5 过渡</h2>
+  <div class="card">
+    <p><strong>Day 4 完成了"供给侧"分析。</strong>三种架构的能力覆盖、累进约束层级、生产条件影响、场景化条件假设、条件适用性矩阵都已建立。</p>
+    <p><strong>Day 5 将做 Deep-case synthesis：</strong></p>
+    <ol>
+      <li>用 <code>Task → Requirements → Baseline → Capabilities → Suitability conditions</code> 总结 Pack EoL deep case</li>
+      <li>提取 <code>Task–Requirement–Capability–Suitability Framework v0.1</code>：可迁移到其他 battery-manufacturing tasks 的分析方法</li>
+      <li>评估哪些框架字段能够迁移、哪些只属于 Pack EoL</li>
+      <li>决定 Week 07 是否把框架应用到 <code>cell recognition / grasping / loading</code></li>
+      <li>如果 B 的 humanoid 直接证据仍弱，缩小主张或把 humanoid 标成 future scenario</li>
+    </ol>
+    <p><strong>Day 4 的 UNKNOWN 直接影响 Day 5：</strong>如果 Humanoid 的 R3 安全集成和 C10 成本是 UNKNOWN，Day 5 的 Framework v0.1 中 Humanoid 的适用性必须标记为"基于 CONDITIONAL 假设"而非"基于 SUPPORTED 证据"。Day 5 不会宣布"哪种架构更好"——而是明确"在什么条件下，哪种架构更值得进一步评估"。</p>
+  </div>
+</section>
+
+<footer style="text-align:center; color:var(--gray); font-size:0.85em; margin-top:48px; padding-top:24px; border-top:1px solid var(--border);">
+  Week 6 Day 4 learning guide · Master Thesis at PEM, RWTH Aachen · Editable HTML source retained in the repository
+</footer>
+</body>
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6D5 — Deep-case Synthesis 与 Task–Requirement–Capability–Suitability Framework v0.1</title>
+<style>
+  :root {
+    --navy: #1a365d;
+    --blue: #2b6cb0;
+    --green: #276749;
+    --orange: #c05621;
+    --red: #c53030;
+    --purple: #6b46c1;
+    --gray: #4a5568;
+    --light: #f7fafc;
+    --border: #e2e8f0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+    line-height: 1.72;
+    color: #2d3748;
+    background: #fafafa;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  h1 { font-size: 2em; color: var(--navy); border-bottom: 3px solid var(--blue); padding-bottom: 12px; margin-bottom: 8px; }
+  h2 { font-size: 1.5em; color: var(--blue); margin: 48px 0 16px; padding-left: 12px; border-left: 4px solid var(--blue); }
+  h3 { font-size: 1.2em; color: var(--navy); margin: 28px 0 12px; }
+  h4 { font-size: 1.05em; color: var(--gray); margin: 20px 0 8px; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 16px 24px; }
+  li { margin-bottom: 6px; }
+  a { color: var(--blue); }
+  code { background: #edf2f7; color: var(--navy); padding: 1px 5px; border-radius: 3px; }
+  .kicker { text-transform: uppercase; font-size: 0.8em; letter-spacing: 1.5px; color: var(--blue); font-weight: 700; margin: 0 0 4px; }
+  .note, .warning, .finding, .risk, .method-note {
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+    font-size: 0.95em;
+  }
+  .note { background: #ebf8ff; border: 1px solid #bee3f8; }
+  .warning { background: #fffaf0; border: 1px solid #fbd38d; }
+  .finding { background: #f0fff4; border: 1px solid #9ae6b4; }
+  .risk { background: #fff5f5; border: 1px solid #fc8181; }
+  .method-note { background: #faf5ff; border: 1px solid #d6bcfa; }
+  .card { background: white; border: 1px solid var(--border); padding: 18px; border-radius: 8px; margin: 12px 0; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 12px 0; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 12px 0; }
+  @media (max-width: 850px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 650px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+  .toc { background: white; border: 1px solid var(--border); padding: 20px 24px; border-radius: 8px; margin: 20px 0; }
+  .toc ol { margin: 8px 0 0 20px; }
+  .toc li { margin-bottom: 4px; }
+  .toc a { text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .section-divider { border: none; border-top: 2px dashed var(--border); margin: 48px 0; }
+  .tag, .status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.78em;
+    font-weight: 700;
+    margin: 1px 4px 1px 0;
+  }
+  .tag.direct, .status.supported { background: #c6f6d5; color: var(--green); }
+  .tag.industry { background: #bee3f8; color: var(--blue); }
+  .tag.paper { background: #e9d8fd; color: var(--purple); }
+  .tag.infer, .status.conditional { background: #fefcbf; color: var(--orange); }
+  .tag.unknown, .status.unknown { background: #e2e8f0; color: var(--gray); }
+  .status.not-supported { background: #fed7d7; color: var(--red); }
+  .req-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.9em; }
+  .req-table th { background: var(--navy); color: white; padding: 10px 12px; text-align: left; font-weight: 600; }
+  .req-table td { padding: 10px 12px; border: 1px solid var(--border); vertical-align: top; }
+  .req-table tr:nth-child(even) { background: #f7fafc; }
+  .req-table .key { font-weight: 700; color: var(--navy); white-space: nowrap; }
+  .table-wrap { overflow-x: auto; margin: 12px 0; }
+  .step-flow { margin: 16px 0; }
+  .step-row { display: flex; margin-bottom: 12px; background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .step-num { background: var(--navy); color: white; padding: 14px 16px; font-weight: 700; min-width: 58px; display: flex; align-items: center; justify-content: center; }
+  .step-body { padding: 14px 18px; flex: 1; }
+  .step-name { font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .step-detail { font-size: 0.9em; color: var(--gray); }
+  .flowline { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+  .flowbox { flex: 1 1 135px; background: white; border: 1px solid var(--border); border-top: 4px solid var(--blue); border-radius: 7px; padding: 12px; text-align: center; }
+  .flowbox strong { display: block; color: var(--navy); }
+  .arrow { display: flex; align-items: center; color: var(--blue); font-weight: 700; }
+  .arch-card { background: white; border: 2px solid var(--border); padding: 18px; border-radius: 9px; margin: 12px 0; }
+  .arch-card.dedicated { border-left: 5px solid #718096; }
+  .arch-card.fixed { border-left: 5px solid var(--blue); }
+  .arch-card.mobile { border-left: 5px solid var(--green); }
+  .arch-label { font-size: 0.76em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gray); }
+  .arch-name { font-size: 1.12em; font-weight: 700; color: var(--navy); margin: 3px 0 7px; }
+  .sentence { background: #1a365d; color: white; padding: 18px 20px; border-radius: 8px; margin: 16px 0; }
+  .sentence code { background: rgba(255,255,255,.14); color: white; }
+  .formula { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #edf2f7; border-left: 4px solid var(--purple); padding: 14px 16px; margin: 14px 0; border-radius: 4px; }
+  .decision { background: white; border: 2px solid var(--border); border-radius: 8px; padding: 16px; }
+  .decision .decision-title { font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .decision.yes { border-top-color: var(--green); }
+  .decision.narrow { border-top-color: var(--orange); }
+  .decision.future { border-top-color: var(--purple); }
+  .question { background: white; border: 1px solid var(--border); border-left: 4px solid var(--blue); padding: 16px 18px; border-radius: 6px; margin: 12px 0; }
+  .question .q-label { font-size: 0.78em; color: var(--blue); font-weight: 700; letter-spacing: 1px; }
+  details { background: #f7fafc; border: 1px solid var(--border); border-radius: 6px; margin: 10px 0; padding: 10px 14px; }
+  summary { color: var(--navy); font-weight: 700; cursor: pointer; }
+  .refs { font-size: 0.9em; }
+  .refs li { margin-bottom: 9px; }
+  .small { color: var(--gray); font-size: 0.88em; }
+  .center { text-align: center; }
+  @media print {
+    body { max-width: none; background: white; padding: 8mm; }
+    .toc { break-after: page; }
+    .card, .arch-card, .question, .decision, table { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Week 6 Day 5<br>Deep-case Synthesis 与方法框架 v0.1<br>把一个案例学会，再把方法带到下一个案例</h1>
+<p><strong>日期：</strong>2026-08-19 | <strong>主题：</strong>Pack EoL deep-case synthesis → transferable assessment method | <strong>建议学习时间：</strong>约 80–100 分钟</p>
+
+<div class="note">
+  <strong>Day 5 在 Week 06 中的位置：</strong>Day 1 固定案例边界，Day 2 拆开动作与责任，Day 3 从任务推出六类要求，Day 4 把要求与三类架构放进生产条件中比较。Day 5 不再增加新技术名词，而是把前四天压缩成一套你能独立复述、能写进论文方法章节、也能迁移到其他电池制造任务的分析方法。
+</div>
+
+<div class="finding">
+  <strong>今天真正要学会的不是“哪种机器人最好”，而是：</strong>给定一个 battery-manufacturing task，怎样用可追溯证据说明某种架构在什么条件下值得采用、暂不支持，或仍需进一步评价。
+</div>
+
+<div class="toc">
+  <p class="kicker">目录</p>
+  <strong>本讲义结构</strong>
+  <ol>
+    <li><a href="#goals">Day 5 学习目标与本日纪律</a></li>
+    <li><a href="#week-map">Week 06 从 Day 1 到 Day 5 的完整逻辑</a></li>
+    <li><a href="#synthesis">Pack EoL deep case 一页综合</a></li>
+    <li><a href="#framework">Task–Requirement–Capability–Suitability Framework v0.1</a></li>
+    <li><a href="#worked-example">完整示范：把 R3 与生产条件同时写进结论</a></li>
+    <li><a href="#claim-grammar">论文结论的证据语法</a></li>
+    <li><a href="#transfer">哪些字段可迁移，哪些只属于 Pack EoL</a></li>
+    <li><a href="#candidate-a">轻量迁移试验：Candidate A</a></li>
+    <li><a href="#decision">Week 06 阶段决策与 Week 07 单一入口</a></li>
+    <li><a href="#study-route">带教式学习路径与练习</a></li>
+    <li><a href="#deliverables">最低交付物与组会表达</a></li>
+    <li><a href="#references">来源、边界与项目文件</a></li>
+  </ol>
+</div>
+
+<hr class="section-divider">
+
+<section id="goals">
+  <p class="kicker">模块 1</p>
+  <h2>Day 5 学习目标与本日纪律</h2>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3 style="margin-top:0;">01 形成完整链条</h3>
+      <p>能够从任务动作讲到要求、能力、架构与适用条件，中间不跳步。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;">02 形成可迁移方法</h3>
+      <p>知道框架中的哪些问题适用于任何 battery-manufacturing case。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;">03 形成证据边界</h3>
+      <p>不把企业披露、论文实验、工程推断和现场未知混成同一种事实。</p>
+    </div>
+  </div>
+
+  <h3>今天针对你的三个真实弱项</h3>
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>Day 4 暴露的弱项</th><th>Day 5 的训练方式</th><th>完成标志</th></tr></thead>
+      <tbody>
+        <tr><td>用“死板、复杂、灵活”代替技术论证</td><td>强制使用 <code>R1–R6</code> 与 <code>C1–C10</code> 编号，并写明物理/系统机制</td><td>句子中至少出现一个 requirement、一个 condition 和一个作用机制</td></tr>
+        <tr><td>只讲 production condition，漏掉 task requirement</td><td>每个架构结论都通过“双门”：任务能力门 + 生产条件门</td><td>能解释“能做”为什么不等于“合理”</td></tr>
+        <tr><td>把 UNKNOWN 说成“不行”，或把潜力说成事实</td><td>使用四种状态和证据标签，禁止从缺证据推导性能结论</td><td>能区分 UNKNOWN、当前证据不支持与物理不成立</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="warning">
+    <strong>本日纪律：</strong>Day 4 的矩阵是 <em>provisional analysis v0.1</em>，不是架构的永久属性表。专用自动化可以集成额外传感器，固定机器人可能仍需换工具，人形与移动双臂也不是同义词。因此 Day 5 的判断对象必须写成“某种已定义配置在某种场景中的适用性”，不能写成“这一大类技术天生如何”。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="week-map">
+  <p class="kicker">模块 2</p>
+  <h2>Week 06 从 Day 1 到 Day 5 的完整逻辑</h2>
+
+  <div class="flowline" aria-label="Week 6 research logic">
+    <div class="flowbox"><strong>Day 1</strong>Case Charter<br>任务为何值得研究</div>
+    <div class="arrow">→</div>
+    <div class="flowbox"><strong>Day 2</strong>Task Anatomy<br>谁在何时做什么</div>
+    <div class="arrow">→</div>
+    <div class="flowbox"><strong>Day 3</strong>Requirements<br>任务为何需要这些能力</div>
+    <div class="arrow">→</div>
+    <div class="flowbox"><strong>Day 4</strong>Architectures<br>何种条件下谁更合理</div>
+    <div class="arrow">→</div>
+    <div class="flowbox"><strong>Day 5</strong>Method v0.1<br>怎样复用这套推理</div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>日次</th><th>核心问题</th><th>稳定产出</th><th>不能越界成什么</th></tr></thead>
+      <tbody>
+        <tr><td class="key">Day 1</td><td>为什么 Pack EoL connector handling 是机器人系统问题？</td><td>Case Charter；EoL 为主、DCR adjacent；三类比较架构</td><td>CATL“小墨”品牌研究或性能验证</td></tr>
+        <tr><td class="key">Day 2</td><td>从未连接到安全拔出，中间发生什么？</td><td>11 步参考周期；I1–I10 插入链；R1–R5 拔出链；责任泳道</td><td>把 Robot、Tester、PLC、MES 的责任混在一起</td></tr>
+        <tr><td class="key">Day 3</td><td>为什么它不是普通 pick-and-place？</td><td>六类要求 R1–R6；Requirement → Robot-task effect → Capability</td><td>从“humanoid 有什么”倒推任务需要什么</td></tr>
+        <tr><td class="key">Day 4</td><td>面对要求，三类架构在什么条件下更合理？</td><td>能力映射、C1–C10、Scenario A/B/C、条件适用性矩阵</td><td>品牌排名、无证据加权总分或“humanoid 必然更灵活”</td></tr>
+        <tr><td class="key">Day 5</td><td>这个案例能否形成可迁移的方法？</td><td>Framework v0.1、deep-case synthesis、迁移边界、Week 07 入口</td><td>提前宣布最终 gap、最终 RQ 或部署结论</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="method-note">
+    <strong>这一周真正的研究贡献雏形：</strong>不是发现了一台“更好”的机器人，而是把一个工业应用从新闻中的动作描述，转化成了可重复执行的 <code>Task → Requirement → Capability → Conditional Suitability</code> 评估过程。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="synthesis">
+  <p class="kicker">模块 3</p>
+  <h2>Pack EoL deep case 一页综合</h2>
+
+  <h3>3.1 稳定边界：我们研究什么</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4 style="margin-top:0;">Included</h4>
+      <ul>
+        <li><strong>Production level：</strong>Battery Pack manufacturing</li>
+        <li><strong>Primary process：</strong>Pack End-of-Line testing</li>
+        <li><strong>Manipulated object：</strong>测试连接器及柔性线束</li>
+        <li><strong>Robot task：</strong>定位/抓持或支撑 → 对准 → 接触插入 → 确认 → 安全拔出 → 归位</li>
+        <li><strong>Decision：</strong>专用自动化、固定工业机器人、移动双臂/人形架构在何种条件下值得采用或继续评价</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;">Outside / Adjacent</h4>
+      <ul>
+        <li>DCR：相邻任务，未证明同一工位、connector 或 robot</li>
+        <li>Tester：执行电气/功能测试，不是机器人物理操作本体</li>
+        <li>PLC/Safety：负责许可、互锁与安全停机</li>
+        <li>MES：负责 Pack、配方与结果关联</li>
+        <li>CATL 现场具体节拍、成本、成功率、安全状态机：仍为 UNKNOWN</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>3.2 任务不是一个动作，而是一个受状态门控的闭环</h3>
+  <div class="formula">
+    Pack 定位与识别<br>
+    → PLC 给出 safe-to-connect<br>
+    → Robot 完成 locate / grasp / align / insert / lock / confirm<br>
+    → PLC 允许 Tester 执行 EoL<br>
+    → Tester 完成测试并去能量<br>
+    → PLC 给出 safe-to-disconnect<br>
+    → Robot unlock / extract / return harness<br>
+    → MES 关联结果并放行或返修
+  </div>
+  <p class="small">这是由工序基线、工业方案、企业披露与系统工程推理组成的 reference abstraction，不是 CATL 现场逐帧复原。</p>
+
+  <h3>3.3 六类要求：从动作推出，而不是从机器人宣传推出</h3>
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>编号</th><th>要求</th><th>它改变了哪个机器人任务</th><th>需要的能力</th><th>当前证据边界</th></tr></thead>
+      <tbody>
+        <tr><td class="key">R1</td><td>Flexible-harness handling</td><td>I1–I5：线束状态随重力、抓点和运动历史变化</td><td>DLO 状态估计、自适应抓取、支撑/张力管理、必要时双臂</td><td><span class="tag paper">PAPER</span><span class="tag direct">DIRECT CLAIM</span>目标线束规格未知</td></tr>
+        <tr><td class="key">R2</td><td>Contact-rich insertion</td><td>I6–I8：首次接触后可能卡滞、楔紧或过载</td><td>F/T 感知、柔顺、力/位置混合控制、搜索与恢复</td><td><span class="tag paper">PAPER</span>目标连接器力/几何未知</td></tr>
+        <tr><td class="key">R3</td><td>Electrical / HV safety interface</td><td>S3、S7、S9、R1：机器人不能自主决定插拔时机</td><td>安全 I/O、PLC 握手、去能量确认、异常安全响应</td><td><span class="tag industry">INDUSTRY</span><span class="tag infer">INFERENCE</span>目标现场实现未知</td></tr>
+        <tr><td class="key">R4</td><td>Variation &amp; changeover</td><td>I1–I4：Pack、接口或连接器变化使固定位置/工具假设失效</td><td>识别、参数化程序、工具/adapter 策略、换型管理</td><td><span class="tag direct">DIRECT CLAIM</span>型号数与换型频率未知</td></tr>
+        <tr><td class="key">R5</td><td>Connection-quality confirmation</td><td>I9–I10：物理插入不等于锁止、电气与状态均成功</td><td>位置/力/视觉/电气的配置化确认、失败恢复</td><td><span class="tag industry">INDUSTRY</span><span class="tag direct">DIRECT CLAIM</span>判据组合未知</td></tr>
+        <tr><td class="key">R6</td><td>Traceability &amp; integration</td><td>全过程：动作必须与 Pack ID、recipe、结果和异常一致</td><td>PLC/MES 接口、状态同步、操作记录</td><td><span class="tag industry">INDUSTRY</span><span class="tag infer">INFERENCE</span>目标数据接口未知</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="warning">
+    <strong>重要校准：</strong>“R3 是本案例中最强 battery-specific safety gate”是 Week 06 的分析分类，不是声称所有 Pack EoL 工位都采用同一种 HVIL、同一种电压状态或同一个 safety protocol。目标 CATL connector 的具体电气接口仍未知。
+  </div>
+
+  <h3>3.4 三类架构的条件性综合</h3>
+  <div class="grid-3">
+    <div class="arch-card dedicated">
+      <div class="arch-label">Architecture A</div>
+      <div class="arch-name">Dedicated automation</div>
+      <p><strong>优先条件：</strong>C1 低多样性、C3 高产量/高节拍、C4 低频换型、C5 单工位、接口可机械标准化。</p>
+      <p><strong>价值机制：</strong>用固定夹具、导向和可重复定位绕过部分 R1/R2 感知与控制复杂度。</p>
+      <p><strong>边界：</strong>一旦 R4 变化需要频繁硬件改造，优势可能下降。具体设备是否具备力/电气确认取决于配置，不能一概写成“没有传感器”。</p>
+    </div>
+    <div class="arch-card fixed">
+      <div class="arch-label">Architecture B</div>
+      <div class="arch-name">Fixed industrial robot</div>
+      <p><strong>优先条件：</strong>C1 中等多样性、C4 日/班次级换型、C5 单工位，且 R1/R2/R5 需要视觉、力控与可编程动作。</p>
+      <p><strong>价值机制：</strong>以可编程运动、传感器与工业控制接口覆盖变化和接触插接。</p>
+      <p><strong>边界：</strong>C5 多工位或 C6 brownfield 时可能需要多台设备、围护和改造；“能覆盖”不等于总成本合理。</p>
+    </div>
+    <div class="arch-card mobile">
+      <div class="arch-label">Architecture C</div>
+      <div class="arch-name">Humanoid / mobile dual-arm</div>
+      <p><strong>优先评价条件：</strong>C1 高多样性、C4 高频换型、C5 多工位、C6 人类导向既有布局，并且移动/双臂能力确实被任务使用。</p>
+      <p><strong>潜在价值机制：</strong>跨站复用、双臂线束支撑、复用既有工具和空间。</p>
+      <p><strong>关键门：</strong>目标配置的 R3 工业安全集成、C10 成本与长期可靠性仍缺直接证据，所以只能写“值得评价”，不能写“部署就绪”或“更优”。</p>
+    </div>
+  </div>
+
+  <div class="finding">
+    <strong>Pack EoL deep-case 的阶段答案：</strong>架构选择由两类因素共同决定——R1–R6 决定系统必须具备什么，C1–C10 决定这些能力在具体产线中是否值得以某种架构实现。Dedicated、fixed robot 与 mobile dual-arm 不是从差到好的序列，而是不同标准化程度、柔性需求、工位结构和证据成熟度下的条件选择。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="framework">
+  <p class="kicker">模块 4 — 核心产出</p>
+  <h2>Task–Requirement–Capability–Suitability Framework v0.1</h2>
+
+  <p>下面七步是 Week 06 从一个案例中抽出的可复用方法。每一步都有输入、关键问题、输出和停止条件。以后换到 cell loading、inspection 或 multi-station handling 时，不是复制 Pack EoL 的答案，而是重复这七步。</p>
+
+  <div class="step-flow">
+    <div class="step-row"><div class="step-num">F0</div><div class="step-body"><div class="step-name">Scope &amp; Evidence Contract｜先签范围与证据合同</div><div class="step-detail"><strong>输入：</strong>导师方向、生产层级、候选案例。<br><strong>问：</strong>cell/module/pack？主工序？直接工业锚点？证据类型允许支持什么？<br><strong>输出：</strong>Case Charter + evidence labels + excluded topics。<br><strong>停止：</strong>没有明确 battery-manufacturing task 或机器人决策时，不继续做架构排名。</div></div></div>
+    <div class="step-row"><div class="step-num">F1</div><div class="step-body"><div class="step-name">Manufacturing-task Identification｜识别真正的制造任务</div><div class="step-detail"><strong>问：</strong>对象是什么？起点/终点是什么？任务为什么存在？完成判据是什么？失败后果是什么？<br><strong>输出：</strong>一句任务定义：<code>Actor manipulates object from state A to state B so that process X can occur.</code><br><strong>停止：</strong>如果只能说“这里用了机器人”，说明任务尚未定义。</div></div></div>
+    <div class="step-row"><div class="step-num">F2</div><div class="step-body"><div class="step-name">Task Anatomy &amp; Responsibility｜拆动作，也拆系统责任</div><div class="step-detail"><strong>问：</strong>自由空间、接触、确认、释放分别有哪些 sub-steps？Robot、process equipment、PLC/safety、MES、fixture 各负责什么？<br><strong>输出：</strong>task cycle + responsibility map + 3–5 个关键 failure modes。<br><strong>停止：</strong>如果 Robot 与工艺设备责任混淆，后续 capability mapping 无效。</div></div></div>
+    <div class="step-row"><div class="step-num">F3</div><div class="step-body"><div class="step-name">Requirement Extraction｜从每个动作推出要求</div><div class="step-detail"><strong>句法：</strong><code>Evidence → why it matters → effect on robot task → required capability → unknown</code>。<br><strong>输出：</strong>Requirement → Robot-task effect → Capability 表，并标 Generic / Hybrid / Battery-specific。<br><strong>停止：</strong>“更灵活、更智能、精度更高”如果没有对应动作和物理机制，不算 requirement。</div></div></div>
+    <div class="step-row"><div class="step-num">F4</div><div class="step-body"><div class="step-name">Existing Baseline &amp; Candidate Architectures｜先找现实基线</div><div class="step-detail"><strong>问：</strong>人工、专机、固定机器人、移动系统现在怎样完成同一功能？是否为同工序、邻近任务还是跨行业能力证据？<br><strong>输出：</strong>baseline cards + transfer limits。<br><strong>停止：</strong>没有 baseline 时不能声称新架构“更好”，因为比较对象不存在。</div></div></div>
+    <div class="step-row"><div class="step-num">F5</div><div class="step-body"><div class="step-name">Capability Mapping｜技术上能否覆盖关键要求</div><div class="step-detail"><strong>问：</strong>每种具体配置如何满足每个 requirement？依靠机械约束、感知、控制、工具、双臂、移动还是系统接口？<br><strong>输出：</strong>SUPPORTED / CONDITIONAL / NOT SUPPORTED BY CURRENT EVIDENCE / UNKNOWN。<br><strong>停止：</strong>不要数绿色格子；关键 safety gate 未满足可否定整体部署。</div></div></div>
+    <div class="step-row"><div class="step-num">F6</div><div class="step-body"><div class="step-name">Conditional Suitability｜把能力放回生产条件</div><div class="step-detail"><strong>问：</strong>产品多样性、节拍、换型、工位数量、brownfield、质量机制、扩展性与成熟度如何改变价值？<br><strong>输出：</strong>scenario-based conditional conclusions。<br><strong>停止：</strong>若结论中没有 condition，就只是技术简介，不是适用性评价。</div></div></div>
+    <div class="step-row"><div class="step-num">F7</div><div class="step-body"><div class="step-name">Evidence-bounded Decision &amp; Transfer｜做阶段决定，再迁移</div><div class="step-detail"><strong>问：</strong>哪些结论是直接支持，哪些需缩小主张？关键 unknown 能用文献、设备资料、专家、scenario 或可选实验怎样降低？<br><strong>输出：</strong>CONTINUE / NARROW / FUTURE SCENARIO / TRANSFER READY + next single case。<br><strong>停止：</strong>不能因资料少就宣布 research gap，也不能因一个案例不成熟就推翻整条论文路线。</div></div></div>
+  </div>
+
+  <h3>框架的“双门 + 两个闸”</h3>
+  <div class="grid-4">
+    <div class="card"><strong>门 1：Task Gate</strong><p>机器人是否承担明确动作，battery requirement 是否改变它？</p></div>
+    <div class="card"><strong>门 2：Condition Gate</strong><p>即使能做，这个产量、换型与工位结构下是否合理？</p></div>
+    <div class="card"><strong>闸 1：Safety Gate</strong><p>硬性安全/合规要求若未满足，其他优势不能补偿。</p></div>
+    <div class="card"><strong>闸 2：Evidence Gate</strong><p>证据强度是否足以支撑主张；不足则降级结论，不虚构数据。</p></div>
+  </div>
+
+  <div class="method-note">
+    <strong>方法贡献为何不是“普通列表”：</strong>它规定了分析顺序、字段、证据标签、判断语言和停止条件。不同案例按照同一程序分析后，才可以做 cross-case comparison；否则只是把三个故事放在一起。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="worked-example">
+  <p class="kicker">模块 5</p>
+  <h2>完整示范：把 R3 与生产条件同时写进结论</h2>
+
+  <p>你在 Day 4 的一句话回答只覆盖了“固定工位 + 高节拍 + 低换型 → dedicated”。方向正确，但漏了 task requirement 和另外两类架构。下面示范如何写成 thesis-ready conditional argument。</p>
+
+  <div class="sentence">
+    <strong>六段式结论模板</strong><br>
+    <code>[生产条件 C]</code> + <code>[关键任务要求 R]</code> + <code>[候选架构]</code> + <code>[作用机制]</code> + <code>[证据]</code> + <code>[边界/UNKNOWN]</code>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3 style="margin-top:0;">Scenario A</h3>
+      <p><strong>C1 低多样性 + C3 高节拍 + C5 单工位</strong>时，如果 connector/adapter 能固定且 R1/R2 的变化可由机械导向吸收，dedicated automation 可能更合理，因为设备商已经公开自动接触方案；但换型时间、传感器配置和经济性仍需具体设备数据。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;">Scenario B</h3>
+      <p><strong>C1 中等多样性 + C4 日/班次换型 + C5 单工位</strong>时，若 R1/R2/R5 要求在线视觉、力控与连接确认，fixed industrial robot 值得优先评价，因为邻近工业案例与论文支持这些能力；但目标 EoL connector 的 transfer validity 仍需核查。</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;">Scenario C</h3>
+      <p><strong>C1 高多样性 + C5 多工位 + C6 brownfield</strong>时，mobile dual-arm/humanoid 因移动与双臂能力值得评价；但只要目标配置的 R3 安全握手和 C10 长期成熟度仍为 UNKNOWN，就不能从“值得评价”升级为“可部署或最优”。</p>
+    </div>
+  </div>
+
+  <h3>为什么这三句话比“谁更灵活”强</h3>
+  <ol>
+    <li>每句话都先给工厂条件，而不是先选机器人。</li>
+    <li>每句话都说明能力如何作用于具体 requirement。</li>
+    <li>每句话都同时给出支持证据与不可外推边界。</li>
+    <li>结论可以随场景改变，因此不是品牌排名。</li>
+  </ol>
+
+  <div class="risk">
+    <strong>不能这样写：</strong>“Humanoid 在 C5/C6 更灵活，因此未来成长空间很大。”前半句仍需证明移动/双臂能力在目标任务中真的被使用；后半句没有可测量证据。可改为：“当 C5/C6 成为主导条件时，移动双臂的系统级价值值得评价，但其安全集成、可靠性和成本证据尚不足。”
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="claim-grammar">
+  <p class="kicker">模块 6</p>
+  <h2>论文结论的证据语法</h2>
+
+  <h3>6.1 四种判断状态必须绑定“具体 claim”</h3>
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>状态</th><th>真正含义</th><th>可以怎样写</th><th>不能怎样写</th></tr></thead>
+      <tbody>
+        <tr><td><span class="status supported">SUPPORTED</span></td><td>当前证据直接或充分支持这个具体配置在该维度具备能力</td><td>“该工业案例支持固定机器人完成视觉引导的柔性 connector handling。”</td><td>“所有固定机器人都能稳定完成 Pack EoL。”</td></tr>
+        <tr><td><span class="status conditional">CONDITIONAL</span></td><td>能力依赖额外配置、假设或尚未验证的 transfer</td><td>“若增加 F/T sensing 且目标 connector 的力范围相容，则该方案值得试验。”</td><td>“理论上能加传感器，所以已经可用。”</td></tr>
+        <tr><td><span class="status not-supported">NOT SUPPORTED BY CURRENT EVIDENCE</span></td><td>现有证据不足以支撑当前主张；不自动等于物理上做不到</td><td>“现有来源不支持该 humanoid 已完成经验证的 R3 安全集成。”</td><td>“没有公开 R3，所以 humanoid 不可能做到。”</td></tr>
+        <tr><td><span class="status unknown">UNKNOWN</span></td><td>当前资料没有回答，且方向无法可靠判断</td><td>“目标现场的 PLC safety handshake implementation 为 UNKNOWN。”</td><td>“UNKNOWN 说明这里存在 research gap。”</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.2 “物理不成立”需要更强证明</h3>
+  <p>只有当已定义配置缺少不可替代能力、且没有其他机制绕过该要求时，才能说它在当前假设下物理/系统上不成立。例如：</p>
+  <div class="grid-2">
+    <div class="card">
+      <strong>较强但合格的否定</strong>
+      <p>若方案被严格定义为“无在线感知、无接触反馈、仅执行 pre-taught pose”，而连接器初始位姿变化超过被动导向可吸收范围，则该配置无法可靠完成 R2；这里的否定来自机制冲突。</p>
+    </div>
+    <div class="card">
+      <strong>不合格的泛化否定</strong>
+      <p>“Pneumatic / dedicated automation 不够智能，所以不能做。”专机可能通过导向、夹具、传感器或 adapter 绕开问题；必须先定义具体配置。</p>
+    </div>
+  </div>
+
+  <h3>6.3 证据类型各自能做什么</h3>
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>证据</th><th>本案例中可以支持</th><th>不能独立支持</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag direct">DIRECT COMPANY DISCLOSURE</span></td><td>企业声称在 Pack EoL/DCR 使用机器人处理柔性线束和连接器</td><td>独立成功率、长期可靠性、成本优势、技术优越性</td></tr>
+        <tr><td><span class="tag industry">INDUSTRIAL BASELINE</span></td><td>Pack EoL 自动接触方案确实存在；固定机器人柔性 connector handling 确实存在</td><td>CATL 现场使用同一结构、同一 connector 或同一安全状态机</td></tr>
+        <tr><td><span class="tag paper">PEER-REVIEWED PAPER</span></td><td>DLO、位姿误差、接触插入、双臂操作的能力与局限</td><td>将实验室性能数字直接复制到 Pack EoL 或“小墨”</td></tr>
+        <tr><td><span class="tag infer">ENGINEERING INFERENCE</span></td><td>把分散证据组合成透明的 reference architecture 与 scenario hypothesis</td><td>冒充已观察现场事实</td></tr>
+        <tr><td><span class="tag unknown">UNKNOWN</span></td><td>指示下一步最有价值的证据问题</td><td>自动构成 research gap 或否定可行性</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="formula">
+    合格 claim = 对象与场景 + 作用机制 + 证据身份 + 适用边界 + 未知项
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="transfer">
+  <p class="kicker">模块 7</p>
+  <h2>哪些字段可迁移，哪些只属于 Pack EoL</h2>
+
+  <p>“可迁移”不是把 R1–R6 原封不动复制到别的任务。真正可迁移的是分析问题与证据结构；具体 requirement 必须从新任务重新推出。</p>
+
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>层级</th><th>可迁移到其他案例的内容</th><th>Pack EoL 专属或需重新验证的内容</th></tr></thead>
+      <tbody>
+        <tr><td class="key">Scope</td><td>明确 production level、process、object、task start/end、comparison baseline</td><td>Pack EoL、DCR adjacent、测试 connector 与 harness</td></tr>
+        <tr><td class="key">Task</td><td>拆自由空间、接触、确认、释放；画责任泳道</td><td>I1–I10 插接链、safe-to-disconnect</td></tr>
+        <tr><td class="key">Requirement</td><td>用 evidence → effect → capability → unknown 生成要求</td><td>R1 柔性线束、R2 connector insertion、R3 HV interface 等具体内容</td></tr>
+        <tr><td class="key">Baseline</td><td>比较人工、专机、固定机器人、移动系统；标同工序/邻近/跨行业</td><td>automatic plug contacting、KUKA connector case、小墨</td></tr>
+        <tr><td class="key">Condition</td><td>产品多样性、节拍、换型、工位、brownfield、安全、质量、扩展性、成熟度</td><td>connector variety、线束复杂度与测试站具体布局</td></tr>
+        <tr><td class="key">Evidence</td><td>DIRECT / INDUSTRY / PAPER / INFERENCE / UNKNOWN 与 claim-level status</td><td>具体来源的 transfer limit 和 CATL 现场未知</td></tr>
+        <tr><td class="key">Decision</td><td>CONTINUE / NARROW / FUTURE SCENARIO / TRANSFER READY</td><td>Humanoid 在 R3/C10 上的当前判断</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="finding">
+    <strong>迁移原则：</strong>保留问题，不保留答案。下一个案例仍问“对象、动作、要求、基线、能力、条件、证据”，但不能预先假设它也有线束、HVIL、接触插入或相同的三类架构结论。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="candidate-a">
+  <p class="kicker">模块 8 — 轻量测试，不开启第二个 deep dive</p>
+  <h2>把 Framework v0.1 试放到 Candidate A</h2>
+
+  <div class="warning">
+    <strong>边界：</strong>这一节只检查框架是否“问得出正确问题”，不替 Week 07 完成文献检索，也不把 Candidate A 写成已锁定案例。直接工业锚点只支持电芯识别、抓取、路径规划与上料；sorting、matching、kitting、精密插入等不得自行加入。
+  </div>
+
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>Framework step</th><th>Candidate A 的初步填写</th><th>需要 Week 07 核实的关键问题</th></tr></thead>
+      <tbody>
+        <tr><td class="key">F0 Scope</td><td>Module/pack manufacturing；单体电芯识别、抓取与上料</td><td>具体 cell format、生产层级、上料 destination 与工位边界是什么？</td></tr>
+        <tr><td class="key">F1 Task</td><td>识别来料位置/姿态 → 规划 → 抓取 → 搬运 → 放置/上料 → 确认</td><td>完成判据是放到 conveyor、fixture、module holder 还是另一设备接口？</td></tr>
+        <tr><td class="key">F2 Responsibility</td><td>Robot 负责识别/抓取/搬运；fixture/process equipment/MES 的职责尚未分清</td><td>谁确认极性/方向？谁给产品型号与目标位？谁判断抓取损伤？</td></tr>
+        <tr><td class="key">F3 Requirements</td><td>可能涉及几何/姿态变化、无损抓取、方向/极性、换型与追溯</td><td>哪些由直接证据支持？哪些真正改变 robot task？是否存在带电或短路相关安全约束？</td></tr>
+        <tr><td class="key">F4 Baselines</td><td>专用上料机/feeder、视觉引导固定工业机器人、人工、移动/人形机器人</td><td>同一 flow object 和 destination 下的现实 baseline 是什么？</td></tr>
+        <tr><td class="key">F5 Capability</td><td>视觉 pose、gripper compatibility、damage avoidance、placement confirmation</td><td>精度、表面状态、质量、节拍和夹持允许区域是否公开？</td></tr>
+        <tr><td class="key">F6 Conditions</td><td>来料规则度、cell format 数量、换型频率、单/多工位、节拍、brownfield</td><td>哪些条件使移动性真正产生价值，而不是只增加系统复杂度？</td></tr>
+        <tr><td class="key">F7 Decision</td><td>当前为 leading adjacent case / framework transfer candidate</td><td>能否建立 battery-specific effect + meaningful architecture decision + credible evidence strategy？</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>这次轻量迁移说明什么，还不能说明什么</h3>
+  <div class="grid-2">
+    <div class="card">
+      <strong>框架可迁移的信号</strong>
+      <p>即使没有复制 R1–R6，我们仍能用同一套顺序明确任务、责任、要求、baseline、条件和证据问题。</p>
+    </div>
+    <div class="card">
+      <strong>框架仍需改进的信号</strong>
+      <p>Candidate A 的 destination/interface 仍不清楚。如果 F1/F2 填不出来，Week 07 应先补任务边界，而不是直接比较 humanoid 与工业机器人。</p>
+    </div>
+  </div>
+
+  <div class="method-note">
+    <strong>Framework v0.1 的第一项自我修正：</strong>“任务终点与完成判据”应被列为强制字段。Week 05 formation case 已经说明，只知道 actor 从 A 搬到 B 还不够；Week 07 也不能只写“抓取与上料”，必须知道上到哪里、怎样算完成、哪个电池要求改变交接。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="decision">
+  <p class="kicker">模块 9</p>
+  <h2>Week 06 阶段决策与 Week 07 单一入口</h2>
+
+  <div class="grid-3">
+    <div class="decision yes">
+      <div class="decision-title">DEEP CASE CONTINUES</div>
+      <p>Pack EoL connector handling 具有明确 battery-manufacturing task、robot actor、现实 baselines、可分析要求和实施问题，足以继续作为 deep reference case。</p>
+    </div>
+    <div class="decision narrow">
+      <div class="decision-title">NARROW CLAIM</div>
+      <p>结论收缩为“架构的条件性适用性与值得评价的场景”。不主张小墨性能被独立验证，也不主张 humanoid 优于 fixed robot 或 dedicated automation。</p>
+    </div>
+    <div class="decision future">
+      <div class="decision-title">FRAMEWORK TRANSFER READY</div>
+      <p>七步框架已经能对 Candidate A 提出结构化问题。Week 07 可以用一个相邻案例检验迁移性，而不是继续无限加深 Pack connector 细节。</p>
+    </div>
+  </div>
+
+  <h3>Humanoid 在当前结论中的准确位置</h3>
+  <div class="card">
+    <p><strong>不是：</strong>已证明更优的目标方案。</p>
+    <p><strong>也不是：</strong>因为证据弱就被排除的“不行方案”。</p>
+    <p><strong>而是：</strong>在高变型、多工位、brownfield 条件下值得评价的 prospective architecture；其 R3 安全集成、目标任务性能、长期可靠性和 C10 经济性需要进一步证据。在这些关键项解决前，不可写成 deployment-ready。</p>
+  </div>
+
+  <h3>Framework v0.1 识别出的四组实施障碍</h3>
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>障碍组</th><th>Pack EoL 中的表现</th><th>合适的证据/评价方式</th><th>当前状态</th></tr></thead>
+      <tbody>
+        <tr><td class="key">Technical</td><td>线束状态、in-hand pose、接触插入、锁止/拔出与异常恢复</td><td>同行评审实验 + connector/line-harness specification + bounded transfer</td><td>机制有证据；目标参数 UNKNOWN</td></tr>
+        <tr><td class="key">Safety &amp; integration</td><td>safe-to-connect/disconnect、去能量、PLC/Tester/MES 责任与通信</td><td>设备资料、标准/安全设计、集成专家或站点审查</td><td>industry baseline；目标实现 UNKNOWN</td></tr>
+        <tr><td class="key">Operational</td><td>换型、节拍、人工恢复、多工位复用、长期可用率</td><td>场景分析 + 真实日志/企业资料 + 可选专家校核</td><td>多数为 UNKNOWN</td></tr>
+        <tr><td class="key">Economic &amp; maturity</td><td>工装改造、机器人复制、维护、占地、TCO 与规模化风险</td><td>透明 cost categories + scenario ranges；不编造单点 ROI</td><td>当前证据不足以排序</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small">Framework v0.1 的实施评价不要求本周得到全部数字。它要求先说明：需要什么证据、哪些输入仍缺失、在缺失时结论必须怎样降级。</p>
+
+  <h3>Week 07 的唯一入口</h3>
+  <div class="sentence">
+    <strong>建议中心问题：</strong><br>
+    How does the Task–Requirement–Capability–Suitability Framework change when transferred from Pack EoL connector handling to cell recognition, grasping and loading in module/pack manufacturing?
+  </div>
+  <p>第一步不是搜索更多 humanoid 新闻，而是锁定 Candidate A 的 <strong>flow object、source、destination、completion criterion 与直接 battery-specific effect</strong>。如果这些字段不能建立，就停止扩展并返回 case map。</p>
+</section>
+
+<hr class="section-divider">
+
+<section id="study-route">
+  <p class="kicker">模块 10 — 带教路径</p>
+  <h2>今天怎样学，才能真的变成你的知识</h2>
+
+  <div class="step-flow">
+    <div class="step-row"><div class="step-num">20′</div><div class="step-body"><div class="step-name">第一轮：只看主线</div><div class="step-detail">读模块 2–4。合上页面，用 90 秒说出 Day 1–5 的逻辑，不要求背论文名。</div></div></div>
+    <div class="step-row"><div class="step-num">20′</div><div class="step-body"><div class="step-name">第二轮：做一次完整架构论证</div><div class="step-detail">从 Scenario A/B/C 任选一个，按“C + R + 架构 + 机制 + 证据 + 边界”说完整。禁止使用“更灵活、比较复杂”作为主要理由。</div></div></div>
+    <div class="step-row"><div class="step-num">20′</div><div class="step-body"><div class="step-name">第三轮：迁移到 Candidate A</div><div class="step-detail">不查新资料，指出 F0–F7 哪三格最缺证据，以及为什么这些 unknown 会阻止架构比较。</div></div></div>
+    <div class="step-row"><div class="step-num">15′</div><div class="step-body"><div class="step-name">第四轮：口头答辩</div><div class="step-detail">回答下列 8 题。每题先用一句话回答，再补证据和边界。</div></div></div>
+    <div class="step-row"><div class="step-num">10′</div><div class="step-body"><div class="step-name">第五轮：两分钟教给别人</div><div class="step-detail">假设 Thomas 问“你这周到底建立了什么方法？”不看讲义完成两分钟说明。能教清楚，才算真正掌握。</div></div></div>
+  </div>
+
+  <h3>学习检查：8 个问题</h3>
+  <div class="question"><div class="q-label">Q1</div><strong>为什么 Framework 的第一步不是比较机器人能力，而是 Case Charter？</strong><p class="small">提示：想想 Week 05 为什么在接口细节很多时仍退出 thesis-candidate path。</p></div>
+  <div class="question"><div class="q-label">Q2</div><strong>Task requirement 和 production condition 有什么不同？各举一个本案例例子。</strong></div>
+  <div class="question"><div class="q-label">Q3</div><strong>为什么“Fixed Robot 技术上能覆盖很多能力”仍不等于 Scenario C 中最合理？</strong></div>
+  <div class="question"><div class="q-label">Q4</div><strong>什么时候可以说 NOT SUPPORTED，什么时候只能说 UNKNOWN？</strong></div>
+  <div class="question"><div class="q-label">Q5</div><strong>为什么 R3 是本案例的关键 safety gate，但又不能把目标 CATL 现场的 HVIL 实现写成事实？</strong></div>
+  <div class="question"><div class="q-label">Q6</div><strong>请用六段式模板，为 mobile dual-arm 在 Scenario C 中写一句条件性结论。</strong></div>
+  <div class="question"><div class="q-label">Q7</div><strong>框架迁移到 Candidate A 时，哪些内容保留，哪些内容必须重新推导？</strong></div>
+  <div class="question"><div class="q-label">Q8</div><strong>Week 06 的成果为什么已经超出 application catalogue，却仍不是最终 research gap/RQ？</strong></div>
+
+  <details>
+    <summary>展开：回答时必须出现的关键词</summary>
+    <ol>
+      <li>生产层级、任务对象、robotics relevance、evidence contract。</li>
+      <li>Requirement = 任务必须满足什么；Condition = 工厂在何种生产环境下选择实现方式。</li>
+      <li>C5 多工位、C6 brownfield、复制机器人/改造工位的实施代价。</li>
+      <li>UNKNOWN = 不知道；NOT SUPPORTED BY CURRENT EVIDENCE = 当前 claim 无支持；物理不成立需要机制冲突。</li>
+      <li>安全门不可补偿；industry baseline 不等于目标现场 implementation。</li>
+      <li>C1/C5/C6 + R1/R3 + 移动双臂机制 + direct/paper evidence + R3/C10 unknown。</li>
+      <li>保留 F0–F7 问题结构；重新推导 object、sub-steps、requirements、baselines 与 evidence。</li>
+      <li>已有可重复方法和条件结论；但 state of research、gap 论证、最终 RQ 与 validation design 尚未完成。</li>
+    </ol>
+  </details>
+
+  <h3>自我评分：不是看记住多少，而是看推理有没有断</h3>
+  <div class="table-wrap">
+    <table class="req-table">
+      <thead><tr><th>等级</th><th>表现</th><th>下一步</th></tr></thead>
+      <tbody>
+        <tr><td class="key">A</td><td>能完整使用 C + R + mechanism + evidence + boundary，并能迁移到 Candidate A</td><td>进入 Week 07</td></tr>
+        <tr><td class="key">B</td><td>能讲三类架构条件，但偶尔漏 evidence 或 unknown</td><td>重做 Q4–Q7</td></tr>
+        <tr><td class="key">C</td><td>仍主要说“灵活、复杂、稳定”，或把绿色格子当得分</td><td>回到模块 5 与 Day 4 模块 9</td></tr>
+        <tr><td class="key">D</td><td>把 Robot 与 Tester/PLC 责任混在一起</td><td>回到 Day 2 responsibility swimlane</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="deliverables">
+  <p class="kicker">模块 11</p>
+  <h2>Day 5 最低交付物与组会表达</h2>
+
+  <div class="grid-3">
+    <div class="card"><h3 style="margin-top:0;">Framework v0.1</h3><p>F0–F7 七步、双门两闸、证据状态与停止条件。</p></div>
+    <div class="card"><h3 style="margin-top:0;">Deep-case synthesis memo</h3><p>稳定边界、任务闭环、R1–R6、三架构条件性结论和关键 unknown。</p></div>
+    <div class="card"><h3 style="margin-top:0;">Week 07 single entry</h3><p>只迁移到 Candidate A，先锁 task destination/interface，不并行打开 C。</p></div>
+  </div>
+
+  <h3>你可以这样向 Thomas 汇报</h3>
+  <div class="card">
+    <p><strong>1. Selection logic：</strong>I used Pack EoL connector handling as a deep reference case because it has a concrete battery-manufacturing task, direct industrial disclosure, established automation baselines and analyzable robotics requirements.</p>
+    <p><strong>2. Task understanding：</strong>The robot does not perform the electrical test; it establishes and removes the physical test connection under PLC/safety permission.</p>
+    <p><strong>3. Method：</strong>I decomposed the task, derived six requirement groups, mapped them to capabilities, and assessed three architectures under explicit production conditions.</p>
+    <p><strong>4. Conditional result：</strong>Dedicated automation may fit stable high-volume interfaces; fixed robots may fit variable but stationary work; mobile dual-arm systems become worth evaluating for multi-station brownfield scenarios, but safety integration and maturity remain unresolved.</p>
+    <p><strong>5. Next step：</strong>I will test whether the same method transfers to cell recognition, grasping and loading, beginning with the task boundary and battery-specific effects rather than with humanoid attributes.</p>
+  </div>
+
+  <div class="warning">
+    <strong>不要在组会上说：</strong>“我已经证明 humanoid 最适合 Pack EoL”或“R3 没有资料，所以 humanoid 不适用”。准确说法是：当前证据使 humanoid/mobile dual-arm 成为某些场景下的 prospective option，但关键安全、成熟度与经济性项仍待验证。
+  </div>
+
+  <h3>Day 5 完成标准</h3>
+  <p>不看讲义时，你能在两分钟内回答：</p>
+  <div class="sentence center">
+    <strong>“我不是在比较哪个机器人最好；我是在用同一套方法判断：一个电池制造任务需要什么、不同架构怎样满足、哪些生产条件改变选择，以及证据允许我把结论说到哪一步。”</strong>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section id="references">
+  <p class="kicker">Traceable sources</p>
+  <h2>来源、边界与项目文件</h2>
+
+  <div class="note">
+    <strong>本讲义没有新增外部性能主张。</strong>它综合 Week 6 Day 1–4 已登记的来源与学生问答，重点是方法提炼、主张降级和迁移测试。具体页码、DOI、企业链接与使用边界应继续以 Day 1–4 的 references section 为准。
+  </div>
+
+  <h3>本地必读链</h3>
+  <ol class="refs">
+    <li><a href="01_Week06工作计划_Candidate_B_Pack_EoL.md">Week 06 工作计划</a>：Day 5 原定目标、case boundary 与 evidence strategy。</li>
+    <li><a href="00_2026-08-12_Thomas组会反馈.md">2026-08-12 Thomas 组会反馈</a>：Pack EoL 可继续、学生需能解释选择、跨行业迁移与反新闻纪律。</li>
+    <li><a href="day1_pack_eol_robotics_chinese_learning_guide.html">Day 1：Pack EoL 机器人研究讲义</a>：Case Charter、直接案例、基线与文献地图。</li>
+    <li><a href="day2_connector_task_anatomy_chinese_learning_guide.html">Day 2：Task Anatomy 与 Responsibility Boundary</a>：任务周期、I1–I10、R1–R5、swimlane 与 failure modes。</li>
+    <li><a href="day3_battery_specific_requirements_chinese_learning_guide.html">Day 3：Battery-Specific Task Requirements</a>：六类 requirements 与学生问答。</li>
+    <li><a href="day4_architecture_suitability_chinese_learning_guide.html">Day 4：Architecture Conditional Suitability</a>：三架构、C1–C10、场景矩阵与学生问答。</li>
+    <li><a href="../week_05_formation_handover/03_Week04_Week05_Research_Transition_and_Case_Selection_Brief.md">Week 04–05 转向与候选比较</a>：旧 formation candidate 退出原因、Candidate A/B/C 同口径证据卡。</li>
+    <li><a href="../docs/research_direction_guardrails.md">Research Direction Guardrails</a>：robotics relevance gate、证据纪律与当前路线。</li>
+  </ol>
+
+  <h3>Day 1–4 使用的主要外部证据组</h3>
+  <ul class="refs">
+    <li><strong>Pack EoL process baseline：</strong>VDMA/PEM 2026 module/pack production process；thyssenkrupp、Marposs、Schaeffler、RePower 的 EoL/test equipment 资料。</li>
+    <li><strong>Direct industrial anchor：</strong>CATL/Spirit AI “小墨”企业披露。只证明企业作出任务与性能声明，不独立证明结果。</li>
+    <li><strong>Flexible connector industrial baseline：</strong>KUKA/Liebherr/KOSTAL 的 battery-pack connector assembly case。属于邻近 permanent-connection task，不是相同 EoL station。</li>
+    <li><strong>Peer-reviewed capability evidence：</strong>Wang et al. (2024/2025)、Gebauer et al. (2024)、Malvido Fresnillo et al. (2025)、Caporali et al. (2026) 等线束感知、DLO、接触插入与双臂操作研究。</li>
+  </ul>
+
+  <h3>仍需保持 UNKNOWN 的关键字段</h3>
+  <div class="grid-2">
+    <div class="card">
+      <ul>
+        <li>目标 connector 类型、几何、锁止与具体 HV/LV/communication 构成</li>
+        <li>CATL 现场完整 task cycle 与 connector 供料/归位方式</li>
+        <li>PLC safety handshake、去能量状态和确认判据</li>
+      </ul>
+    </div>
+    <div class="card">
+      <ul>
+        <li>独立验证的节拍、成功率、故障恢复和人工介入</li>
+        <li>部署数量、可用率、CAPEX/OPEX/TCO 与长期可靠性</li>
+        <li>DCR 是否与 EoL 共用工位、connector 或 robot</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="risk">
+    <strong>注册提醒：</strong>当前 Pack case 已得到 Thomas 的工作认可，但 working title、原始任务段落中的 <em>battery cell production value chain</em> 与 pack-level deep case 的关系仍需在 registration abstract 中显式说明。任何正式注册流程、模板、语言和期限必须按 Thomas/PEM/ZPA 最新信息核验，不能直接套用仓库中的 2022/2025 材料。
+  </div>
+</section>
+
+<footer style="text-align:center; color:var(--gray); font-size:0.85em; margin-top:48px; padding-top:24px; border-top:1px solid var(--border);">
+  Week 6 Day 5 learning guide · Master Thesis at PEM, RWTH Aachen · Editable HTML source retained in the repository
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W6D3 — Battery-Specific Task Requirements：为什么 Pack EoL 接线不是普通 pick-and-place</title>
+<style>
+  :root { --navy: #1a365d; --blue: #2b6cb0; --green: #276749; --orange: #c05621; --red: #c53030; --gray: #4a5568; --light: #f7fafc; --border: #e2e8f0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.7; color: #2d3748; background: #fafafa; max-width: 1100px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 2em; color: var(--navy); border-bottom: 3px solid var(--blue); padding-bottom: 12px; margin-bottom: 8px; }
+  h2 { font-size: 1.5em; color: var(--blue); margin: 48px 0 16px; padding-left: 12px; border-left: 4px solid var(--blue); }
+  h3 { font-size: 1.2em; color: var(--navy); margin: 28px 0 12px; }
+  h4 { font-size: 1.05em; color: var(--gray); margin: 20px 0 8px; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 16px 24px; }
+  li { margin-bottom: 6px; }
+  .kicker { text-transform: uppercase; font-size: 0.8em; letter-spacing: 1.5px; color: var(--blue); font-weight: 600; margin: 0 0 4px; }
+  .note { background: #ebf8ff; border: 1px solid #bee3f8; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 0.95em; }
+  .warning { background: #fffaf0; border: 1px solid #fbd38d; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 0.95em; }
+  .finding { background: #f0fff4; border: 1px solid #9ae6b4; padding: 14px 18px; border-radius: 6px; margin: 16px 0; font-size: 0.95em; }
+  .card { background: white; border: 1px solid var(--border); padding: 18px; border-radius: 8px; margin: 12px 0; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 12px 0; }
+  @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.78em; font-weight: 600; margin-right: 4px; }
+  .tag.direct { background: #c6f6d5; color: var(--green); }
+  .tag.industry { background: #bee3f8; color: var(--blue); }
+  .tag.paper { background: #e9d8fd; color: #6b46c1; }
+  .tag.infer { background: #fefcbf; color: var(--orange); }
+  .tag.unknown { background: #fed7d7; color: var(--red); }
+  .req-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.9em; }
+  .req-table th { background: var(--navy); color: white; padding: 10px 12px; text-align: left; font-weight: 600; }
+  .req-table td { padding: 10px 12px; border: 1px solid var(--border); vertical-align: top; }
+  .req-table tr:nth-child(even) { background: #f7fafc; }
+  .req-table .req-col { font-weight: 600; color: var(--navy); }
+  .req-table .ev-col { font-size: 0.85em; color: var(--gray); }
+  .req-table .eff-col { font-size: 0.9em; }
+  .req-table .cap-col { font-size: 0.9em; color: var(--blue); }
+  .req-table .unk-col { font-size: 0.85em; color: var(--red); }
+  .concept-box { background: white; border: 1px solid var(--border); padding: 20px; border-radius: 8px; margin: 16px 0; }
+  .concept-title { font-size: 1.15em; font-weight: 700; margin-bottom: 12px; }
+  .concept-title .icon { display: inline-block; width: 28px; height: 28px; line-height: 28px; text-align: center; background: var(--navy); color: white; border-radius: 50%; font-size: 0.85em; margin-right: 8px; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+  .col { padding: 16px; border-radius: 6px; }
+  .col-title { font-weight: 700; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: var(--gray); }
+  .a { background: #f7fafc; border: 1px solid var(--border); }
+  .b { background: #f0fff4; border: 1px solid #9ae6b4; }
+  .section-divider { border: none; border-top: 2px dashed var(--border); margin: 48px 0; }
+  .toc { background: white; border: 1px solid var(--border); padding: 20px 24px; border-radius: 8px; margin: 20px 0; }
+  .toc ol { margin: 8px 0 0 20px; }
+  .toc li { margin-bottom: 4px; }
+  .toc a { color: var(--blue); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .refs { font-size: 0.9em; }
+  .refs li { margin-bottom: 8px; }
+  .refs a { color: var(--blue); }
+  .step-flow { margin: 16px 0; }
+  .step-row { display: flex; margin-bottom: 14px; background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .step-num { background: var(--navy); color: white; padding: 14px 16px; font-weight: 700; font-size: 1.1em; min-width: 48px; display: flex; align-items: center; justify-content: center; }
+  .step-body { padding: 14px 18px; flex: 1; }
+  .step-name { font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .step-detail { font-size: 0.9em; color: var(--gray); }
+  .audit-tag { font-size: 0.82em; font-weight: 600; padding: 2px 8px; border-radius: 3px; }
+  .audit-tag.specific { background: #c6f6d5; color: var(--green); }
+  .audit-tag.generic { background: #e2e8f0; color: var(--gray); }
+  .audit-tag.hybrid { background: #fefcbf; color: var(--orange); }
+  .audit-tag.unknown { background: #fed7d7; color: var(--red); }
+  .seq-arrow { display: flex; align-items: center; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+  .seq-item { background: white; border: 1px solid var(--border); padding: 8px 14px; border-radius: 6px; font-size: 0.9em; font-weight: 600; }
+  .seq-conn { color: var(--blue); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>Week 6 Day 3<br>Battery-Specific Task Requirements<br>为什么 Pack EoL 接线不是普通 pick-and-place</h1>
+<p><strong>日期：</strong>2026-08-18 | <strong>主题：</strong>Task Requirements → Robot-task Effect → Required Capability | <strong>阅读时间：</strong>约 60 分钟</p>
+
+<div class="note"><strong>Day 3 在 Week 06 中的位置：</strong>Day 1 恢复了 Pack EoL 工序和机器人任务链；Day 2 拆解了 Connector Handling 的 sub-step 和 System Interaction。Day 3 是 Week 06 的转折点——我们从"描述任务"转向"分析这个任务为什么需要机器人具备特定能力"。Day 3 不比较三种架构（那是 Day 4 的事），Day 3 只回答一个问题：<strong>电池 Pack EoL 测试连接器插拔，有哪些不同于普通 pick-and-place 或"插一个插头"的任务要求？</strong></div>
+
+<!-- ============================================================ -->
+<div class="toc">
+  <p class="kicker">目录</p>
+  <strong>本讲义结构</strong>
+  <ol>
+    <li><a href="#why">Day 3 的定位：为什么需要这一天的研究</a></li>
+    <li><a href="#overview">六类 battery-specific task requirements 总览</a></li>
+    <li><a href="#r1">Requirement 1：柔性线束处理（Flexible-Harness Handling）</a></li>
+    <li><a href="#r2">Requirement 2：接触密集型连接器插接（Contact-Rich Connector Insertion）</a></li>
+    <li><a href="#r3">Requirement 3：高压安全接口（Electrical / HV Safety Interface）</a></li>
+    <li><a href="#r4">Requirement 4：Pack/连接器变异与换型（Pack/Connector Variation & Changeover）</a></li>
+    <li><a href="#r5">Requirement 5：连接质量确认（Connection-Quality Confirmation）</a></li>
+    <li><a href="#r6">Requirement 6：追溯性与系统集成（Traceability & System Integration）</a></li>
+    <li><a href="#master-table">主表：Requirement → Robot-task Effect → Required Capability</a></li>
+    <li><a href="#audit">Battery-Specific vs Generic 区分审计</a></li>
+    <li><a href="#check">学习检查：8 个问题</a></li>
+    <li><a href="#deliverable">Day 3 最低交付物与成功标准</a></li>
+    <li><a href="#references">参考文献</a></li>
+  </ol>
+</div>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="why">
+  <p class="kicker">模块 1</p>
+  <h2>Day 3 的定位：为什么需要这一天的研究</h2>
+
+  <p>Day 1 和 Day 2 已经告诉我们：电池 Pack EoL 测试需要机器人插拔高压连接器，这个任务有 10 个插入 sub-step 和 5 个拔出 sub-step，涉及 Robot、Tester、PLC、MES、Fixture 五个系统角色。但有一个关键问题尚未回答：</p>
+
+  <div class="finding"><strong>核心问题：</strong>为什么这个任务不能简单等同于"工业机器人抓一个零件插到另一个零件上"？为什么不是 pick-and-place？为什么不是"插一个 USB 线"？任务本身有什么特殊性，使得机器人需要具备特定能力？</div>
+
+  <p>Day 3 的任务就是把这个问题拆开，从六个维度逐一分析 battery-pack EoL test-connector handling 的 task requirements。每个维度都按 <strong>Evidence → Why it matters → Effect on robot task → Required capability → Current unknown</strong> 的结构展开。</p>
+
+  <div class="card">
+    <h4>Day 3 的核心纪律</h4>
+    <ul>
+      <li><strong>从 task 出发，不从 robot 出发：</strong>我们不说"humanoid 有双臂所以需要双臂任务"。我们先分析任务本身需要什么，再讨论什么机器人架构能提供这些能力（Day 4 的事）。</li>
+      <li><strong>区分 battery-specific 和 generic：</strong>不是所有要求都是电池制造特有的。力控插入是通用精密装配的能力，但高压安全互锁是电池制造特有的。Day 3 必须诚实区分。</li>
+      <li><strong>不虚构 CATL 现场参数：</strong>所有 evidence 必须来自公开来源或合理推理。找不到 evidence 的标记为 UNKNOWN，不说"应该"、"可能"、"通常"。</li>
+      <li><strong>不把"资料少"直接写成"research gap"：</strong>UNKNOWN 是当前具体维度未被来源覆盖，不等于整个研究方向有 gap。</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<section id="overview">
+  <p class="kicker">模块 2</p>
+  <h2>六类 battery-specific task requirements 总览</h2>
+
+  <p>以下是 Day 3 要研究的六类需求，以及它们与 Day 2 的 10 个插入 sub-step 的对齐关系：</p>
+
+  <div class="card">
+    <table class="req-table">
+      <thead>
+        <tr><th>#</th><th>需求类别</th><th>影响 Day 2 的哪些 sub-step</th><th>核心问题</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="req-col">R1</td>
+          <td class="req-col">Flexible-Harness Handling<br><span style="font-weight:400;font-size:0.9em;">柔性线束处理</span></td>
+          <td>I1 Locate, I2 Approach, I3 Grasp, I4 Pre-align, I5 Transport</td>
+          <td>线束不是刚体。重力、弯曲、扭转改变连接器姿态，抓取后 in-hand pose 不确定。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R2</td>
+          <td class="req-col">Contact-Rich Connector Insertion<br><span style="font-weight:400;font-size:0.9em;">接触密集型连接器插接</span></td>
+          <td>I6 First Contact, I7 Fine Alignment, I8 Insertion</td>
+          <td>多端子、小间隙、卡滞/楔紧风险。不能只靠位置控制，需要力控和接触状态感知。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R3</td>
+          <td class="req-col">Electrical / HV Safety Interface<br><span style="font-weight:400;font-size:0.9em;">高压安全接口</span></td>
+          <td>I9 Connection Confirm, I10 Release & Withdraw; D1-D5</td>
+          <td>HVIL、去能量确认、安全状态机约束机器人动作时序。插错或带电拔出的后果不是"装不上"而是"安全隐患"。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R4</td>
+          <td class="req-col">Pack/Connector Variation & Changeover<br><span style="font-weight:400;font-size:0.9em;">Pack/连接器变异与换型</span></td>
+          <td>I1 Locate, I3 Grasp, I4 Pre-align, I6-I8</td>
+          <td>多 Pack 型号、接口位置变化、连接器类型变化。不能针对一种 connector 做硬编码。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R5</td>
+          <td class="req-col">Connection-Quality Confirmation<br><span style="font-weight:400;font-size:0.9em;">连接质量确认</span></td>
+          <td>I9 Connection Confirm, I10 Release</td>
+          <td>插入≠连接成功。需要锁止/CPA/电气连续性确认。确认失败时不能直接进入测试。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R6</td>
+          <td class="req-col">Traceability & System Integration<br><span style="font-weight:400;font-size:0.9em;">追溯性与系统集成</span></td>
+          <td>全周期（尤其 I9, I10, D4, D5）</td>
+          <td>Pack ID → 测试配方 → 结果关联。机器人需在 MES/PLC/Tester 的约束下执行动作，不能独立运行。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note"><strong>为什么是这六类而不是别的？</strong>回到 Week 06 的核心问题——"what task and production requirements determine the suitability of dedicated automation, fixed industrial robots, and humanoid/mobile dual-arm systems?"。这六类是从"任务需求→机器人能力"的角度筛选出来的。BMS 算法、thermal runaway detection、cell degradation 等不属于 robot task requirement，不进入 Day 3。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- R1: Flexible-Harness Handling -->
+<!-- ============================================================ -->
+<section id="r1">
+  <p class="kicker">模块 3</p>
+  <h2>Requirement 1：柔性线束处理（Flexible-Harness Handling）</h2>
+
+  <div class="concept-box">
+    <div class="concept-title"><span class="icon">1</span>核心问题：为什么线束不是刚体，这个问题重要在哪里？</div>
+    <p>在 Pack EoL 测试场景中，机器人操作的不是一个独立、刚性、位置固定的连接器，而是 <strong>连接器 + 柔性线束</strong> 这个系统。线束的柔性改变了抓取、运输和插入的物理条件。Day 2 的 F2（Harness deformation causes bad approach）和 F1（Connector not found / pose uncertain）都直接源于这个特性。</p>
+  </div>
+
+  <h3>Evidence（证据）</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>DLO 操作研究<br><span class="tag paper">PAPER</span></h4>
+      <p><strong>Caporali et al. (2026)</strong> 的 IJRR DLO 综述系统梳理了 deformable linear object 的操作挑战：高维状态空间、非线性动力学、状态估计困难。线束（wire harness）是 DLO 的一个子类，具有多分支、变刚度、与连接器耦合的特点。</p>
+      <p><strong>Wu et al. (2025)</strong> 用 curriculum RL 实现 Type-C 线缆插入，最大弯曲 40° 时成功率超过 90%。关键发现：线缆弯曲程度越大，插入成功率越低——线束状态直接影响任务可行性。</p>
+      <p><strong>Zhang et al. (2024)</strong> 提出单臂扭转操作线束的方法：通过 twisting 产生张力，用 Koopman MPC 进行张力跟踪。证明单臂可以通过扭转策略克服线束柔性。</p>
+      <p><strong>Zhang Y. et al. (2025)</strong> 提出 joint shape + tension prediction 的 DLO 安全操作框架，关键发现：DLO 操作中张力信息不可直接观测，需要通过 learning-based 方法近似推断。</p>
+    </div>
+    <div class="card">
+      <h4>工业与邻近案例<br><span class="tag industry">EoL BASELINE</span> <span class="tag direct">DIRECT</span></h4>
+      <p><strong>CATL 小墨（Spirit AI, 2025）：</strong>Piston.my 报道明确提到小墨"can vary its applied force when handling flexible wire harnesses to avoid damage"——柔性线束处理是小墨的核心能力之一，不是可选的附加功能。</p>
+      <p><strong>KUKA/Liebherr/KOSTAL 案例：</strong>固定双工业机器人处理柔性高压连接器，是柔性线束工业机器人操作的已验证基线。</p>
+      <p><strong>Malvido Fresnillo et al. (2025)：</strong>双臂线束装配系统，证明双臂通过"一手持线束、一手操作连接器"的策略可以解决 DLO 状态估计的困难。</p>
+      <p><strong>Wang H. et al. (2024)：</strong>计算机视觉在线束装配中的应用综述，指出视觉感知是线束自动化的关键瓶颈。</p>
+    </div>
+  </div>
+
+  <h3>Why it matters（为什么重要）</h3>
+  <p>在 Pack EoL 场景中，高压连接器通过粗重柔性线束连接到 Pack 内部。这意味着：</p>
+  <ol>
+    <li><strong>连接器位置不是固定的：</strong>线束的重力、弯曲刚度、之前操作的影响（如上一个 Pack 的拔线动作导致线束变形）都会改变连接器在空间中的位置。Day 2 的 F1（Connector not found）就源于此。</li>
+    <li><strong>抓取后连接器在手中仍会移动：</strong>Gebauer (2024) 的 in-hand pose uncertainty 问题——你抓住了连接器，但线束施加的弹性力会让连接器在 gripper 中发生微小位移，这直接影响插入阶段的对准精度。</li>
+    <li><strong>张力控制是安全要求：</strong>如果机器人拉拽线束过紧，可能损坏内部端子或线束本身。CATL 小墨的"vary applied force to avoid damage"正是这个要求的体现。</li>
+    <li><strong>线束状态影响所有后续步骤：</strong>如果 I1 无法准确估计线束状态，I2-I5 全部受影响。这不是"可以容忍的误差"，而是 cascading error。</li>
+  </ol>
+
+  <h3>Effect on robot task（对机器人任务的影响）</h3>
+  <table class="req-table">
+    <thead><tr><th>受影响的 sub-step</th><th>具体影响</th></tr></thead>
+    <tbody>
+      <tr><td>I1 Locate</td><td>不能只检测连接器位置，还需要估计线束的空间配置（弯曲曲率、张力状态）</td></tr>
+      <tr><td>I2 Approach</td><td>接近路径必须避开线束，不能假定连接器在固定位置</td></tr>
+      <tr><td>I3 Grasp</td><td>抓取策略需要考虑线束弹力反作用，可能需要双臂支撑或张力管理</td></tr>
+      <tr><td>I4 Pre-align</td><td>粗对准需要补偿线束变形导致的姿态偏差</td></tr>
+      <tr><td>I5 Transport</td><td>运输过程中线束重力可能导致连接器姿态漂移，需要在线更新</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Required capability（所需能力）</h3>
+  <ul>
+    <li><strong>DLO 状态估计</strong>：实时估计线束的 3D 形状、弯曲和张力（Caporali 2026; Zhang Y. 2025）</li>
+    <li><strong>自适应抓取策略</strong>：根据线束状态调整抓取点和抓取力（Gebauer 2024）</li>
+    <li><strong>张力感知与控制</strong>：操作过程中监测和控制线束张力，避免过度拉拽（Zhang 2024; CATL 小墨）</li>
+    <li><strong>双臂协调或替代策略</strong>：一手管理线束、一手操作连接器，或通过单臂扭转策略管理张力（Malvido Fresnillo 2025; Zhang 2024）</li>
+    <li><strong>视觉鲁棒性</strong>：在遮挡、光照变化、线束变形条件下仍能可靠检测连接器（Wang H. 2024）</li>
+  </ul>
+
+  <h3>Current unknown（当前未知）</h3>
+  <ul>
+    <li><span class="tag unknown">UNKNOWN</span> CATL 现场 Pack 线束的具体规格（长度、重量、刚度、连接器型号）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 小墨在实际操作中如何实现张力感知（关节力矩估计？腕部 F/T 传感器？视觉估计？）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 线束疲劳老化对长期操作一致性的影响（连接器经数千次插拔后，线束变形特性是否改变）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 多根线束同时存在时（如 Pack 有多个测试接口），操作顺序如何影响后续线束的状态</li>
+  </ul>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- R2: Contact-Rich Connector Insertion -->
+<!-- ============================================================ -->
+<section id="r2">
+  <p class="kicker">模块 4</p>
+  <h2>Requirement 2：接触密集型连接器插接（Contact-Rich Connector Insertion）</h2>
+
+  <div class="concept-box">
+    <div class="concept-title"><span class="icon">2</span>核心问题：为什么"把连接器推进去"不是简单的位置控制？</div>
+    <p>Day 2 已经区分了 Pre-align（视觉引导，粗对准）和 Fine Alignment（接触力反馈，精对准）。Day 2 的 F3（Misalignment/jamming during insertion）和 Q5（Insertion jamming 是 perception、motion 还是 force 问题？）都指向同一个核心：连接器插接是 <strong>接触密集型</strong> 任务，不能仅靠位置控制完成。</p>
+  </div>
+
+  <h3>Evidence（证据）</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>连接器插接物理<br><span class="tag paper">PAPER</span></h4>
+      <p><strong>Wang et al. (2025), IEEE T-ASE：</strong>直接研究 electrical connector 的 geometry+force guided assembly。论文的核心贡献是处理"大初始偏差"（large initial deviations）下的连接器装配——这正是 Pack EoL 中因线束变形导致的场景。关键发现：连接器装配的接触状态序列（approach → first contact → sliding → alignment → insertion）每一步都需要不同的力/位置控制策略。</p>
+      <p><strong>Gebauer et al. (2024), Procedia CIRP：</strong>专门研究 connector mating 的 gripper jaw design 和 in-hand pose uncertainty。关键发现：即使 gripper 设计优化，in-hand pose error 仍可达 1-3mm，这对连接器的小间隙插入是显著的。</p>
+      <p><strong>Wu et al. (2025)：</strong>Type-C 线缆插入实验，弯曲 40° 时成功率仍 >90%，但需要 curriculum learning 逐步训练。</p>
+    </div>
+    <div class="card">
+      <h4>连接器工业标准<br><span class="tag industry">INDUSTRY</span></h4>
+      <p><strong>SAE USCAR-2 (2024, Revision 9)：</strong>汽车电气连接器系统性能规范。与插接相关的关键参数：</p>
+      <ul>
+        <li>插入力 ≤ 75N（非辅助连接器），保持力 ≥ 110N（大电缆 ≥ 170N）</li>
+        <li>锁扣释放力 6-51N</li>
+        <li>CPA 机制下锁扣不得在外力 70N 下脱开</li>
+        <li>端子插入力 ≤ 20N（1.5mm 端子），一次保持力 ≥ 45N</li>
+        <li>振动测试中电路连续性中断超过 1μs 即判定失效</li>
+      </ul>
+      <p><strong>接触电阻与插拔力检测：</strong>力值-位移曲线用于识别卡滞点、弹性悬臂屈服、镀层剥落。多次插拔循环后力值衰减测试评估端子耐磨性。</p>
+    </div>
+  </div>
+
+  <h3>Why it matters（为什么重要）</h3>
+  <ol>
+    <li><strong>Pack EoL 连接器不是普通插头：</strong>高压连接器有多个端子（power + signal + HVIL），每个端子有独立的接触簧片和插入力要求。插接时所有端子同时接触，力分布不均会导致个别端子未完全接触。</li>
+    <li><strong>间隙小、公差严：</strong>汽车级连接器的端子间隙通常在 0.1-0.5mm 量级。Gebauer (2024) 报告的 1-3mm in-hand pose error 已经远超这个间隙——这意味着纯位置控制不足以可靠完成插入。</li>
+    <li><strong>卡滞/楔紧是真实风险：</strong>Wang (2025) 研究的 jamming 和 wedging 不是理论问题——当连接器以微小角度偏差进入时，端子边缘会卡在插座入口，继续施加位置控制的力只会导致 damage，不会 solve alignment。</li>
+    <li><strong>力控插入的物理必要性：</strong>Day 2 已经区分了"自由空间运动（position control）→ 接触力引导（force feedback）→ 力/位置混合控制（hybrid）"三种控制模式。连接器插接需要这三种模式在 sub-step 之间切换。</li>
+  </ol>
+
+  <h3>Effect on robot task（对机器人任务的影响）</h3>
+  <table class="req-table">
+    <thead><tr><th>受影响的 sub-step</th><th>具体影响</th></tr></thead>
+    <tbody>
+      <tr><td>I6 First Contact</td><td>控制策略从自由空间位置控制切换到接触力引导。机器人必须感知"接触发生了"这一瞬间。</td></tr>
+      <tr><td>I7 Fine Alignment</td><td>通过接触力/力矩反馈搜索正确的对准位置。这是 Wang (2025) 论文的核心——force-guided alignment with large initial deviations。</td></tr>
+      <tr><td>I8 Insertion</td><td>沿轴线推入，同时需要力/位置混合控制。监测插入力曲线，检测异常（卡滞、楔紧、力峰值超限）。</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Required capability（所需能力）</h3>
+  <ul>
+    <li><strong>6-DOF 力/力矩感知</strong>：腕部 F/T 传感器或关节力矩估计，采样率足够高以捕获接触事件</li>
+    <li><strong>力/位置混合控制</strong>：在插入方向做力控（限制最大插入力），在横向做位置/阻抗控制（保持对准）</li>
+    <li><strong>接触状态检测</strong>：区分 free space、first contact、sliding、jamming、full insertion（Wang 2025 的接触状态序列）</li>
+    <li><strong>搜索与恢复策略</strong>：当检测到卡滞时，执行微小的横向振动或回退-重试（spiral search, random exploration）</li>
+    <li><strong>力曲线异常检测</strong>：将实时力曲线与正常插入的 reference profile 比较，检测早期异常（如端子变形、镀层剥落）</li>
+  </ul>
+
+  <h3>Current unknown（当前未知）</h3>
+  <ul>
+    <li><span class="tag unknown">UNKNOWN</span> CATL Pack 使用的具体连接器型号和规格（端子数量、间隙、插入力要求）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 小墨的力控策略（纯力控？阻抗控制？导纳控制？）和传感器配置</li>
+    <li><span class="tag unknown">UNKNOWN</span> 多次插拔循环后连接器磨损对插入力曲线的影响</li>
+    <li><span class="tag unknown">UNKNOWN</span> Wang (2025) 的算法在工业级 HV 连接器（而非实验室级）上的验证结果</li>
+  </ul>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- R3: Electrical / HV Safety Interface -->
+<!-- ============================================================ -->
+<section id="r3">
+  <p class="kicker">模块 5</p>
+  <h2>Requirement 3：高压安全接口（Electrical / HV Safety Interface）</h2>
+
+  <div class="concept-box">
+    <div class="concept-title"><span class="icon">3</span>核心问题：为什么插拔高压连接器存在特殊的 safety 约束？</div>
+    <p>Day 2 的 Q4（为什么 test finished 之后 robot 不能默认立即拔线？）和 Responsibility Swimlane 中的 PLC 行（Safe-to-connect / Safe-to-disconnect / De-energize）都指向高压安全。这不是"小心一点"的软要求，而是硬性的安全状态机约束。</p>
+  </div>
+
+  <h3>Evidence（证据）</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>HVIL 系统<br><span class="tag industry">INDUSTRY</span> <span class="tag direct">DIRECT</span></h4>
+      <p><strong>高压互锁（HVIL）专利 CN201910271326.0：</strong>动力电池包 HVIL 检测系统，通过检测电阻和 PWM 信号区分"正确连接"、"半连接"和"断开"三种状态。HVIL 回路是独立于主功率回路的低压信号回路，其通断状态直接反映连接器是否完全就位。</p>
+      <p><strong>WinAck WA-EOL-520 测试项目：</strong>第 14 项"High-voltage interlock test"——测试 BMS 状态和互锁导通性。当某互锁断开时，BMS 应报告 NG 状态。</p>
+      <p><strong>CATL 小墨（Spirit AI, 2025）：</strong>Piston.my 报道："workers had to manually connect high-voltage test plugs with absolute precision. By taking over these operations, the robot has reduced spark risks."——高压电弧（spark）风险是真实存在的，不是理论假设。</p>
+    </div>
+    <div class="card">
+      <h4>EoL 测试安全要求<br><span class="tag industry">EoL BASELINE</span></h4>
+      <p><strong>WinAck EOL 测试项：</strong>绝缘阻抗测试（positive/negative to shell）、耐压测试（withstand voltage, leakage current）、接地连续性测试。这些测试在连接器插入后执行，需要 Pack 处于特定电气状态。</p>
+      <p><strong>爱疆科技 EOL 系统：</strong>高压互锁模拟测试是标准测试项，用于验证 BMS 在 HVIL 断开时的响应。</p>
+      <p><strong>Day 2 Responsibility Swimlane：</strong>PLC 的 Safe-to-connect / Safe-to-disconnect 信号是 Robot 动作的硬约束。Robot 不能自行决定何时插入或拔出。</p>
+    </div>
+  </div>
+
+  <h3>Why it matters（为什么重要）</h3>
+  <ol>
+    <li><strong>电池 Pack 在 EoL 测试时可能带电：</strong>EoL 测试包括充放电循环，Pack 在测试过程中处于高电压状态（400V/800V 平台）。连接器插拔时如果 Pack 未完成去能量（de-energize），电弧风险真实存在。</li>
+    <li><strong>HVIL 是独立的安全回路：</strong>HVIL 回路通常比主功率端子更短——当连接器被拔出时，HVIL 端子先断开，BMS 检测到 HVIL 开路后立即切断主回路。这意味着连接器插拔的顺序和速度直接影响安全机制的有效性。</li>
+    <li><strong>安全状态机约束机器人动作时序：</strong>Day 2 的 Swimlane 已经确认：Robot 插接 → PLC 确认 safe-to-connect → Tester 测试 → 去能量 → PLC 确认 safe-to-disconnect → Robot 拔出。每一步都是顺序依赖的，Robot 不能跳过或加速。</li>
+    <li><strong>这不是"小心一点"的软要求：</strong>如果 Robot 在 Tester 测试期间拔出连接器，后果不仅是测试失败，而是高压电弧可能导致设备损坏或人员安全风险。这是 hard constraint。</li>
+  </ol>
+
+  <h3>Effect on robot task（对机器人任务的影响）</h3>
+  <table class="req-table">
+    <thead><tr><th>受影响的 sub-step</th><th>具体影响</th></tr></thead>
+    <tbody>
+      <tr><td>I9 Connection Confirm</td><td>确认不仅是物理就位，还包括 HVIL 回路导通——Robot 需要确认 HVIL 信号状态</td></tr>
+      <tr><td>I10 Release & Withdraw</td><td>Robot 释放连接器后不能立即拔线，需等待 PLC 确认 safe-to-connect（插入场景）</td></tr>
+      <tr><td>D1-D5（拔出全流程）</td><td>拔出前必须等待 PLC 的 safe-to-disconnect 信号。拔出顺序需确保 HVIL 先断开（如果设计如此）</td></tr>
+      <tr><td>全周期</td><td>Robot 在安全状态机中处于"被约束"的角色——它不能自主决定何时插拔，必须等待 PLC 授权</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Required capability（所需能力）</h3>
+  <ul>
+    <li><strong>与 PLC 的实时安全握手</strong>：Robot 控制器必须能接收和解析 PLC 的 safe-to-connect / safe-to-disconnect 信号，并在收到信号前阻止动作执行</li>
+    <li><strong>HVIL 状态感知</strong>：Robot 需要能读取 HVIL 回路状态（通过 PLC 或直接接口），以判断连接器是否完全就位</li>
+    <li><strong>异常安全响应</strong>：当检测到 HVIL 异常（半连接、断开）或 PLC 的 fault stop 信号时，Robot 必须立即停止当前动作并进入安全状态</li>
+    <li><strong>动作时序管理</strong>：Robot 的动作序列必须与 PLC 的安全状态机严格同步，不能有竞态条件</li>
+  </ul>
+
+  <h3>Current unknown（当前未知）</h3>
+  <ul>
+    <li><span class="tag unknown">UNKNOWN</span> CATL EoL 站的具体安全状态机逻辑（几个状态、转移条件、超时处理）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 小墨与 PLC 的通信协议（Profinet? EtherCAT? 数字 I/O?）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 去能量确认的具体实现方式（电压检测？放电确认？安全继电器？）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 安全等级要求（ISO 13849 PL? SIL?）</li>
+  </ul>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- R4: Pack/Connector Variation & Changeover -->
+<!-- ============================================================ -->
+<section id="r4">
+  <p class="kicker">模块 6</p>
+  <h2>Requirement 4：Pack/连接器变异与换型（Pack/Connector Variation & Changeover）</h2>
+
+  <div class="concept-box">
+    <div class="concept-title"><span class="icon">4</span>核心问题：为什么不能针对一种 connector 做硬编码？</div>
+    <p>CATL 生产多种电池 Pack 型号，不同型号可能有不同的连接器类型、接口位置、线束布局。如果机器人只能处理一种 connector，那就回到了 dedicated automation 的范畴——而这正是 Day 1 的三类 baseline 比较中需要区分的关键维度。</p>
+  </div>
+
+  <h3>Evidence（证据）</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>CATL 现场证据<br><span class="tag direct">DIRECT</span></h4>
+      <p><strong>CATL 小墨（Piston.my, 2025）：</strong>报道明确提到"When production shifts between different battery models, Moz has shown the ability to cope without interruption, achieving up to three times the daily workload with stable performance."——多型号换型是小墨的已验证能力，不是推测。</p>
+      <p><strong>小墨件披露：</strong>Day 1 引用的 Spirit AI 报道提到"来料位置变化"是明确的问题陈述——连接器的空间位置可能因 Pack 型号、载具精度、线束状态而异。</p>
+    </div>
+    <div class="card">
+      <h4>连接器多样性<br><span class="tag paper">PAPER</span> <span class="tag industry">INDUSTRY</span></h4>
+      <p><strong>Wang H. et al. (2023), IEEE CASE：</strong>创建了 20 种汽车线束连接器的数据集用于深度学习检测。20 种连接器的外观差异足以说明"一种 connector 一个 hard-coded 方案"不可行。</p>
+      <p><strong>汽车连接器行业（Bishop & Associates）：</strong>2023 年全球汽车连接器市场超 200 亿美元。单车连接器用量随电动化显著提升，高压连接器规格多样化（400V/800V 平台，不同电流等级）。</p>
+      <p><strong>MES 方案（迈斯）：</strong>支持多型号自由配置工艺路径，通过 RFID 载体识别产品型号并下发对应参数——说明多型号换型是电池 Pack 产线的标准需求。</p>
+    </div>
+  </div>
+
+  <h3>Why it matters（为什么重要）</h3>
+  <ol>
+    <li><strong>Dedicated automation 的边界：</strong>如果只生产一种 Pack 型号，可以设计专用的自动接触机构（dedicated contacting mechanism），不需要机器人。但当产线需要换型时，专用机构的换型时间和成本（机械改造、重新标定）会急剧上升。机器人方案的换型优势在于"软件切换"而非"硬件改造"。</li>
+    <li><strong>连接器变异不是视觉识别问题那么简单：</strong>不同连接器不仅有不同外观，还有不同的物理特性（插入力、端子布局、锁止机构）。机器人需要不仅"认出"是什么连接器，还要"知道"如何操作它。</li>
+    <li><strong>接口位置变化影响运动规划：</strong>不同 Pack 型号的连接器接口位置可能不同。机器人需要在线调整运动规划，而不是每次都回到同一个 teach point。</li>
+  </ol>
+
+  <h3>Effect on robot task（对机器人任务的影响）</h3>
+  <table class="req-table">
+    <thead><tr><th>受影响的 sub-step</th><th>具体影响</th></tr></thead>
+    <tbody>
+      <tr><td>I1 Locate</td><td>需要识别连接器类型（不仅仅是位置），查询对应的操作参数</td></tr>
+      <tr><td>I3 Grasp</td><td>不同连接器可能需要不同的抓取策略（抓取点、抓取力、gripper 配置）</td></tr>
+      <tr><td>I4 Pre-align</td><td>参考位置随 Pack 型号变化，不能 hard-code 一个 teach point</td></tr>
+      <tr><td>I6-I8 (First Contact → Insertion)</td><td>插入力阈值、接触状态序列、端子布局随连接器型号变化</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Required capability（所需能力）</h3>
+  <ul>
+    <li><strong>连接器类型识别</strong>：通过视觉识别连接器型号，查询对应的操作参数数据库（Wang H. 2023）</li>
+    <li><strong>自适应运动规划</strong>：根据在线感知的接口位置动态调整运动轨迹，而非依赖 pre-taught waypoints</li>
+    <li><strong>参数化操作策略</strong>：插入力、力控参数、搜索策略等作为可配置参数，支持通过 MES/配方系统动态下发</li>
+    <li><strong>Gripper 兼容性</strong>：末端执行器需要能操作多种连接器类型，或支持快速换爪</li>
+  </ul>
+
+  <h3>Current unknown（当前未知）</h3>
+  <ul>
+    <li><span class="tag unknown">UNKNOWN</span> CATL Zhongzhou 工厂实际生产多少种 Pack 型号，以及各型号使用的连接器类型</li>
+    <li><span class="tag unknown">UNKNOWN</span> 小墨在换型时是自动识别连接器类型，还是通过 MES 下发当前型号信息</li>
+    <li><span class="tag unknown">UNKNOWN</span> 换型频率（每天几次？每班几次？）和换型时间要求</li>
+    <li><span class="tag unknown">UNKNOWN</span> 不同连接器类型的插入力、端子布局等物理参数差异有多大</li>
+  </ul>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- R5: Connection-Quality Confirmation -->
+<!-- ============================================================ -->
+<section id="r5">
+  <p class="kicker">模块 7</p>
+  <h2>Requirement 5：连接质量确认（Connection-Quality Confirmation）</h2>
+
+  <div class="concept-box">
+    <div class="concept-title"><span class="icon">5</span>核心问题：为什么"插进去了"不等于"连接成功"？</div>
+    <p>Day 2 的三大概念区分之一就是"Physical Insertion ≠ Successful Connection"。Day 2 的 F4（Connection not confirmed）更具体地列出了连接器已推入但未完全就位、锁止未完成或电气连续性检测失败的场景。Day 2 的 Q3 带教问答也专门纠正了学生对这个问题的理解。</p>
+  </div>
+
+  <h3>Evidence（证据）</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>连接器锁止与 CPA<br><span class="tag industry">INDUSTRY</span></h4>
+      <p><strong>SAE USCAR-2 (2024)：</strong>CPA（Connector Position Assurance）是独立于主锁扣的二次锁止机构。CPA 锁止后，主锁扣在外力 70N 下不得脱开。锁扣释放力 6-51N。这意味着插入后还需要一个额外的"锁止"动作——不是推入就结束。</p>
+      <p><strong>KUKA/Liebherr/KOSTAL 案例：</strong>明确包含 CPA lock 步骤——即使工业机器人方案也需要专门的锁止操作。</p>
+      <p><strong>HVIL 专利 (CN201910271326.0)：</strong>定义了"正确连接"、"半连接"和"断开"三种状态。半连接状态——物理上已部分插入但 HVIL 未导通——是真实的中间状态，不能等同于"已连接"。</p>
+    </div>
+    <div class="card">
+      <h4>CATL 现场证据<br><span class="tag direct">DIRECT</span></h4>
+      <p><strong>CATL 小墨（Piston.my, 2025）：</strong>"actively monitors wire harness connections, flags irregularities immediately to reduce defect rates"——连接质量监控是小墨的持续任务，不是一次性 check。</p>
+      <p><strong>Day 2 Failure Modes：</strong>F4（Connection not confirmed）的后果是"若直接进入测试，可能造成测试结果错误或高压安全隐患"。这比"装不上"更严重——它会产生 false negative（测试结果错误）或 safety hazard。</p>
+    </div>
+  </div>
+
+  <h3>Why it matters（为什么重要）</h3>
+  <ol>
+    <li><strong>插入深度和锁止状态是独立的：</strong>连接器推入到"止动位"（mechanical stop）后，还需要将锁扣或 CPA 推到位。推入深度≠锁止完成。Day 2 的 I9（Connection Confirm）是独立的 sub-step，不是 I8（Insertion）的自动结果。</li>
+    <li><strong>电气连续性确认是物理确认的补充：</strong>即使物理上锁止完成，端子接触不良（如氧化、异物、端子变形）仍可能导致电气连续性不合格。WinAck EOL 的 HV interlock test 正是为此设计。</li>
+    <li><strong>确认失败的处理策略：</strong>如果确认失败，Robot 需要执行回退-重试策略，而不是简单地报警等待人工干预。这要求 Robot 具有自主错误恢复能力。</li>
+    <li><strong>这是 battery-manufacturing 特有的 context：</strong>连接确认失败在普通工业装配中是"质量问题"，在电池 Pack EoL 中是"安全隐患"——因为紧接着就是高压测试。</li>
+  </ol>
+
+  <h3>Effect on robot task（对机器人任务的影响）</h3>
+  <table class="req-table">
+    <thead><tr><th>受影响的 sub-step</th><th>具体影响</th></tr></thead>
+    <tbody>
+      <tr><td>I9 Connection Confirm</td><td>需要多模态确认（力传感器就位力峰值、终点开关、视觉确认、HVIL 导通、电气连续性），不仅是单一判据</td></tr>
+      <tr><td>I10 Release & Withdraw</td><td>确认失败时不能释放连接器并回退，需要执行重试策略（微调位置后重新插入、或完全拔出重来）</td></tr>
+      <tr><td>全周期</td><td>连接确认不是一次性事件——在测试过程中 Robot 可能需要持续监控连接状态（小墨的"actively monitors"）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Required capability（所需能力）</h3>
+  <ul>
+    <li><strong>多模态确认融合</strong>：力传感器（就位力峰值）、位置传感器（终点开关）、视觉（再次确认位置）、电气信号（HVIL 导通、连续性检测）——四种信号融合判断连接状态</li>
+    <li><strong>锁止/CPA 操作能力</strong>：Robot 需要能执行锁扣或 CPA 的推动动作，并感知锁止是否完成（力反馈或位置反馈）</li>
+    <li><strong>异常检测与恢复策略</strong>：当确认失败时，Robot 需要自主执行回退-重试，而不是直接报警</li>
+    <li><strong>与 Tester 的电气确认握手</strong>：Robot 完成物理确认后，Tester 执行电气确认（HVIL 测试、绝缘测试），两者通过 PLC 协调</li>
+  </ul>
+
+  <h3>Current unknown（当前未知）</h3>
+  <ul>
+    <li><span class="tag unknown">UNKNOWN</span> CATL Pack 连接器的具体锁止机构类型（CPA? 螺栓锁紧? 旋转锁止?）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 小墨的确认判据组合（用了几种传感器？融合策略是什么？）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 确认失败时的重试策略（最多重试几次？什么情况下放弃并报警？）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 连接器老化和磨损对确认判据（如就位力峰值）的长期影响</li>
+  </ul>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- R6: Traceability & System Integration -->
+<!-- ============================================================ -->
+<section id="r6">
+  <p class="kicker">模块 8</p>
+  <h2>Requirement 6：追溯性与系统集成（Traceability & System Integration）</h2>
+
+  <div class="concept-box">
+    <div class="concept-title"><span class="icon">6</span>核心问题：为什么 Robot 不能独立运行，必须与 MES/PLC/Tester 协同？</div>
+    <p>Day 2 的 Responsibility Swimlane 已经展示了 Robot 在五个系统角色中的位置。但 Swimlane 只是描述了"谁做什么"，没有回答"为什么 Robot 必须在系统约束下运行"以及"这个约束如何影响 Robot 的能力需求"。</p>
+  </div>
+
+  <h3>Evidence（证据）</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>MES 追溯需求<br><span class="tag industry">INDUSTRY</span></h4>
+      <p><strong>迈斯 MES 电池 PACK 方案：</strong>RFID 载体追踪，Pack ID 与测试结果自动绑定。关键架构：MES 通过 RFID 识别载具 → 调取产品型号 → 下发工艺参数 → 设备执行 → 数据回传绑定。Robot 在这个架构中是被 MES 调度的执行设备之一。</p>
+      <p><strong>万界星空 MES：</strong>三级条码绑定（电芯码→模组码→PACK 码），EOL 测试结果与 PACK 码关联。测试数据自动记录，避免人工误差。</p>
+      <p><strong>CATL 小墨：</strong>"switches into inspection mode between tasks"——小墨在操作间隙进行监测，说明其行为模式是任务驱动的，与产线节拍和 MES 调度耦合。</p>
+    </div>
+    <div class="card">
+      <h4>EoL 测试系统集成<br><span class="tag industry">EoL BASELINE</span></h4>
+      <p><strong>WinAck WA-EOL-520：</strong>通过 CAN 与 BMS 通信，测试项目包括 CAN 通信测试、充电通信、整车通信。测试系统需要 Pack ID 来加载正确的测试配方。</p>
+      <p><strong>Day 2 Swimlane 关键交互：</strong>Robot 建立物理连接后，Tester 才能执行测试。Robot 和 Tester 不直接通信，通过 PLC 中介。MES 在测试完成后关联结果并做出 Pass/Fail 决策。</p>
+      <p><strong>海维激光 PACK 线：</strong>MES 实现生产管理、质量数据采集与追溯、工艺管理、关键件追溯。PLC+计算机+MES 三层控制架构。</p>
+    </div>
+  </div>
+
+  <h3>Why it matters（为什么重要）</h3>
+  <ol>
+    <li><strong>Robot 不能独立决定"做什么"：</strong>Robot 的操作参数（连接器类型、插入力阈值、运动轨迹）由当前 Pack 型号决定，而 Pack 型号由 MES 根据 RFID 识别下发。Robot 是被动的执行者。</li>
+    <li><strong>Robot 不能独立决定"什么时候做"：</strong>Robot 的动作时序由 PLC 的安全状态机约束（safe-to-connect / safe-to-disconnect）。Robot 不能在任何时候自由插拔。</li>
+    <li><strong>Robot 的操作结果需要被追溯：</strong>哪个 Pack 在哪个时间被哪个 Robot 连接、连接确认结果、插入力曲线——这些数据需要与 Pack ID 绑定，存入 MES。这是 IATF 16949 和电池溯源法规的要求。</li>
+    <li><strong>这是 battery-manufacturing 特有的 context：</strong>普通工业装配中 Robot 可以相对独立运行（例如焊接机器人只需知道工件位置即可工作）。但电池 Pack EoL 中 Robot 的每个动作都与安全、质量和法规合规性绑定，必须全程在系统约束下运行。</li>
+  </ol>
+
+  <h3>Effect on robot task（对机器人任务的影响）</h3>
+  <table class="req-table">
+    <thead><tr><th>受影响的 sub-step</th><th>具体影响</th></tr></thead>
+    <tbody>
+      <tr><td>全周期</td><td>Robot 在每个动作前需要等待 PLC 授权（safe-to-connect / safe-to-disconnect）</td></tr>
+      <tr><td>I1 之前</td><td>Robot 需要从 MES 获取当前 Pack 型号和连接器参数，不能使用默认参数</td></tr>
+      <tr><td>I9, I10</td><td>连接确认结果需要上传至 MES，与 Pack ID 绑定</td></tr>
+      <tr><td>D4, D5</td><td>拔出完成后需要通知 MES 和 PLC，允许 Pack 流转至下一站</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Required capability（所需能力）</h3>
+  <ul>
+    <li><strong>与 MES 的双向数据接口</strong>：接收任务参数（Pack ID、型号、连接器类型、操作参数），上传操作结果（连接确认、力曲线、异常事件）</li>
+    <li><strong>与 PLC 的实时安全握手</strong>：接收 safe-to-connect / safe-to-disconnect / fault stop 等信号，在授权前阻止动作执行</li>
+    <li><strong>操作数据记录与追溯</strong>：每个 Pack 的操作数据（时间戳、力曲线、确认结果、异常事件）需要结构化记录并关联 Pack ID</li>
+    <li><strong>多协议通信能力</strong>：可能需要同时支持工业以太网（Profinet/EtherCAT）、CAN、数字 I/O 等多种通信协议</li>
+  </ul>
+
+  <h3>Current unknown（当前未知）</h3>
+  <ul>
+    <li><span class="tag unknown">UNKNOWN</span> CATL 的具体 MES 架构（品牌？接口协议？数据格式？）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 小墨与 MES/PLC 的通信协议和数据结构</li>
+    <li><span class="tag unknown">UNKNOWN</span> 操作数据的追溯粒度（记录到 sub-step 级别还是 cycle 级别？）</li>
+    <li><span class="tag unknown">UNKNOWN</span> 法规合规要求的具体追溯标准（GB/T? 国家溯源平台？）</li>
+  </ul>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- Master Table -->
+<!-- ============================================================ -->
+<section id="master-table">
+  <p class="kicker">模块 9</p>
+  <h2>主表：Requirement → Robot-task Effect → Required Capability</h2>
+  <p>这是 Day 3 的最低交付物。六类需求、对机器人任务的影响、所需能力、证据来源，全部浓缩在一张表中。</p>
+
+  <div style="overflow-x: auto;">
+    <table class="req-table" style="min-width: 1000px;">
+      <thead>
+        <tr>
+          <th style="width:10%">需求</th>
+          <th style="width:14%">Evidence</th>
+          <th style="width:14%">Why it matters</th>
+          <th style="width:16%">Effect on robot task</th>
+          <th style="width:22%">Required capability</th>
+          <th style="width:24%">Current unknown</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="req-col">R1<br>Flexible-Harness Handling</td>
+          <td class="ev-col"><span class="tag paper">PAPER</span> Caporali 2026, Wu 2025, Zhang 2024, Zhang Y. 2025, Wang H. 2024, Malvido Fresnillo 2025<br><span class="tag direct">DIRECT</span> CATL 小墨：vary force for flexible harness<br><span class="tag industry">EoL</span> KUKA/Liebherr</td>
+          <td>线束柔性导致连接器位置不确定、in-hand pose error、张力安全风险</td>
+          <td class="eff-col">I1-I5 全部受影响：定位、接近、抓取、预对准、运输都需要补偿线束变形</td>
+          <td class="cap-col">DLO 状态估计、自适应抓取、张力感知与控制、双臂协调或替代策略、视觉鲁棒性</td>
+          <td class="unk-col">线束规格、小墨张力感知方案、线束老化影响、多线束操作顺序</td>
+        </tr>
+        <tr>
+          <td class="req-col">R2<br>Contact-Rich Connector Insertion</td>
+          <td class="ev-col"><span class="tag paper">PAPER</span> Wang 2025, Gebauer 2024, Wu 2025<br><span class="tag industry">INDUSTRY</span> SAE USCAR-2 2024</td>
+          <td>多端子小间隙、卡滞/楔紧风险、纯位置控制不足</td>
+          <td class="eff-col">I6-I8：需要三种控制模式切换（自由空间→接触力引导→力/位置混合）</td>
+          <td class="cap-col">6-DOF F/T 感知、力/位置混合控制、接触状态检测、搜索与恢复策略、力曲线异常检测</td>
+          <td class="unk-col">连接器型号规格、小墨力控策略、磨损影响、Wang 2025 工业验证</td>
+        </tr>
+        <tr>
+          <td class="req-col">R3<br>HV Safety Interface</td>
+          <td class="ev-col"><span class="tag direct">DIRECT</span> CATL 小墨：reduced spark risks<br><span class="tag industry">INDUSTRY</span> HVIL 专利, WinAck EOL, 爱疆 EOL<br><span class="tag infer">INFERENCE</span> Day 2 Swimlane</td>
+          <td>Pack 可能带电、HVIL 独立安全回路、安全状态机约束动作时序</td>
+          <td class="eff-col">I9, I10, D1-D5：Robot 不能自主决定插拔时机，必须等待 PLC 授权</td>
+          <td class="cap-col">PLC 实时安全握手、HVIL 状态感知、异常安全响应、动作时序管理</td>
+          <td class="unk-col">安全状态机逻辑、通信协议、去能量确认方式、安全等级要求</td>
+        </tr>
+        <tr>
+          <td class="req-col">R4<br>Pack/Connector Variation</td>
+          <td class="ev-col"><span class="tag direct">DIRECT</span> CATL 小墨：cope without interruption<br><span class="tag paper">PAPER</span> Wang H. 2023<br><span class="tag industry">INDUSTRY</span> MES 多型号方案</td>
+          <td>多 Pack 型号、连接器类型和接口位置变化、不能 hard-code</td>
+          <td class="eff-col">I1, I3, I4, I6-I8：需要在线识别连接器类型、动态调整操作参数</td>
+          <td class="cap-col">连接器类型识别、自适应运动规划、参数化操作策略、Gripper 兼容性</td>
+          <td class="unk-col">Pack 型号数量、换型频率、换型时间、不同连接器物理参数差异</td>
+        </tr>
+        <tr>
+          <td class="req-col">R5<br>Connection-Quality Confirmation</td>
+          <td class="ev-col"><span class="tag direct">DIRECT</span> CATL 小墨：actively monitors connections<br><span class="tag industry">INDUSTRY</span> SAE USCAR-2 CPA, HVIL 专利<br><span class="tag industry">EoL</span> KUKA CPA lock</td>
+          <td>插入≠连接成功、锁止/CPA 独立步骤、半连接状态真实存在、失败后果是安全隐患</td>
+          <td class="eff-col">I9, I10：多模态确认、锁止操作、失败时回退-重试</td>
+          <td class="cap-col">多模态确认融合、锁止/CPA 操作、异常检测与恢复、与 Tester 电气确认握手</td>
+          <td class="unk-col">锁止机构类型、确认判据组合、重试策略、磨损对确认判据的影响</td>
+        </tr>
+        <tr>
+          <td class="req-col">R6<br>Traceability & System Integration</td>
+          <td class="ev-col"><span class="tag industry">INDUSTRY</span> 迈斯 MES, 万界星空 MES, WinAck EOL, 海维激光<br><span class="tag infer">INFERENCE</span> Day 2 Swimlane<br><span class="tag direct">DIRECT</span> CATL 小墨：inspection mode between tasks</td>
+          <td>Robot 不能独立决定做什么和什么时候做、操作结果需追溯至法规合规</td>
+          <td class="eff-col">全周期：Robot 的每个动作都需要在 MES/PLC 约束下执行，操作数据需上传追溯</td>
+          <td class="cap-col">MES 双向数据接口、PLC 实时安全握手、操作数据记录与追溯、多协议通信</td>
+          <td class="unk-col">MES 架构与协议、小墨通信接口、追溯粒度、法规合规标准</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note"><strong>这张表怎么用：</strong>Day 4 将从这张表出发，回答"dedicated automation、fixed industrial robot、humanoid/mobile dual-arm 三种架构，分别能满足哪些 capability、不能满足哪些 capability"。Day 3 是"需求侧"，Day 4 是"供给侧"。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- Battery-Specific vs Generic Audit -->
+<!-- ============================================================ -->
+<section id="audit">
+  <p class="kicker">模块 10</p>
+  <h2>Battery-Specific vs Generic 区分审计</h2>
+  <p>这是 Day 3 的关键质量控制。不能把所有的 requirement 都标记为 battery-specific——有些是通用精密装配的能力，有些是电池制造特有的。诚实区分是学术严谨性的要求。</p>
+
+  <div class="card">
+    <table class="req-table">
+      <thead>
+        <tr><th style="width:12%">需求</th><th style="width:22%">哪些方面是 battery-specific</th><th style="width:22%">哪些方面是 generic（精密装配/机器人学通用）</th><th style="width:8%">判断</th><th style="width:36%">解释</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="req-col">R1<br>Flexible-Harness</td>
+          <td>HV 线束的粗重特性（截面大、刚度高、不可忽略的弹性力）；线束连接 Pack 内部，不可拆卸</td>
+          <td>DLO 操作是通用机器人学问题（线缆、绳索、布料都适用）；视觉感知、状态估计、抓取策略是通用方法</td>
+          <td><span class="audit-tag hybrid">HYBRID</span></td>
+          <td>DLO 操作本身是通用问题，但 Pack EoL 的 HV 线束组合（粗重 + 高压 + 不可拆卸 + 产线环境）使问题具有 battery-specific 的特征。AC 供电线缆和 USB 数据线不需要面对类似约束。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R2<br>Contact-Rich Insertion</td>
+          <td>HV 连接器多端子（power + signal + HVIL）同时插入；失效后果是安全风险而非仅是装配缺陷</td>
+          <td>力/位置混合控制、接触状态检测、peg-in-hole 搜索策略都是通用精密装配能力</td>
+          <td><span class="audit-tag hybrid">HYBRID</span></td>
+          <td>力控插入的控制策略是通用的。但 HV 连接器的多端子同步插入、HVIL 端子的特殊时序要求、以及失效后果（电弧风险 vs 装配缺陷）是 battery-specific。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R3<br>HV Safety</td>
+          <td>HVIL 安全回路、去能量确认、安全状态机——这些是电池/EV 领域特有的</td>
+          <td>安全状态机和互锁逻辑在工业自动化中普遍存在（如机器人安全围栏、光栅）</td>
+          <td><span class="audit-tag specific">BATTERY-SPECIFIC</span></td>
+          <td>虽然安全状态机是通用概念，但 HVIL 回路、去能量确认、电弧风险这三者组合是电池制造特有的。普通工业装配的安全互锁（如围栏门开关）不涉及高压电气安全。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R4<br>Variation & Changeover</td>
+          <td>电池 Pack 型号变化导致连接器类型和接口位置变化；换型频率和节拍要求来自电池产线</td>
+          <td>多型号换型是通用制造问题（汽车、电子、消费品都有）；自适应运动规划和视觉识别是通用方法</td>
+          <td><span class="audit-tag generic">GENERIC</span></td>
+          <td>换型问题本身不是 battery-specific。但电池 Pack 的高压连接器换型有特殊的安全验证要求（换型后首次插接需要额外确认）。这是 battery-specific 的 nuance，但主问题是 generic。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R5<br>Connection Confirmation</td>
+          <td>HVIL 导通确认、电气连续性检测——确认失败可能导致高压测试中的安全隐患</td>
+          <td>多模态确认（力+视觉+位置）是通用装配质量检测方法；CPA/锁止确认在汽车连接器领域通用</td>
+          <td><span class="audit-tag hybrid">HYBRID</span></td>
+          <td>确认的方法论是通用的（多传感器融合），但 HVIL 导通确认和电气连续性检测是 battery-specific。确认失败的后果在 battery context 中更严重（安全 vs 质量）。</td>
+        </tr>
+        <tr>
+          <td class="req-col">R6<br>Traceability & Integration</td>
+          <td>电池溯源法规（IATF 16949、国家溯源平台）要求特定的追溯粒度和数据格式；Pack ID 与测试结果的绑定是法规要求</td>
+          <td>MES 集成、RFID 追踪、数据追溯是通用智能制造能力</td>
+          <td><span class="audit-tag hybrid">HYBRID</span></td>
+          <td>MES 集成和数据追溯是通用的。但电池行业的特定追溯标准（国家溯源平台、GB/T 标准）和 EoL 测试结果与安全合规的绑定，使追溯需求的严格程度和具体内容为 battery-specific。</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="finding">
+    <strong>审计结论：</strong>六类需求中，<strong>R3（HV Safety）是唯一完全 battery-specific 的</strong>——它直接来自电池 Pack 的高压电气特性，在普通工业装配中找不到对应物。R4（Variation）的物理问题是 generic 的，但安全验证要求是 battery-specific。R1、R2、R5、R6 都是 hybrid——通用机器人学提供了方法基础，但电池制造的 context 使问题具有独特的约束和后果。
+    <br><br>
+    <strong>这对 thesis 论证的意义：</strong>这六类需求构成了一个"累进约束"体系——从通用（R4 换型）到混合（R1/R2/R5/R6）到专用（R3 安全）。三种架构（dedicated / fixed industrial / humanoid）的 suitability 取决于它们能在这个累进约束体系中覆盖多少层。Day 4 将基于这个层级结构进行比较。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- Learning Check -->
+<!-- ============================================================ -->
+<section id="check">
+  <p class="kicker">学习检查</p>
+  <h2>读完本讲义后，请准备回答以下 8 个问题</h2>
+  <p>这些问题不需要你写下来。读完后在心里过一遍，然后我们开始带教式对话。</p>
+
+  <div class="step-flow">
+    <div class="step-row">
+      <div class="step-num">Q1</div>
+      <div class="step-body">
+        <div class="step-name">为什么"插一个高压 Pack 连接器"和"插一个 USB 线"在物理上和安全上不同？</div>
+        <div class="step-detail">提示：从线束特性、端子数量、间隙大小、高压安全四个维度比较。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q2</div>
+      <div class="step-body">
+        <div class="step-name">柔性线束如何改变机器人的抓取和插入策略？</div>
+        <div class="step-detail">提示：从 I1（定位）到 I5（运输）分别说明。想一下为什么 Gebauer 的 in-hand pose error 在柔性线束场景中更严重。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q3</div>
+      <div class="step-body">
+        <div class="step-name">为什么连接器插接需要三种不同的控制模式？这三种模式分别对应 Day 2 的哪些 sub-step？</div>
+        <div class="step-detail">提示：自由空间运动（位置控制）、接触力引导（力反馈）、力/位置混合控制。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q4</div>
+      <div class="step-body">
+        <div class="step-name">为什么 Connection Confirmation 是独立步骤，不能省略？</div>
+        <div class="step-detail">提示：从物理插入、锁止/CPA、HVIL 导通、电气连续性四个层次回答。再想一下如果确认失败，Robot 应该做什么。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q5</div>
+      <div class="step-body">
+        <div class="step-name">Robot 在 Pack EoL 中为什么不能独立决定何时插拔？</div>
+        <div class="step-detail">提示：从 HVIL 安全回路、PLC 安全状态机、Tester 去能量三个角度回答。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q6</div>
+      <div class="step-body">
+        <div class="step-name">六类需求中，哪些是 battery-specific？哪些是 generic？为什么诚实区分这个问题很重要？</div>
+        <div class="step-detail">提示：不要背书。用自己的话解释 R3 为什么是 battery-specific，R4 为什么是 generic 但有电池-specific 的 nuance。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q7</div>
+      <div class="step-body">
+        <div class="step-name">CATL 小墨的公开报道为六类需求提供了哪些直接证据？哪些方面仍然缺失？</div>
+        <div class="step-detail">提示：对照六类需求逐一检查小墨报道（Piston.my 2025 和 Spirit AI 披露）中有哪些 statement，哪些是推断，哪些完全缺失。</div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">Q8</div>
+      <div class="step-body">
+        <div class="step-name">如果你需要向一个机器人工程师解释"为什么 Pack EoL 接线不能用一个简单的 pneumatic gripper + pre-taught position 完成"，你会怎么说？</div>
+        <div class="step-detail">提示：用六类需求中的至少四类来组织你的回答。这不是学术问题，是工程论证。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding"><strong>Day 3 最低完成标准：</strong>你能用自己的话解释——(1) 为什么 Pack EoL 接线不是普通 pick-and-place；(2) 六类需求各自如何影响机器人的任务执行；(3) 哪些需求是电池制造特有的，哪些是通用能力；(4) 当前 evidence 在哪些方面仍然缺失。达到这个标准，Day 3 即完成，可以进入 Day 4 的架构比较。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- Deliverable -->
+<!-- ============================================================ -->
+<section id="deliverable">
+  <p class="kicker">模块 11</p>
+  <h2>Day 3 最低交付物与 Success Criteria</h2>
+
+  <div class="card">
+    <h4>最低交付物</h4>
+    <ol>
+      <li><strong>六类需求的完整分析：</strong>每类需求包含 Evidence、Why it matters、Effect on robot task、Required capability、Current unknown（本讲义模块 3-8）</li>
+      <li><strong>Requirement → Robot-task Effect → Required Capability 主表：</strong>一张浓缩表（模块 9）</li>
+      <li><strong>Battery-Specific vs Generic 区分审计：</strong>诚实区分六类需求中哪些是电池特有的、哪些是通用的（模块 10）</li>
+      <li><strong>学习检查 8 问：</strong>用于带教式对话（模块 10 学习检查）</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h4>Success Criteria（成功标准）</h4>
+    <p>读完 Day 3 讲义并通过带教提问后，你应该能够：</p>
+    <ol>
+      <li>用自己的话解释"为什么插一个高压 Pack 连接器"和"插一个普通插头"在物理上和安全上不同</li>
+      <li>说明柔性线束如何改变机器人从定位到插入的每一步策略</li>
+      <li>解释为什么连接确认是独立步骤、确认什么、确认失败后怎么办</li>
+      <li>区分哪些需求是 battery-specific（R3 为主）、哪些是 hybrid（R1/R2/R5/R6）、哪些是 generic（R4 的物理问题）</li>
+      <li>列出当前 evidence 在六类需求中各自缺失的内容（UNKNOWN），并理解为什么这些缺失不影响 Day 4 的架构比较</li>
+    </ol>
+  </div>
+
+  <div class="warning"><strong>Day 3 不做什么（重申）：</strong>不从 humanoid 属性出发倒推需求；不比较三种架构（Day 4 的事）；不虚构 CATL 现场参数；不重新搜 EoL 测试标准或 BMS 算法；不把"资料少"直接写成"requirement gap"。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- References -->
+<!-- ============================================================ -->
+<section id="references">
+  <p class="kicker">TRACEABLE SOURCES</p>
+  <h2>本讲义引用的来源</h2>
+  <p>Day 3 新增来源标注为 <strong>[NEW]</strong>，Day 1/2 已有来源无特别标注。</p>
+  <ol class="refs">
+    <li><span class="tag direct">DIRECT</span> <strong>[NEW]</strong> Spirit AI / CATL. "CATL Brings Humanoid Robots to the Heart of Battery Production." <a href="https://www.piston.my/2025/12/18/catl-brings-humanoid-robots-to-the-heart-of-battery-production/">Piston.my</a>, 18 Dec 2025. 小墨在 CATL Zhongzhou 工厂的部署报道，提供柔性线束处理、HV 安全、换型、连接质量监控的直接证据。</li>
+    <li><span class="tag paper">PAPER</span> <strong>[NEW]</strong> Wu, K., Chen, R., Chen, Q., & Li, W. (2025). <a href="https://openreview.net/forum?id=KlQndUeGD8">Robotic Assembly of Deformable Linear Objects via Curriculum Reinforcement Learning</a>. <em>IROS 2025 Workshop ROMADO</em>. Type-C 线缆插入的 curriculum RL 方法，弯曲 40° 成功率 >90%。</li>
+    <li><span class="tag paper">PAPER</span> <strong>[NEW]</strong> Zhang, X., Lin, H.-C., Zhao, Y., & Tomizuka, M. (2024). <a href="https://arxiv.org/abs/2410.10729">Harnessing with Twisting: Single-Arm Deformable Linear Object Manipulation for Industrial Harnessing Task</a>. <em>arXiv:2410.10729</em>. 单臂扭转操作的线束处理方法，Koopman MPC 张力跟踪。</li>
+    <li><span class="tag paper">PAPER</span> <strong>[NEW]</strong> Zhang, Y. & Li, S. (2025). <a href="https://arxiv.org/abs/2505.13889">Certifiably Safe Manipulation of Deformable Linear Objects via Joint Shape and Tension Prediction</a>. <em>arXiv:2505.13889</em>. DLO 安全操作框架，joint shape + tension prediction。</li>
+    <li><span class="tag paper">PAPER</span> <strong>[NEW]</strong> Wang, H. & Johansson, B. (2023). <a href="https://arxiv.org/abs/2309.13746">Deep Learning-Based Connector Detection for Robotized Assembly of Automotive Wire Harnesses</a>. <em>IEEE CASE 2023</em>. 20 种汽车线束连接器的深度学习检测数据集。</li>
+    <li><span class="tag industry">INDUSTRY</span> <strong>[NEW]</strong> SAE USCAR-2 (2024, Revision 9). <a href="https://www.antpedia.com/standard/1281977795-10.html">Performance Specification for Automotive Electrical Connector Systems</a>. 汽车电气连接器性能规范，插入力、保持力、CPA、振动测试等关键参数。</li>
+    <li><span class="tag industry">INDUSTRY</span> <strong>[NEW]</strong> 上海捷新动力电池系统有限公司. CN201910271326.0. <a href="https://m.sme-gov.cn/zhuanli/1807631.html">一种动力电池包系统高压互锁连接器检测系统</a>. HVIL 检测系统专利，定义"正确连接/半连接/断开"三种状态。</li>
+    <li><span class="tag industry">EoL BASELINE</span> <strong>[NEW]</strong> WinAck Battery. <a href="https://www.winackbattery.com/products/Battery-Pack-End-Of-Line-Test-System.html">Battery Pack End-Of-Line Test System (WA-EOL-520)</a>. EoL 测试项目清单，含 HV interlock test、绝缘阻抗、耐压等 19 项。</li>
+    <li><span class="tag industry">INDUSTRY</span> <strong>[NEW]</strong> 爱疆科技. <a href="https://www.aijchina.com/xyxw/1572.html">电池模组PACK EOL综合测试系统技术优势与应用实践</a>. 2026-01-12. 高压互锁模拟测试等 EoL 测试能力。</li>
+    <li><span class="tag industry">INDUSTRY</span> <strong>[NEW]</strong> 迈斯软件. <a href="https://www.hfmes.net/html/Solution/pack-mes.htm">新能源锂电池行业MES解决方案</a>; <a href="https://juejin.cn/post/7576676694783459362">MES系统如何实现电池PACK产线全流程追溯</a>. RFID 载体追踪、参数下行锁定、数据上行绑定。</li>
+    <li><span class="tag industry">INDUSTRY</span> <strong>[NEW]</strong> 万界星空. <a href="https://m.zol.com.cn/techbbs/d16_107219.html">MES：让锂电池Pack生产更安全、可溯、高效</a>. 2025-12-31. 三级条码绑定、BOM 与固件版本防错。</li>
+    <li><span class="tag paper">PAPER</span> <strong>[NEW]</strong> Aksoy, B. & Wen, J. T. <a href="https://arxiv.org/abs/2503.04007">Planning and Control for Deformable Linear Object Manipulation</a>. DLO 操作规划与控制框架，CBF 安全约束。</li>
+    <li><span class="tag paper">PAPER</span> Wang, Z. et al. (2025). <a href="https://doi.org/10.1109/TASE.2024.3477918">Geometry and Force Guided Robotic Assembly With Large Initial Deviations for Electrical Connectors</a>. <em>IEEE T-ASE</em>, 22, 8095–8107.</li>
+    <li><span class="tag paper">PAPER</span> Gebauer, D. et al. (2024). <a href="https://doi.org/10.1016/j.procir.2024.10.176">Robot-based, sensitive mating of electrical connectors using automatically designed gripper jaws</a>. <em>Procedia CIRP</em>, 130, 861–866.</li>
+    <li><span class="tag paper">PAPER</span> Wang, H. et al. (2024). <a href="https://doi.org/10.1016/j.aei.2024.102596">A systematic literature review of computer vision applications in robotized wire harness assembly</a>. <em>Advanced Engineering Informatics</em>, 62, 102596.</li>
+    <li><span class="tag paper">PAPER</span> Caporali, A. et al. (2026). <a href="https://doi.org/10.1177/02783649261432253">Robotic perception and manipulation of deformable linear objects: A survey</a>. <em>IJRR</em>, OnlineFirst.</li>
+    <li><span class="tag paper">PAPER</span> Malvido Fresnillo, P. et al. (2025). <a href="https://doi.org/10.1016/j.jmsy.2025.10.008">A dual-arm robotic system for automated multi-branch wire harness assembly in automotive industry</a>. <em>J. Manufacturing Systems</em>, 83, 577–596.</li>
+    <li><span class="tag industry">EoL BASELINE</span> <a href="https://www.kuka.com/en-us/industries/solutions-database/2023/05/liebherr-battery-pack-assembly%2C-high-voltage-battery">KUKA / Liebherr / KOSTAL：Automated battery pack assembly</a>.</li>
+    <li><span class="tag industry">EoL BASELINE</span> <a href="https://www.vdma.eu/documents/34570/35405938/Production%2BProcess%2Bof%2BBattery%2BModules%2Band%2BBattery%2BPacks%2B%282026-03%29.pdf/c0b5ed59-8713-074d-5db2-fab4fee69410">VDMA / PEM RWTH Aachen：Production Process of Battery Modules and Battery Packs (2026)</a>.</li>
+    <li><span class="tag industry">INDUSTRY</span> <a href="https://www.haiweilaser.com/dianchipackshengchanxian/58-107.html">海维激光：方形铝壳电池模组PACK生产线</a>. PLC+计算机+MES 三层控制架构。</li>
+  </ol>
+  <div class="note"><strong>证据标签说明：</strong><span class="tag direct">DIRECT</span> 来自 CATL 小墨或 KUKA 直接披露；<span class="tag industry">INDUSTRY</span> 来自行业标准、专利、MES 方案；<span class="tag paper">PAPER</span> 来自同行评审论文；<span class="tag infer">INFERENCE</span> 来自系统工程合理推导；<span class="tag unknown">UNKNOWN</span> 表示当前来源无法回答，不自动等于 research gap。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- 带教问答记录 -->
+<!-- ============================================================ -->
+<section id="qa">
+  <p class="kicker">带教问答记录</p>
+  <h2>2026-08-18 带教提问与回答（含导师点评）</h2>
+  <p>以下记录了 Day 3 学习完成后，学生与导师之间的八轮带教式问答。每道题包含：学生原始回答、导师纠正/补充、以及最终评价。保留此记录用于日后复盘。</p>
+
+  <!-- Q1 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q1</span> 为什么高压连接器比 USB 线对机器人任务有更苛刻的要求？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>我觉得因为是线的物理尺寸不一样？而且高压也会导致安全问题？然后尺寸，间隙都会影响？</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>方向对但回答太笼统。学生抓住了三个方向——物理差异、高压安全、间隙——但每个方向都只说了"有差异"，没有说清楚差异具体是什么以及为什么改变机器人任务执行方式。按四个维度纠正：</p>
+        <ol>
+          <li><strong>线束柔性：不是"尺寸不同"，而是"不是刚体"。</strong>USB 线直径 3-5mm，几乎不产生弹性反力。Pack 高压线束截面大、刚度高，抓取连接器后线束施加不可忽略的弹性力，导致 I1 定位阶段连接器不在预期位置，I3 抓取后 in-hand pose error 可达 1-3mm（Gebauer 2024）——远超端子间隙 0.1-0.5mm。</li>
+          <li><strong>多端子同步插入：不是"间隙小"，而是"不是一根针进一个孔"。</strong>USB 是 4-9 个端子排列在一个固定插头内。Pack 连接器有 power + signal + HVIL 多组端子，每组有独立插入力要求。HVIL 端子比 power 端子更短——插入时 power 端子先接触，拔出时 HVIL 端子先断开——这个时序特性是 safety design，不是 bug。</li>
+          <li><strong>高压安全：不是"高压危险所以要小心"，而是安全状态机约束机器人。</strong>Robot 不能自主决定何时插拔——它必须等待 PLC 的 safe-to-connect / safe-to-disconnect 信号。Tester 测试期间 Pack 可能处于 400V/800V 带电状态，若 Robot 在此时拔出，后果不是"测试失败"而是电弧风险。</li>
+          <li><strong>连接确认：不是"插进去就完事了"。</strong>Pack 连接器插进去后还有锁止/CPA 确认、HVIL 导通确认、电气连续性检测。USB 插进去电脑显示"已连接"就是确认了，Pack 连接器没有这种自动确认——Robot 必须主动执行多模态确认。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>学生需要从"有差异"推进到"差异具体是什么"以及"差异如何改变机器人要做的动作"。这是 Day 3 的核心训练——从 requirement 到 robot-task effect 的映射。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q2</span> 柔性线束的"形变"如何具体影响机器人 I1-I5 每一步？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>柔性线束会导致线束歪？没有刚体的那种刚性？比较容易产生形变？</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>直觉"会歪、不刚、容易形变"是对的，但需要从"线歪了"推进到"线歪了意味着机器人每一步都要做不同的事"。按 sub-step 逐项纠正：</p>
+        <ol>
+          <li><strong>I1 Locate：</strong>不只是定位连接器 6 DOF，还要估计线束 3D 形状 + 张力状态。Zhang Y. et al. (2025) 明确指出 DLO 操作中张力信息不可直接观测，需要 learning-based 方法近似推断。I1 从"定位一个物体"变成了"估计一个系统的状态"。</li>
+          <li><strong>I2 Approach：</strong>不能 pre-taught 固定路径——每次接近路径都需要根据 I1 的在线感知结果动态计算，且必须避开线束本体。</li>
+          <li><strong>I3 Grasp：</strong>抓取后线束弹力导致连接器在手中移动。Gebauer (2024) 实验数据：in-hand pose error 1-3mm，远超 SAE USCAR-2 端子间隙 0.1-0.5mm。这个误差会 cascading 到后续所有 sub-step。CATL 小墨明确需要"vary its applied force"——抓取力不是固定值。</li>
+          <li><strong>I4 Pre-align：</strong>线束形变不是静态的——你在操作它的过程中，它的形状在持续变化。Wu et al. (2025) 实验验证：线缆弯曲 40° 时插入成功率明显低于直线状态，需要 curriculum learning 逐步训练。</li>
+          <li><strong>I5 Transport：</strong>运输过程中连接器姿态可能漂移。Malvido Fresnillo et al. (2025) 的双臂方案用"一手持线束、一手操作连接器"来缓解——单臂方案没有这个优势。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>线束形变不是"线歪了"这个静态事实，而是动态的——你在操作它的过程中，它的形状在持续变化。每个 sub-step 都需要额外补偿这个动态变化。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q3</span> 三种控制模式（位置控制/力反馈/力位混合）分别对应 Day 2 的哪些 sub-step？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>因为连接器插接不是简单的插拔，插入，还有一些视觉定位，以及力反馈也会给连接器插接带来更多的帮助，总而言之，这个插接任务很复杂？</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>三个问题：没有回答 Q3 问的对应关系；把视觉定位和力反馈混在一起说"都有帮助"；用"复杂"总结等于什么都没说。正确回答：</p>
+        <ol>
+          <li><strong>模式 A：自由空间位置控制 → I2 Approach。</strong>此时连接器尚未接触任何物体，力传感器读数为零，力反馈没有信息可用。如果在这个阶段用力控，机器人会因为没感受到阻力而一直推进直到撞上东西。</li>
+          <li><strong>模式 B：接触力反馈引导 → I6 First Contact + I7 Fine Alignment。</strong>I6 检测到接触事件后，从位置控制切换到力控。I7 利用接触力/力矩反馈搜索精确对准位置——Wang (2025) 论文的核心，因为视觉对准精度不够（Gebauer 的 in-hand pose error 1-3mm 远超端子间隙 0.1-0.5mm）。</li>
+          <li><strong>模式 C：力/位置混合控制 → I8 Insertion。</strong>插入方向做力控，限制最大插入力不超过 SAE USCAR-2 规定的 75N；横向做位置控制，保持连接器对正。如果全程只用位置控制，卡滞时持续加力会损坏端子；如果全程只用柔顺控制，自由空间中没有阻力会导致机器人失控。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>视觉定位和力反馈不是并列的"辅助工具"，而是顺序依赖的——视觉定位给你初始位置 → 力反馈帮你从初始位置找到精确对准 → 力/位置混合控制保证安全插入。三种模式不能合并，因为它们依赖不同的传感器信息、面对不同的物理约束、必须在 sub-step 之间精确切换。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q4</span> 为什么 Connection Confirmation 是独立步骤？它包含哪四个层次？确认失败后 Robot 该做什么？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>因为这是与 PLC 通讯的关键步骤，如果忽略了，Robot 和 Pack 电气设备等会发生很严重的电气事故吧，也会影响我们的产品测试，这个连接确认是保证我们工艺成功，完整的关键。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>两个关键缺失：没有展开四个层次；没有回答"确认失败后 Robot 该做什么"。且把"确认"和"通讯"混为一谈了——确认是 Robot 自己验证物理状态，通讯是把确认结果发给 PLC，这是先后两个动作。正确回答：</p>
+        <ol>
+          <li><strong>第 1 层物理就位：</strong>连接器是否推到机械止动位。推入深度不够 = 端子未完全接触。但推到位 ≠ 连接成功，因为锁止和电气可能仍不满足。</li>
+          <li><strong>第 2 层锁止/CPA：</strong>锁扣或 CPA 是否完全啮合。SAE USCAR-2 规定 CPA 锁止后在外力 70N 下不得脱开。KUKA/Liebherr 案例有专门的 CPA lock 步骤。</li>
+          <li><strong>第 3 层 HVIL 导通：</strong>高压互锁回路是否闭合。HVIL 专利定义了"正确连接/半连接/断开"三种状态，半连接是真实存在的中间状态。此时如果进入高压测试，BMS 无法在拔出时及时切断主回路。</li>
+          <li><strong>第 4 层电气连续性：</strong>各端子接触电阻是否正常。WinAck EOL 的 HV interlock test 和绝缘阻抗测试依赖于此。</li>
+        </ol>
+        <p style="margin-top: 8px;">这四个层次是顺序依赖的——物理就位是锁止的前提，锁止是 HVIL 导通的前提，HVIL 导通是电气连续性检测的前提。确认失败后，Robot 应执行<strong>回退-重试策略</strong>（retract-and-retry），而非直接报警：微调位置后重新插入、重新锁止、重新确认。仅在多次重试失败后才报警请求人工干预。CATL 小墨是否有此能力当前标记为 UNKNOWN。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q5</span> 为什么 Robot 在 Pack EoL 中不能独立决定何时插拔？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>因为 Robot 只能做到物理层面的确认，而 HVIL 安全回路是电气层面，PLC 安全状态则是 PLC 在与各模块有通讯后，能判断的最高最贴切逻辑，Tester 则是沟通去除电气能量的很重要装置。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>正确识别了四个角色的不同职责，这是很大的进步。三个问题需要修正：</p>
+        <ol>
+          <li><strong>Robot 不能自主决定的根本原因不是"它只能做物理确认"，而是它缺少做安全判断所需的信息输入。</strong>Robot 不知道插之前 Pack 是否安全（BMS 就绪？Tester 准备？），也不知道拔之前 Pack 是否已完成去能量。这些信息分布在 Tester、BMS、MES 三个系统中，Robot 没有直接访问权限。所以不是 Robot "不应该"自己决定，而是它"没有能力"自己决定。</li>
+          <li><strong>HVIL 和 PLC 不是上下级关系，而是两层独立安全机制。</strong>HVIL 是硬件级保护（连接器物理拔出 → 回路断开 → BMS 切断），PLC 是系统级保护（多源信息汇总 → 安全判断 → 授权机器人）。两者同时存在，互相独立。学生把 HVIL 说成"电气层面"方向对，但 HVIL 不是主动的"判断者"，它是被动的安全机制。</li>
+          <li><strong>Tester 不只是"去能量装置"。</strong>Tester 的主要角色是执行测试。它发出两个独立信号：Test Complete（测试已完成）和 De-energized（去能量已完成）。两者之间有时间差——Test Complete ≠ De-energized ≠ Safe-to-disconnect。Robot 必须等最后一个信号，不能看到 Test Complete 就拔。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>四个角色串成因果链：Robot 想插拔 → 但缺少信息 → PLC 汇总 Tester/BMS/MES 信息后仲裁 → 授权 Robot → 如果所有软件判断都失效，HVIL 在硬件层面提供最后一道防线。每一层是上一层的约束，不是并列关系。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q6</span> 六类需求中哪些是 Battery-Specific？哪些是 Generic？为什么诚实区分很重要？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>我记不太清了，你可以总结下。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>学生诚实承认记不清，这是好的学习态度。逐类总结：</p>
+        <ol>
+          <li><strong>R1 柔性线束 → HYBRID。</strong>线缆操作是通用机器人学问题，但 Pack 的 HV 线束粗重+高压+不可拆卸的组合是电池特有的。</li>
+          <li><strong>R2 接触插接 → HYBRID。</strong>力控插入是通用精密装配能力，但 HV 连接器的多端子同步+HVIL 时序+失效后果是电弧而非装配缺陷是电池特有的。</li>
+          <li><strong>R3 高压安全 → BATTERY-SPECIFIC。</strong>唯一完全 battery-specific 的。HVIL 回路、去能量确认、电弧风险——普通工业装配的安全互锁（围栏门开关）不涉及高压电气安全。</li>
+          <li><strong>R4 变异换型 → GENERIC。</strong>多型号换型是通用制造问题。但电池 Pack 换型后首次插接需要额外安全验证，这是 battery-specific 的 nuance。</li>
+          <li><strong>R5 连接确认 → HYBRID。</strong>多传感器融合确认是通用方法，但 HVIL 导通+电气连续性确认是电池特有的，确认失败的后果（安全隐患 vs 质量问题）也不同。</li>
+          <li><strong>R6 追溯集成 → HYBRID。</strong>MES 集成是通用智能制造，但电池行业的国家溯源平台+IATF 16949+EoL 测试结果与安全合规绑定是电池特有的。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>为什么诚实区分很重要？</strong>不是为了贴标签，而是为了 Day 4 的架构比较。这六类需求构成累进约束层级：R4（Generic）→ R1/R2/R5/R6（Hybrid）→ R3（Battery-Specific）。如果一个架构声称适合 battery manufacturing 但它的论证只依赖 generic 能力（如"力控精度高"），那论证是不充分的——它必须证明自己能处理 R3。如果你不区分，thesis 论证就会变成"这个机器人精度高所以适合电池制造"——这是不成立的。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q7</span> 小墨的公开报道为六类需求提供了多少证据？缺失什么？
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>我觉得没啥证据，都是文字材料宣传而已，具体工艺和步骤以及视频也没有提供。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>两个正确直觉——确实没有视频和工艺参数，确实是企业宣传材料。但从"宣传材料"跳到"没啥证据"就过度否定了。宣传材料中也有事实陈述（factual claim）和宣传修辞（marketing language）之分，需要区分对待：</p>
+        <ol>
+          <li><strong>R1 柔性线束：</strong>"can vary its applied force when handling flexible wire harnesses"——这是事实陈述（可验证的能力声明），确认线束力控是任务需求。缺失：用什么传感器？力控精度？线束规格？</li>
+          <li><strong>R2 接触插接：</strong>"success rate exceeding 99%"+ "adjust its posture when alignment changes"——"99% 成功率"是可验证的量化声明。缺失：力控算法？接触状态检测方法？传感器配置？</li>
+          <li><strong>R3 高压安全：</strong>"reduced spark risks"——结果声明，描述了真实的安全问题。缺失：安全状态机逻辑？PLC 通信协议？去能量确认方式？</li>
+          <li><strong>R4 变异换型：</strong>"shifts between different battery models without interruption, 3x workload"——明确的量化能力声明。缺失：换型频率？Pack 型号数量？连接器类型差异？</li>
+          <li><strong>R5 连接确认：</strong>"actively monitors connections, flags irregularities immediately"——确认持续监控是任务需求。缺失：确认判据组合？重试策略？</li>
+          <li><strong>R6 追溯集成：</strong>"switches into inspection mode between tasks"——只有 inference，没有直接声明。缺失：MES 接口？通信协议？追溯粒度？</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>小墨报道提供了关于"任务需求存在性"的 evidence，证据等级为企业自报（低于同行评审论文但高于纯推测）。但缺乏技术实现细节意味着我们不能从小墨报道推导 Day 4 的架构比较结论——Day 4 的架构比较将依赖论文和工业标准中的通用能力分析。学生把"证据有限"等同于"没有证据"，学术上这是两个不同的判断。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="concept-box" style="border-color: var(--blue);">
+    <div class="concept-title" style="color: var(--navy);">
+      <span class="icon">Q8</span> 用"pneumatic gripper + pre-taught position"为什么不能完成这个任务？用至少四类需求的物理事实论证。
+    </div>
+    <div class="compare">
+      <div class="col a">
+        <div class="col-title">学生回答</div>
+        <p>首先就是柔性线束的 R1 需要力控，R3 也很麻烦，总而言之，不能这么简单。</p>
+      </div>
+      <div class="col b" style="background: #e8f0fe; border-color: #bcd4f0;">
+        <div class="col-title">导师点评</div>
+        <p>抓了两个点（R1 力控、R3 安全），但 Q8 是 Day 3 的最终工程论证题——要说服一个机器人工程师，这不只是"麻烦"，而是 pneumatic gripper + pre-taught position 在物理上就不成立。用"总而言之不能这么简单"结尾等于放弃了论证。正确应覆盖至少四类需求：</p>
+        <ol>
+          <li><strong>R1 柔性线束：pre-taught position 在第一步就失效。</strong>Pre-taught position 假设连接器每次都在同一个位置。线束是柔性的——上一个 Pack 拔线后线束变形了，这一个 Pack 的连接器就不在上次的位置。Gebauer (2024)：即使抓住连接器，in-hand pose error 仍可达 1-3mm，而 SAE USCAR-2 端子间隙是 0.1-0.5mm。还没开始插，手里的误差已经超过允许间隙 6-30 倍。需要在线视觉定位（不是 pre-taught）和自适应抓取策略（不是固定抓取力）。Pneumatic gripper 不能调力，CATL 小墨明确需要"vary its applied force"。</li>
+          <li><strong>R2 接触插接：pneumatic gripper 没有力反馈。</strong>沿 pre-taught 轨迹推过去，碰到插座入口时不知道、卡住了不知道、继续加力直到端子变形。Wang (2025) 论文核心：连接器插接需要力反馈来检测接触事件和搜索对准位置。Pneumatic gripper 没有腕部 F/T 传感器，卡滞时不能执行回退-重试，只能"推到底"——不管中间发生了什么。</li>
+          <li><strong>R3 高压安全：pre-taught 轨迹没有安全握手。</strong>Pre-taught 方案假设 Robot 可以随时插拔。但 Pack EoL 中 Robot 必须等待 PLC 的 safe-to-connect 和 safe-to-disconnect 信号。如果 Robot 按 pre-taught 时序在 Tester 完成去能量之前就拔线，电弧风险是真实存在的。CATL 小墨报道明确提到"reduced spark risks"——spark 不是假设，是之前人工操作时存在的问题。</li>
+          <li><strong>R5 连接确认：pneumatic gripper 不能确认连接是否成功。</strong>推到底了——然后呢？Pneumatic gripper 唯一能告诉你的是"气缸到行程终点了"。它不知道锁止是否完成（没有力传感器检测锁止力），不知道 HVIL 是否导通（没有电气信号接口），不知道端子接触是否良好（没有电气连续性检测）。只能假设连接成功，然后释放连接器。如果连接实际上没成功，下一个工位 Tester 会在未正确连接的 Pack 上加载高压——这就是 Day 2 F4 的场景。</li>
+        </ol>
+        <p style="margin-top: 8px;"><strong>核心要点：</strong>这个方案不是"可以优化"——它从根本上缺少执行这个任务所需的物理能力。工程论证和学术论证的区别：学术论证说"这个方案有局限性"，工程论证说"这个方案在物理上不成立，因为 A、B、C、D 四个事实"。Q8 训练的是后者。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 总结表 -->
+  <h3 style="margin-top: 30px;">八题整体评价</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th style="width:5%">题号</th><th style="width:20%">核心概念</th><th style="width:30%">学生回答要点</th><th style="width:45%">评价</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Q1</strong></td>
+          <td>高压连接器 vs USB 的差异维度</td>
+          <td>物理尺寸、高压安全、间隙——方向对但笼统</td>
+          <td>⚠️ 方向正确，但需要从"有差异"推进到"差异如何改变机器人任务"——四个维度（线束、端子、安全、确认）各需精确化</td>
+        </tr>
+        <tr>
+          <td><strong>Q2</strong></td>
+          <td>柔性线束形变对 sub-step 的影响</td>
+          <td>"会歪、不刚、容易形变"——直觉对</td>
+          <td>⚠️ 需要从"线歪了"推进到"每一步都要做不同的事"——I1 到 I5 逐步展开，核心是形变是动态而非静态的</td>
+        </tr>
+        <tr>
+          <td><strong>Q3</strong></td>
+          <td>三种控制模式与 sub-step 对应</td>
+          <td>视觉定位+力反馈"都有帮助"，"很复杂"</td>
+          <td>❌ 未回答对应关系，混用视觉和力反馈，用"复杂"逃避分析。需要明确：位置控制→I2，力反馈→I6+I7，力位混合→I8</td>
+        </tr>
+        <tr>
+          <td><strong>Q4</strong></td>
+          <td>Connection Confirmation 四层次</td>
+          <td>"与 PLC 通讯的关键步骤"——混用确认和通讯</td>
+          <td>⚠️ 方向对但漏了：四个层次（物理就位→锁止→HVIL→电气连续性）的顺序依赖，确认失败后的重试策略</td>
+        </tr>
+        <tr>
+          <td><strong>Q5</strong></td>
+          <td>Robot 不能自主插拔的原因</td>
+          <td>正确识别四个角色职责，但说反了 HVIL 和 PLC 的角色</td>
+          <td>✅ 主线正确，需要修正：Robot 缺少信息而非"只能做物理确认"；HVIL 是被动硬件保护而非主动判断者；Tester 有两个独立信号</td>
+        </tr>
+        <tr>
+          <td><strong>Q6</strong></td>
+          <td>Battery-Specific vs Generic 区分</td>
+          <td>诚实承认记不清</td>
+          <td>— 诚实是好的。需要记住：R3 唯一完全 battery-specific；R1/R2/R5/R6 hybrid；R4 generic。这个区分直接决定 Day 4 架构比较的论证结构</td>
+        </tr>
+        <tr>
+          <td><strong>Q7</strong></td>
+          <td>小墨报道的证据评估</td>
+          <td>"没啥证据，宣传材料"</td>
+          <td>⚠️ 两个正确直觉，但过度否定：宣传材料中也有事实陈述（factual claim），需要区分事实陈述和宣传修辞。证据等级：企业自报 < 同行评审论文 > 纯推测</td>
+        </tr>
+        <tr>
+          <td><strong>Q8</strong></td>
+          <td>工程论证：pneumatic + pre-taught 不成立</td>
+          <td>R1 力控 + R3 安全，"不能这么简单"</td>
+          <td>❌ 只覆盖两类需求（要求至少四类），用"不能这么简单"代替论证。需要：R1/R2/R3/R5 各有物理上不成立的具体理由，结论是"方案从根本上缺少物理能力"而非"不够好"</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="finding" style="margin-top: 16px;">
+    <strong>整体评价：</strong><br>
+    <strong>掌握了的：</strong>四个角色（Robot/HVIL/PLC/Tester）的职责识别、六类需求的存在性、线束形变对任务的影响方向<br>
+    <strong>需要加固的：</strong><br>
+    1. 从"有差异"到"差异如何具体改变每个 sub-step"的映射能力（Q1, Q2, Q3 都暴露这个问题）<br>
+    2. 工程论证能力——不说"复杂"或"麻烦"，而是给出"在物理上不成立，因为 A/B/C/D 四个事实"（Q8 暴露）<br>
+    3. 证据评估的精确性——区分"事实陈述"和"宣传修辞"，区分"证据有限"和"没有证据"（Q7 暴露）<br>
+    4. Battery-Specific vs Generic 六类区分要记住，这是 Day 4 架构比较的论证基础（Q6 暴露）<br>
+    <strong>Day 4 的关键衔接：</strong>当前理解已足够支撑 Day 4 的供给侧分析。Day 4 将基于 Day 3 的累进约束层级（R4 generic → R1/R2/R5/R6 hybrid → R3 battery-specific），评估三种架构（dedicated / fixed industrial / humanoid）各自能覆盖哪些层级。需要特别注意 Q8 暴露的弱点——如果 Day 4 的架构比较只说"这个架构精度高所以更合适"，那就是在重犯 Q3 的错误。
+  </div>
+
+  <div class="note"><strong>记录说明：</strong>本问答记录于 2026-08-18，基于 Day 3 讲义内容。学生回答为原始表述，导师点评为当场纠正。此记录用于日后复盘，追踪学习轨迹。与 Day 2 的 Q&A 对比，可观察学生在"从需求到能力映射"和"工程论证"两个维度的进步曲线。</div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ============================================================ -->
+<!-- Day 3 → Day 4 过渡 -->
+<!-- ============================================================ -->
+<section>
+  <p class="kicker">前向指针</p>
+  <h2>Day 3 → Day 4 过渡</h2>
+  <div class="card">
+    <p><strong>Day 3 完成了"需求侧"分析。</strong>六类需求、每类需求对机器人任务的影响、所需能力、当前证据和 unknown 都已明确。</p>
+    <p><strong>Day 4 将做"供给侧"分析：</strong></p>
+    <ol>
+      <li>从 Day 3 的 Required capability 列表中提取能力需求</li>
+      <li>评估三种架构（dedicated automation / fixed industrial robot / humanoid or mobile dual-arm）各自能提供哪些能力</li>
+      <li>基于"累进约束"层级（R4 generic → R1/R2/R5/R6 hybrid → R3 battery-specific）进行结构化比较</li>
+      <li>回答 Week 06 的核心问题："what task and production requirements determine the suitability of"这三种方案</li>
+    </ol>
+    <p><strong>Day 3 的 UNKNOWN 列表直接影响 Day 4：</strong>如果某个能力需求对应的 evidence 状态是 UNKNOWN，Day 4 的架构比较就需要在该维度上标记为"基于 inference 的假设"，而非"基于 evidence 的结论"。</p>
+  </div>
+</section>
+
+</body>
+</html>
