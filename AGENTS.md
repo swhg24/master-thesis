@@ -47,6 +47,66 @@ This is the working title supplied by Thomas, not yet a final registered title. 
 - Apply the rule **technical neutrality does not mean robotics neutrality**. Do not force AGV, AMR, robot arm, or humanoid into a case, but every potential thesis case must identify an actual or credibly evaluable robotic-system actor, the task or implementation decision being studied, and how a battery-manufacturing requirement changes that actor's role.
 - Fixed conveyors, stacker cranes, inbound machines, dedicated transfer mechanisms, and process equipment may be reference architectures, comparators, or subsystems. They must not silently become the thesis core unless a genuine robotic-system problem, implementation decision, practical consequence, and credible evidence strategy are established and the scope is consistent with Thomas's intent.
 
+## Thesis skill orchestration
+
+The student does not need to name a Skill in ordinary requests. Infer the task type, select the smallest effective Skill set, announce the selected Skill(s) and purpose in a short commentary update, and then apply them. Do not invoke a Skill merely because it is installed. Normally use one primary Skill; add at most one complementary Skill when the task genuinely spans two distinct stages. For a larger end-to-end request, execute Skills sequentially and preserve the output of each stage instead of allowing overlapping workflows to compete.
+
+Project authority always outranks third-party Skill defaults. Apply the research-direction precedence, PEM requirements, current case status, evidence rules, and weekly pacing in this file and the referenced project documents before following a Skill. A Skill's scoring rubric, paper genre, venue preference, prose convention, or workflow recommendation is advisory and must never silently redefine the thesis, manufacture a research gap, overrule Thomas, or replace missing evidence.
+
+Use the following default routing:
+
+- **Fast literature discovery, DOI/BibTeX, citation metadata, deduplication, or open-access status -> `academic-search`.** Prefer structured academic APIs. Do not start Chrome remote debugging or a CDP proxy, configure API keys, or download PDFs unless the task requires it and the user authorizes the relevant action. The installed upstream package references a legacy `check-deps.sh` that is not shipped; do not rely on that command.
+- **Survey-grade investigation, evidence synthesis, closest-work search, counterexamples, or adversarial literature review -> `deep-research`.** Read the current case materials first, freeze the concrete research question, and require claim strength to match evidence strength. Do not also invoke the ARS deep-research route by default.
+- **Title, research-question, case-selection, novelty, feasibility, or fatal-flaw assessment -> `idea-evaluator`.** Read `docs/research_direction_guardrails.md` and the current week/case notes first. Treat scores and verdicts as structured critique, not as a supervisor decision or proof of novelty.
+- **Claim-citation audit, research-integrity check, structured manuscript review, or research-to-paper consistency audit -> `academic-research-suite`.** Prefer it for auditing an existing evidence set, while `deep-research` remains the default for building the evidence synthesis. Do not invoke cross-model transport, external providers, external-model upload, or experiment execution without explicit user consent.
+- **A local paper/thesis logic skeleton or advisor-discussion structure -> `tech-paper-template`.** Adapt its technical-paper assumptions to a PEM engineering thesis; do not force a Technique/benchmark framing.
+- **End-to-end cross-chapter story, material-to-chapter mapping, or complete manuscript build -> `paper-spine`.** Use only when the user requests whole-document orchestration or when the title/RQs, method, evidence base, and case status are sufficiently stable. Establish the output path and mutation scope before it writes files, and do not let it search for evidence merely to fill a predetermined story.
+- **Drafting evidence-grounded prose -> `paper-writer`; Introduction-only drafting or restructuring -> `intro-drafter`.** Supply the approved outline and evidence pack. Do not create citations, performance values, costs, maturity claims, or conclusions beyond the supplied or verified evidence.
+- **Language polishing -> `paper-polish` by default.** Use `nature-polishing` only when the user explicitly wants that style or its whole-manuscript academic-language discipline. Do not run both on the same passage by default, and preserve terminology, citation intent, uncertainty, and conditional claim strength.
+- **Submission-stage adversarial review -> `pre-submission-reviewer`.** Use it for a mature full draft or when explicitly requested, not as the default reviewer for early weekly notes. PEM/Thomas requirements override its CS-paper, LaTeX, vocabulary, punctuation, or venue-specific preferences.
+- **Figure logic and layout planning -> `figure-designer`; reconstruction of a supplied reference as an editable diagram -> `drawio-reconstruction`; data-driven scientific plots or multi-panel figures -> `nature-figure`.** Prefer editable Draw.io/SVG/PPT/vector sources for PEM thesis system diagrams. Do not use an external image-generation route or send data to OpenRouter without explicit consent.
+- **Full-paper bilingual, figure/table/equation-aware reading -> `nature-reader`.** Use ordinary local reading for short extraction, a simple summary, or when the full bilingual reader would be disproportionate.
+- **Formal Word thesis creation, audit, or formatting -> `thesis-docx`.** First read the relevant part of `docs/pem_thesis_requirements.md` and verify the current official PEM template/rules. This environment is Linux, so do not assume Word COM or PowerShell automation is available; prefer OOXML-compatible checks unless an appropriate Windows environment is explicitly provided.
+- **`benchmark-paper-template` is not a default thesis Skill.** Use it only if the task genuinely concerns a benchmark/evaluation-paper contribution. **`vibe-research-workflow` is not a default research Skill.** Use it only for explicit questions about organizing an AI-assisted research workflow or choosing research tools.
+
+For thesis questions, first classify the request as explanation, evidence search, deep synthesis, research decision, writing, review, figure work, or document production. Inspect the relevant current-week files and project references, choose the route above, and continue autonomously. For a new weekly plan, continue to follow `docs/collaboration_and_pacing.md`: one central learning question, a minimum target, and optional extension. If no installed Skill materially improves the task, work directly from the repository and evidence rather than forcing a Skill invocation.
+
+## Registration proposal checkpoint (2026-08-20)
+
+Treat `docs/thesis_registration_consensus_2026-08-20.md` as the canonical decision record for the current proposed title, research questions, research problem, scope, method, expected contributions, thesis story, risks, and post-registration route. This is a **student–GPT–Codex consensus pending Thomas's confirmation**, not an approved or registered supervisor decision. If Thomas changes any part, update that record, this checkpoint, the direction guardrails, and the current case plan together.
+
+The proposed registration title is:
+
+> **Task-Based Assessment of Robotic Systems in Battery Manufacturing: Application Potential and Implementation Strategies**
+
+Proposed German title:
+
+> **Aufgabenbasierte Bewertung von Robotersystemen in der Batteriefertigung: Anwendungspotenziale und Implementierungsstrategien**
+
+The proposed research questions are:
+
+1. **Which task characteristics and process and production requirements determine the application potential of robotic systems in selected battery-manufacturing use cases?**
+2. **How do different robotic-system architectures compare with dedicated, fixed-purpose automation in their conditional suitability under varying task and production conditions?**
+3. **How can the selected robotic applications be implemented in industry while addressing technical, economic, and integration-related barriers?**
+
+Preserve the following thesis logic unless a higher-authority source changes it:
+
+```text
+Battery-manufacturing task and industrial decision problem
+-> task / process / production requirements
+-> existing automation baseline
+-> robotic-system capabilities
+-> conditional architecture suitability
+-> technical, economic and integration barriers
+-> implementation strategies and future potential
+```
+
+The thesis remains an **evidence-based comparative multiple-case assessment**, with Pack EoL test-connector handling as the first deep reference case and one to two evidence-sufficient adjacent applications used to test transfer and support cross-case conclusions. Week 06 provides a method prototype, not the final thesis contribution. Humanoid/mobile dual-arm systems are candidates to compare, not a preferred answer; dedicated fixed-purpose automation, fixed industrial robots, cobots/mobile systems, and relevant manual baselines remain legitimate comparators.
+
+The unresolved registration-scope question is whether Thomas intends selected module/pack applications to be explicitly included alongside battery-cell-production applications. Do not silently resolve the difference between the PDF phrase `battery cell production value chain`, the broader working title `Battery Manufacturing`, and Thomas's acceptance of Pack EoL. State the production level of every case and obtain Thomas's confirmation in the registration exchange.
+
+Do not mutate the title or RQs merely to fit new evidence, a new Skill template, or weekly-plan continuity. A change requires an explicit decision record triggered by Thomas's feedback, a defeated relevance/evidence gate, or a materially better and feasible thesis framing.
+
 ## Current research direction
 
 - Week 01 established: battery fundamentals -> process requirements -> initial robotics opportunities.
