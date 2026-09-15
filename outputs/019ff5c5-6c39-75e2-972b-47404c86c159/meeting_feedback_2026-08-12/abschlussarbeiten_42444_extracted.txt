@@ -1,0 +1,61 @@
+===== PAGE 1 =====
+Head of the chair: Prof. Dr.-Ing. Achim Kampker
+Visit us: www.pem.rwth-aachen.de
+Initial situation :
+The production of lithium-ion batteries is rapidly scaling worldwide, driven
+by demand for electric mobility and energy storage. New large-scale
+manufacturing facilities, particularly in Europe, must meet high
+requirements in terms of quality, efficiency, and cost. At the same time,
+battery production is characterized by complex processes, sensitive
+materials, and strict environmental conditions such as dry room operation.
+Despite increasing automation, many process steps remain partially
+manual, especially in cell assembly, material handling, logistics, and
+quality assurance. These manual interventions limit scalability and
+introduce variability. Robotic systems offer significant potential to improve
+process stability, increase efficiency, enhance safety, and enable better
+data integration for digitalization. However, challenges remain regarding
+integration, handling of delicate materials, operation under dry room
+conditions, and economic feasibility.
+Master's thesis / Bachelor's thesis
+Your task :
+The objective of this work is to analyze and evaluate the use of robotic
+systems along the battery cell production value chain. The study begins
+with an overview of current manufacturing processes and their specific
+requirements. Based on this, suitable application areas for robotics are
+identified, including industrial robots, collaborative robots, and mobile
+systems. Typical use cases include material handling, automated
+inspection, flexible assembly, and intralogistics. These applications are
+then assessed from a technical and economic perspective, considering
+factors such as automation potential, cost, quality impact, and scalability.
+Building on this, selected use cases are developed into concrete
+application scenarios, taking into account different cell formats and
+production environments. Finally, the work outlines future trends in
+robotics and provides recommendations for industrial implementation and
+further research.
+Robotic Systems in Battery Manufacturing: Potentials,
+Applications, and Implementation Strategies
+Image Source : Own
+Prerequisites:
+● Degree in (industrial)
+engineering (or comparable)
+● Enthusiasm for battery
+technologies
+● Commitment and willingness to
+learn
+We offer:
+● Insight into the battery
+technology of today and
+tomorrow
+● Electromobility laboratory
+(eLab) at RWTH Aachen
+University
+● Option to shape the thematic
+focus
+Interested?
+Please send a current transcript of
+records as well as your CV and
+certificates to the e-mail address
+below.
+Your contact :
+Thomas Fey , M.Sc .
+T.Fey @ pem.rwth - aachen.de
