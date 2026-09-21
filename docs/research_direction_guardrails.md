@@ -1,8 +1,9 @@
 # Research Direction Guardrails / 研究方向与防跑偏护栏
 
-> 维护日期：2026-08-13
+> 初始维护日期：2026-08-13
+> 最近同步：2026-09-20
 > 用途：本文件是 GPT、Codex 与学生在选择案例、制定周计划、收缩研究问题和判断论文相关性时的**必读项目规则**。
-> 状态：项目内部方向协议，不是 PEM/RWTH 官方文件，也不是最终注册题目、最终 research question 或 Thomas 的逐字书面决定。
+> 状态：项目内部方向协议。当前题目、RQ、scope 和案例路线以 2026-09-18 注册材料及 2026-09-20 学生确认作为固定研究基线；本文件不是 PEM/RWTH 官方规定，也不证明行政注册、签字、正式开始日期或截止日期已经生效。
 
 ## 1. 最高方向锚点
 
@@ -12,6 +13,7 @@
 
 ```text
 Thomas最新明确反馈
+→ 2026-09-18 registration materials + 2026-09-20 student-confirmed research baseline
 → Thomas原始任务说明 `abschlussarbeiten_42444.pdf`
 → 本方向护栏
 → 周计划与case dossier
@@ -28,7 +30,7 @@ Thomas 最初给出的 working title 是：
 
 因此，本论文无论怎样收缩，都必须同时保留三个要素：
 
-1. **Battery manufacturing**：核心场景属于锂离子电池制造，并明确处于cell、module还是pack层级；标题与任务段落对生产层级的表述宽窄不同，因此由Thomas确认，内部规则不得预先排除module/pack；
+1. **Battery manufacturing**：核心场景属于锂离子电池制造，并明确处于cell、module还是pack层级；2026-09-18材料已将selected cell/module/pack manufacturing applications写入当前scope，但这不要求三个层级各选一个案例；
 2. **Robotic systems**：必须存在可辨认或可被可信评价的机器人系统角色；
 3. **Potentials / applications / implementation**：研究必须落到机器人为何适合、承担什么任务、受什么约束以及怎样集成和验证，而不只是描述电池设备。
 
@@ -36,7 +38,7 @@ Thomas 最初给出的 working title 是：
 
 > 电池制造中的具体问题怎样形成机器人任务；电池工艺、产品、环境和设备接口怎样约束机器人系统；选定机器人应用在什么条件下具有价值并能够工业实施。
 
-根据`abschlussarbeiten_42444.pdf`，原始任务轮廓是：先理解制造工艺及要求，再识别工业机器人、协作机器人和移动系统的合适应用，随后从自动化潜力、成本、质量影响和可扩展性等维度开展技术经济评价，把选定use case发展成具体应用场景，并形成未来趋势与实施建议。PDF任务段落写有`battery cell production value chain`，标题写有`Battery Manufacturing`；module/pack是否可成为正式核心必须向Thomas确认。工艺学习只是机器人应用研究的输入，不是独立终点。
+根据`abschlussarbeiten_42444.pdf`，原始任务轮廓是：先理解制造工艺及要求，再识别工业机器人、协作机器人和移动系统的合适应用，随后从自动化潜力、成本、质量影响和可扩展性等维度开展技术经济评价，把选定use case发展成具体应用场景，并形成未来趋势与实施建议。PDF任务段落写有`battery cell production value chain`，标题写有`Battery Manufacturing`；当前注册材料通过显式写出cell/module/pack scope并以Pack EoL作为reference case记录了后续收束。工艺学习只是机器人应用研究的输入，不是独立终点。
 
 ### 1.3 论文类型与预期贡献
 
@@ -50,7 +52,7 @@ Thomas 最初给出的 working title 是：
 
 > 在什么battery-manufacturing task和production conditions下，不同robotic systems适合、不适合或值得进一步评价？
 
-暂定总体研究路线为：
+当前总体研究路线为：
 
 ```text
 Battery-manufacturing task
@@ -65,7 +67,7 @@ Battery-manufacturing task
 → future potential / recommendations
 ```
 
-案例结构采用`1个deep reference case + 2–3个adjacent battery-manufacturing cases`。Deep case用于建立`Task → Requirement → Capability → Suitability`方法原型，不等于整篇论文只能研究该case。
+案例结构采用`1个deep reference case + 1–2个evidence-sufficient adjacent battery-manufacturing applications`。Deep case用于建立`Task → Requirement → Capability → Suitability`方法原型，不等于整篇论文只能研究该case；也不得为了覆盖cell/module/pack全部层级而增加案例数量。
 
 ### 1.4 Evidence credibility而非强制实验验证
 
@@ -187,7 +189,7 @@ Week 05 Day 3责任审计没有找到直接证据证明formation-specific condit
 2. **B—Pack EoL/DCR高压测试接插件柔性插拔**：CATL/千寻智能`小墨`案例直接支持高压测试插头插接、柔性线束处理与连接状态检查；需与固定双工业机器人方案比较，而不能预设humanoid优势。
 3. **C—模组/Pack多工位搬运与拣选**：CATL Galbot S1直接支持module/pack中的material handling与picking，但公开任务、flow object和接口粒度仍过低，暂不具备直接deep-dive条件。
 
-`cell-EoL终检/分选`不再是已选case；`module/pack`也不再被内部规则预先排除。正式边界由Thomas结合原始PDF和最新humanoid反馈确认。
+`cell-EoL终检/分选`不再是已选case。当前scope明确允许selected cell/module/pack manufacturing applications，但每个案例与证据必须标注production level，跨层级迁移必须给出边界。
 
 ### 4.3 Week 06及论文方法原型的当前中心问题
 
@@ -195,13 +197,21 @@ Week 05 Day 3责任审计没有找到直接证据证明formation-specific condit
 
 Week 06把Candidate B作为第一个deep reference case，用它建立`Task → Requirement → Capability → Suitability`分析方法。目标不是证明humanoid更好，也不是把CATL/千寻案例变成整篇论文对象。
 
-### 4.4 尚未确定
+### 4.4 当前已确定与仍待研究
 
-- 最终论文是否以humanoid为主对象，还是把它作为一种候选robot architecture；
-- B能否持续作为deep reference case，以及DCR能否与EoL使用同一handling abstraction；
-- cell format与生产环境如何进一步收缩；
-- 最终 practical problem、research gap、research question、method 和 validation design；
-- 最终credible evaluation / evidence strategy采用哪些证据组合；专家或现场入口属于可选增强项。
+已经确定：
+
+- humanoid/mobile dual-arm system 是与 industrial robot、cobot、mobile manipulator、dedicated automation 和适用时的 manual solution 比较的候选架构之一，不是预设答案；
+- Pack EoL test-connector handling 是 detailed deep reference case；
+- 当前 RQ1–RQ3、cell/module/pack scope、比较维度和 comparative multiple-case route 以 2026-09-18 注册材料为准。
+
+仍待研究而非重新选题：
+
+- DCR能否与EoL使用相同的handling abstraction、connector、station或robot；
+- Pack EoL具体product format与production environment怎样界定；
+- closest-work与novelty boundary；
+- Framework v1.0的操作化判定规则与最终credible evaluation / evidence strategy；
+- Candidate A能否通过`F0`–`F3`相邻案例闸门，以及是否需要第二个adjacent case。
 
 ### 4.5 Case Lock与变更控制
 
@@ -226,13 +236,23 @@ Week 06把Candidate B作为第一个deep reference case，用它建立`Task → 
 - Thomas同时否定仅依赖新闻信息的证据方式。企业新闻只证明企业披露，不能独立证明性能、成熟度或经济优势。
 - Thomas提出下周可准备约1–2页/张的abstract并进入注册流程，他将另行提供信息。正式动作前仍须核验最新PEM/RWTH/ZPA流程。
 
-因此当前状态更新为：
+因此当时状态更新为：
 
 > **Candidate B = PROVISIONAL WEEK 06 FOCUS / supervisor-accepted student choice for further investigation / NOT YET FINAL CASE LOCK.**
 
 Humanoid/mobile dual-arm system可以成为Week 06的重点评价对象，但必须与专用自动化和固定工业机器人比较，不预设优越性。公开信息不足可构成检索与迁移研究的入口，但不能单独构成research gap。
 
-2026-08-13进一步校准：Candidate B的身份从“唯一最终case的生死候选”调整为**第一个deep reference case**。Week 06的终点不是永久锁题，而是形成可迁移的方法原型。后续优先将同一框架应用到Candidate A（cell recognition / grasping / loading），再根据证据选择第二或第三adjacent case并开展cross-case comparison。
+2026-08-13进一步校准：Candidate B的身份从“唯一最终case的生死候选”调整为**第一个deep reference case**。Week 06的终点不是永久锁题，而是形成可迁移的方法原型。后续优先将同一框架应用到Candidate A（cell recognition / grasping / loading），再根据证据决定是否需要另一个adjacent case并开展cross-case comparison。
+
+### 4.7 2026-09-18/20 current checkpoint
+
+- 当前标题为 `Task-Based Assessment of Robotic Systems in Battery Manufacturing: Application Potential and Implementation Strategies`；
+- 当前 RQ1–RQ3 以 2026-09-18 注册材料的文字为准，不再使用 2026-08-20 旧措辞；
+- Pack EoL test-connector handling 已从 Week 06 provisional focus 升级为注册材料中的 detailed reference case；
+- scope 明确覆盖 selected cell/module/pack manufacturing applications；
+- 使用一个至两个evidence-based adjacent applications；Candidate A仍是第一个准入候选，尚未自动成为正式第二案例；
+- 研究阶段已从方向探索转入 evidence protocol、Pack EoL claim audit 与 Framework v1.0 操作化；
+- 行政签字、ZPA注册、正式起止日期仍需独立确认，不能与研究方向是否固定混为一谈。
 
 ## 5. Week 05 Architecture B 的正确身份
 
@@ -329,7 +349,7 @@ Position、contact、pressure、identity 和 readiness 只是筛选项，不是�
 - 不在transport technology、任务、数据和验证未确认时做fleet sizing、dispatching、routing、parking或robustness；
 - 不把position、contact、pressure、identity、readiness全部捆成一个大课题；
 - 不研究formation电化学配方、cabinet内部详细机构或PLC报文实现；
-- 不扩大到整厂或recycling；module/pack可进入Thomas决策短名单，但在导师确认前不冒充已锁定scope；
+- 不扩大到整厂或recycling；当前scope允许selected module/pack applications，但不因此把所有module/pack活动或跨层级证据自动纳入；
 - 不因为humanoid热门或Thomas建议关注就预设其优于工业机器人/专用自动化，也不进入步态、运动控制或foundation-model算法开发；
 - 允许把humanoid作为重点候选机器人类别，但必须绑定具体battery-manufacturing task、比较baseline、battery-specific requirement、实施决策与验证路径；
 - 不因专利/论文未披露就宣布industrial problem或research gap；
@@ -349,6 +369,14 @@ Position、contact、pressure、identity 和 readiness 只是筛选项，不是�
 - Week 06应形成deep-case charter、selection tree、任务/责任边界、要求—能力—架构条件比较和方法框架v0.1；
 - Candidate B用于建立方法原型，不承担“唯一最终case”的生死审查；证据不足时缩小主张或将humanoid降为future-trend scenario，而不是自动推翻整篇多案例研究路线。
 
+### 2026-09-20当前执行决定
+
+- 不重新打开题目、RQ或总体方向；
+- Pack EoL test-connector handling 作为deep reference case继续，但Week 06内容必须先经过claim-level evidence audit；
+- 当前顺序固定为：baseline synchronization → Evidence Protocol v1 → Pack EoL claim/closest-work audit → Framework v1.0 → Candidate A `F0`–`F3` gate → full adjacent-case and cross-case work → implementation strategies → thesis writing；
+- 在Evidence Protocol、Claim–Evidence Matrix和Framework v1.0稳定前，不开始完整Candidate A架构比较，不撰写未经证据支持的Results/Discussion；
+- Method章节可在protocol和Framework v1.0稳定后提前起草。
+
 ### KEEP / NARROW
 
 只有机器人相关性硬门、battery-specific effect、practical relevance和credible evidence strategy均成立时，才允许继续强化该case的结论。
@@ -366,25 +394,21 @@ Position、contact、pressure、identity 和 readiness 只是筛选项，不是�
 - 返回Week 02/04 problem map，重新比较exception flow、vision-guided loading/inspection、机器人上下料或其他有更清楚robotics relevance的候选；
 - 不自动回到AGV fleet simulation。
 
-## 11. 向 Thomas 必须确认的方向问题
+## 11. 当前外部确认与开放问题
 
-1. **Does the intended scope of “Battery Manufacturing” include module and pack production as a possible primary case, despite the task paragraph's wording “battery cell production value chain”?**
-2. **Which case should we deepen: (A) cell identification/grasping/loading for module or pack assembly, (B) flexible high-voltage test-connector handling at pack EoL/DCR testing, or (C) multi-station material handling and picking in module/pack production?**
-3. **Should humanoid robots be the primary technology under evaluation, one candidate within a technology comparison, or mainly a future-trend scenario?**
-4. **Which concrete FFB/PEM/industry station, expert, equipment specification, or dataset could validate the selected task requirements and current automation pain points?**
-5. **After selecting the case, which product format and production environment should form the first concrete application scenario?**
-
-2026-08-12状态更新：
-
-| 问题 | 当前状态 |
+| 项目 | 2026-09-20状态 |
 | --- | --- |
-| module/pack能否作为当前case范围 | `WORKING ACCEPTANCE`：Thomas表示Pack EoL testing方向可以；注册abstract仍需显式写清正式边界 |
-| A/B/C选择 | `STUDENT DECISION`：学生暂选B并提出继续深化，Thomas认可计划；尚未通过最终case-lock gate |
-| humanoid角色 | `PARTLY RESOLVED`：可作为重点评价对象并做属性适用性分析；主对象/比较方案/future trend的最终论文角色仍由证据和abstract决定 |
-| evidence strategy | `IN DEVELOPMENT`：不以专家/现场为强制门；Week 06将组合文献、设备baseline、直接披露、跨行业迁移和scenario analysis，专家/站点为可选增强 |
-| product format / station environment | `UNRESOLVED`：必须在后续具体application scenario前锁定 |
+| 英文/德文题目与RQ | `FIXED INTERNAL RESEARCH BASELINE`：以2026-09-18材料及学生确认执行；后续只有更高权威反馈或正式decision record才能修改 |
+| production-level scope | `RESOLVED FOR CURRENT RESEARCH`：selected cell/module/pack applications 均允许；不要求每层各一个案例 |
+| deep case | `DEFINED`：Pack EoL test-connector handling |
+| humanoid角色 | `DEFINED AS COMPARATOR`：候选架构之一，不是预设答案或唯一研究对象 |
+| adjacent case | `GATE PENDING`：先审计Candidate A的`F0`–`F3`，未通过前不做完整比较 |
+| evidence strategy | `ACTIVE DEVELOPMENT`：下一步建立Evidence Protocol v1、Claim–Evidence Matrix和Framework v1.0 |
+| product format / station environment | `RESEARCH OPEN ITEM`：必须在Pack EoL正式case application中显式界定 |
+| expert/industry access | `OPTIONAL / UNKNOWN`：可增强可信度，但不是题目成立的普遍硬门 |
+| administrative registration | `UNVERIFIED IN REPOSITORY`：需确认签字、ZPA登记、正式开始日期和截止日期 |
 
-下次不再把前三项原样作为“请Thomas替我们选题”的问题。学生应提交自己的decision tree、Candidate B方法原型和证据边界，再请Thomas审查scope、分析逻辑、可选专家入口和注册abstract。
+后续向 Thomas 汇报的重点不再是请他重新选择 A/B/C 或重新确认 module/pack 是否允许，而是提交：检索协议、证据边界、Pack EoL审计结果、Framework v1.0、Candidate A准入结果，以及需要导师/专家确认的具体事实或实施假设。
 
 ## 12. 每周计划前的强制自检
 

@@ -4,9 +4,9 @@
 >
 > 制定依据：Thomas原始课题PDF、2026-08-12组会反馈、Week 01–05成果、`AGENTS.md`、`docs/research_direction_guardrails.md`、`docs/collaboration_and_pacing.md`以及学生与GPT对论文定位的进一步讨论。
 >
-> 当前状态：**Battery-Pack EoL test-connector handling是第一个deep reference case；不是整篇论文唯一case，也不是最终注册题目、最终gap或最终RQ。**
+> 2026-09-20状态同步：**Battery-Pack EoL test-connector handling已写入2026-09-18注册材料，作为当前论文的detailed deep reference case；它不是整篇论文唯一case。Week 06内容仍是方法原型，必须经过正式证据审计后才能进入论文Results。**
 >
-> Production level：**battery-pack manufacturing**。Thomas已认可Pack EoL testing作为可继续研究的方向；注册abstract仍须明确其与原始`battery cell production value chain`措辞的关系。
+> Production level：**battery-pack manufacturing**。当前注册材料已明确论文scope covers selected cell/module/pack manufacturing applications；每项证据仍必须标注具体production level，跨层级迁移必须说明边界。
 
 ---
 
@@ -78,20 +78,20 @@ Expert review、实验、simulation或quantitative analysis如果以后确实能
 
 ## 2. 整篇论文的暂定研究路线
 
-当前采用：
+Week 06当时采用、并由2026-09-18注册材料进一步收缩为：
 
-> **1个deep reference case + 2–3个adjacent battery-manufacturing cases**
+> **1个deep reference case + 1–2个evidence-sufficient adjacent battery-manufacturing applications**
 
 ```text
 Week 06
 Deep case: Pack EoL test-connector handling
 → 建立Task–Requirement–Capability–Suitability Framework v0.1
 
-Week 07（暂定，须由Week 06结果确认）
+后续（须先完成Evidence Protocol、Pack EoL claim audit与Framework v1.0）
 Adjacent case 1: cell recognition / grasping / loading
 → 用同一框架检验可迁移性
 
-Week 08及以后（不是硬计划）
+如证据和篇幅确实需要，再增加第二个adjacent case
 Adjacent case 2: multi-station handling / picking或证据更强的任务
 → cross-case comparison
 → task characteristics favoring different robotic systems

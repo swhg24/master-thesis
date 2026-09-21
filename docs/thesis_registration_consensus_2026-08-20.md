@@ -1,15 +1,17 @@
 # Thesis Registration Consensus and Research Route / 论文注册共识与总体研究路线
 
-> 记录日期：2026-08-20  
-> 当前状态：**学生、GPT 与 Codex 已形成注册提案共识；尚待 Thomas 明确确认，尚未构成最终注册题目。**  
-> 适用阶段：Week 06 完成后、注册 abstract 准备前。  
+> 初始记录日期：2026-08-20
+> 最近同步：2026-09-20
+> 当前状态：**2026-09-18 注册材料已经记录当前题目、摘要、RQ、范围与工作包；学生于 2026-09-20 确认题目、基本摘要和方向已经确定。它们是当前研究基线，不再作为开放选题提案。**
+> 行政边界：仓库中的注册表仍未显示导师、教授或 ZPA 签字，不据此声称正式注册、正式开始日期或截止日期已经生效。
+> 适用阶段：注册方案设计完成后、正式研究执行开始。
 > 研究方向依据优先级：Thomas 最新明确反馈 → `abschlussarbeiten_42444.pdf` → `docs/research_direction_guardrails.md` → 本记录 → 周计划与工作假设。
 
 ## 0. 本次决策的结论
 
-本项目已从 Week 01–02 的宏观应用梳理、Week 03–05 的 formation/tray-flow 学习与反例审计，推进到可以提出注册题目、研究问题和论文方法的阶段。
+本项目已从 Week 01–02 的宏观应用梳理、Week 03–05 的 formation/tray-flow 学习与反例审计、Week 06 的 Pack EoL 方法原型，推进到注册方案设计完成并开始正式建立证据基础与研究方法的阶段。
 
-学生、GPT 与 Codex 当前共同认可：
+当前研究基线为：
 
 1. 论文应保持 `robotic systems in battery manufacturing` 的上位范围，而不是注册成单一品牌、单一机器人或单一 Pack EoL 工位研究；
 2. 论文核心不是开发机器人算法或证明 humanoid 更优，而是建立并应用一套透明、可复核的任务驱动评价方法；
@@ -17,9 +19,9 @@
 4. humanoid/mobile dual-arm system 是被评价的候选架构之一，必须与 dedicated automation、fixed industrial robot、cobot/mobile system 等方案进行条件化比较；
 5. 论文应采用一个 deep case 加一至两个证据足够的 adjacent cases，通过 cross-case comparison 检验方法的适用范围；
 6. 论文结论必须回答“在什么任务和生产条件下适合、为什么适合、怎样实施”，而不是制作机器人应用目录或品牌排名；
-7. 注册前仍须由 Thomas 明确确认 `battery cell production value chain` 与 module/pack cases 的正式范围关系。
+7. 2026-09-18 材料已经明确 scope covers selected lithium-ion battery cell, module, and pack manufacturing；这允许跨层级选择案例，但不要求每个层级各选一个，也不允许无迁移论证地混用不同层级证据。
 
-## 1. 建议注册题目
+## 1. 当前论文题目
 
 ### English
 
@@ -48,46 +50,46 @@
 - 不采用 AGV fleet sizing、formation handover 或控制算法题目：Week 03–05 的证据审计没有把这些方向建立成当前机器人论文核心；
 - 不采用纯 `Overview/Review of Robotics...`：容易退化成应用目录，无法体现透明、可复用的分析方法。
 
-## 2. 三个研究问题
+## 2. 当前三个研究问题
 
 ### RQ1 — Task and requirements
 
-> **Which task characteristics and process and production requirements determine the application potential of robotic systems in selected battery-manufacturing use cases?**
+> **Which task and process characteristics determine the suitability of different robotic system architectures in selected battery manufacturing applications?**
 
 中文：
 
-> 哪些任务特征、工艺要求和生产条件决定了机器人系统在选定电池制造用例中的应用潜力？
+> 哪些任务与工艺特征决定不同机器人系统架构在选定电池制造应用中的适用性？
 
 RQ1 用于识别和结构化：制造任务、操作对象、工艺边界、质量与安全要求、节拍与产品变化、系统责任和机器人能力需求。
 
 ### RQ2 — Architecture comparison and conditional suitability
 
-> **How do different robotic-system architectures compare with dedicated, fixed-purpose automation in their conditional suitability under varying task and production conditions?**
+> **Under which technical, economic, quality, safety, and integration conditions are the considered robotic architectures suitable compared with dedicated automation and manual reference solutions?**
 
 中文：
 
-> 在不同任务与生产条件下，不同机器人系统架构与专用固定自动化相比，其条件化适用性有何差异？
+> 在哪些技术、经济、质量、安全与集成条件下，所研究的机器人架构相对于专用自动化和人工参考方案是适用的？
 
 RQ2 不产生脱离场景的全局排名，而是比较 dedicated fixed-purpose automation、fixed industrial robots、cobots、mobile robots/mobile manipulators、humanoid/mobile dual-arm systems，以及必要时的 manual baseline 在不同条件下的 suitability boundary。
 
 ### RQ3 — Industrial implementation
 
-> **How can the selected robotic applications be implemented in industry while addressing technical, economic, and integration-related barriers?**
+> **Which implementation strategies and remaining research needs can be derived from the comparative case assessment?**
 
 中文：
 
-> 在应对技术、经济与系统集成障碍的前提下，选定的机器人应用应如何在工业环境中实施？
+> 可以从比较案例评价中导出哪些实施策略和仍待研究的问题？
 
 RQ3 用于形成：工程边界、安全与质量保障条件、机器人与 PLC/MES/测试设备的责任划分、成本驱动因素、分阶段实施路线、试点需求和未来研究建议。
 
 三个 RQ 构成递进链：
 
 ```text
-RQ1: What does the task require?
+RQ1: Which task/process characteristics determine suitability?
   ↓
-RQ2: Which architecture is suitable under which conditions?
+RQ2: Under which conditions is each architecture suitable relative to the references?
   ↓
-RQ3: How can a suitable application be implemented industrially?
+RQ3: Which implementation strategies and remaining research needs follow?
 ```
 
 ## 3. 论文要解决的 practical problem 与 research need
@@ -149,7 +151,7 @@ CATL/Spirit AI `Xiaomo/Moz` 仅作为 direct industrial disclosure 和现实锚�
 
 ### 4.3 Adjacent cases
 
-暂定使用一至两个相邻案例检验框架迁移：
+使用一至两个证据足够的相邻案例检验框架迁移：
 
 1. **Candidate A — cell identification, grasping and loading**：当前领先的 adjacent case；
 2. **Candidate C — multi-station material handling and picking**：只有在 flow object、任务边界和证据足够具体时才进入；
@@ -157,17 +159,15 @@ CATL/Spirit AI `Xiaomo/Moz` 仅作为 direct industrial disclosure 和现实锚�
 
 不同时打开所有案例。案例数量服从证据质量、论文篇幅和 cross-case comparison 的实际需要。
 
-### 4.4 Production-level boundary still pending
+### 4.4 Current production-level boundary
 
-必须向 Thomas 明确确认：
+2026-09-18 注册摘要和注册表明确写明 scope covers selected lithium-ion battery **cell, module, and pack manufacturing**。当前执行规则是：
 
-> 是否允许论文同时选择 cell production 与 module/pack production 用例，或最终必须严格限定在 battery cell production value chain？
-
-在 Thomas 确认前：
-
-- 不得静默把 module/pack 等同于 cell production；
-- 也不得因原始任务段落写了 cell production 而推翻 Thomas 已认可的 Pack EoL 深度案例；
-- 注册 abstract 必须直接说明 working title、原始 task paragraph 与当前 Pack case 的层级关系。
+- Pack EoL test-connector handling 在 pack 层级作为 detailed reference case；
+- adjacent applications 根据证据选择，可位于 cell、module 或 pack 层级；
+- 每个 claim 和 case 必须标注 production level；
+- 不要求最终案例组合覆盖全部三个层级；
+- 跨层级转移要求、能力或结论时，必须说明等价条件、非等价条件和迁移限制。
 
 ### 4.5 Out of core scope
 
@@ -196,9 +196,9 @@ Manufacturing task
 
 Week 06 的 `Task → Requirement → Capability → Suitability` 是方法原型，不是论文最终贡献。论文需要继续完成指标操作化、系统文献证据、deep-case application、adjacent-case transfer、counterexample analysis 和 cross-case synthesis。
 
-### 5.2 Proposed method
+### 5.2 Current method
 
-建议采用：
+当前采用：
 
 > **Evidence-based comparative multiple-case assessment**
 
@@ -376,41 +376,47 @@ Week 03–05 不是失败或应删除的旧工作。它们形成了本论文的�
 - Challenges → Methodology：PASS；
 - Methodology → Contributions：PASS。
 
-目前没有阻止注册提案继续推进的 critical chain break。范围确认与 evidence sufficiency 是需要在注册和正式检索中管理的 major risks，不是当前的致命缺陷。
+目前没有阻止当前研究基线继续执行的 critical chain break。Evidence sufficiency、closest-work boundary、框架操作化和相邻案例准入是正式研究阶段需要管理的 major risks，不是当前需要重新选题的理由。
 
-## 10. 注册前必须确认的事项
+## 10. 当前确认状态与行政待办
 
-1. Thomas 是否接受建议英文/德文题目与三个 RQ 的措辞；
-2. cell versus module/pack 的正式 production-level boundary；
-3. 注册 abstract 是否明确写 Pack EoL 为 deep case、adjacent cases 为方法检验；
-4. 最新 PEM/RWTH/ZPA abstract template、页数、语言、注册表、签字和日期；
-5. 学生所属 Faculty/degree program 的具体 registration route；
-6. Wissenschaftliche Integrität 等正式注册条件是否满足；
-7. 是否存在可用 expert/industry access；若没有，继续采用已设计的 secondary-evidence strategy。
+### 已进入当前研究基线
+
+1. 当前英文/德文题目；
+2. 2026-09-18 材料中的 RQ1–RQ3；
+3. selected cell/module/pack manufacturing applications 的范围；
+4. Pack EoL test-connector handling 作为 detailed reference case；
+5. 一至两个 evidence-based adjacent applications；
+6. humanoid/mobile dual-arm 作为比较候选架构之一，而非预设答案；
+7. structured literature and case analysis + comparative multiple-case assessment 的总体方法。
+
+### 仍需行政确认或外部状态更新
+
+1. 导师、教授和必要审批人的签字状态；
+2. ZPA 是否已完成注册；
+3. 正式开始日期和提交截止日期；
+4. 当前适用的 PEM/RWTH/ZPA 模板、程序、考试规则和引用要求；
+5. 是否存在可用 expert/industry access；若没有，继续采用已设计的 secondary-evidence strategy。
+
+上述行政未确认事项不得被重新解释为题目、RQ 或案例方向仍处于开放选择状态。
 
 ## 11. 下一阶段总体路线
 
-### Registration checkpoint
+### Fixed execution order
 
-- 把本记录中的题目、三个 RQ 和 scope note 发给 Thomas；
-- 根据 Thomas 反馈形成 `accepted / revised / rejected` decision record；
-- 使用最新模板起草约 1–1.5 页 registration abstract；
-- 在 Thomas 确认前不把本提案写成 final registered title。
+1. **研究基线冻结**：同步当前题目、RQ、范围、案例角色与确认/注册状态，并保留变更记录；
+2. **正式证据协议**：建立可复现的检索、筛选、去重、证据分类和页码追踪规则；
+3. **Pack EoL 证据审计**：逐条形成 `retain / retain conditionally / downgrade / remove` 决定；
+4. **Framework v1.0**：操作化任务特征、生产要求、机器人能力、评价维度、判断规则和证据门；
+5. **相邻案例闸门**：先对 Candidate A 执行 `F0`–`F3`，通过后才开展完整第二案例；
+6. **跨案例与实施策略**：使用同一框架比较案例，并形成有证据边界的技术、经济、安全、质量、可扩展性与集成建议；
+7. **论文写作**：Method 可在协议与 Framework v1.0 稳定后起草，Results/Discussion 必须等待证据矩阵和案例评价完成。
 
-### Formal research after scope confirmation
-
-1. 冻结 RQ 与 inclusion/exclusion scope；
-2. 建立系统、可复现的 literature-search protocol；
-3. 完成 closest-work 与 counterexample search，校准 novelty wording；
-4. 将 Week 06 framework 操作化为可重复使用的 case-analysis template；
-5. 完成 Pack EoL deep-case evidence dossier；
-6. 依次筛选并分析 adjacent cases，不并行摊大饼；
-7. 开展 cross-case synthesis 与 implementation-strategy analysis；
-8. 进入论文主体写作、证据审计和最终审稿。
+当前立即执行步骤是第 2 项。第 1 项以本文件、`AGENTS.md` 和 `docs/research_direction_guardrails.md` 同步完成为结束条件。
 
 ## 12. 变更控制
 
-本文件记录的是 2026-08-20 的注册提案基线。今后若 Thomas 修改题目、RQ、生产层级、案例路线或方法，应同时更新：
+本文件起源于 2026-08-20 的注册提案，并于 2026-09-20 同步为当前研究基线。今后若 Thomas 修改题目、RQ、生产层级、案例路线或方法，应同时更新：
 
 1. 本文件的状态与变更记录；
 2. `AGENTS.md` 的 registration checkpoint；
@@ -419,12 +425,20 @@ Week 03–05 不是失败或应删除的旧工作。它们形成了本论文的�
 
 不得因新新闻、单一企业案例、某个 Skill 的模板或为了保持周计划连续性而静默改变题目与研究问题。
 
+### 变更记录
+
+- **2026-08-20**：形成学生–GPT–Codex 注册提案；题目、RQ 和 production-level boundary 尚待确认。
+- **2026-09-18**：最新 abstract 和 Masterarbeit registration-form review copy 记录当前题目、修订后的 RQ1–RQ3、cell/module/pack scope、Pack EoL reference case、一个至两个 adjacent applications、四个工作包和 18 周计划。
+- **2026-09-20**：学生确认题目、基本摘要和方向已经确定；本文件由历史提案升级为当前内部研究基线。行政注册状态仍单独保留为未验证。
+
 ## 13. 关键项目来源
 
 - `abschlussarbeiten_42444.pdf`：Thomas 原始 working title、任务轮廓和评价维度；
 - `week_06_candidate_b_pack_eol/00_2026-08-12_Thomas组会反馈.md`：Pack EoL 被认可为可继续方向、跨行业证据与注册准备反馈；
 - `week_06_candidate_b_pack_eol/01_Week06工作计划_Candidate_B_Pack_EoL.md`：deep-case 边界和方法原型；
 - `week_06_candidate_b_pack_eol/day1_pack_eol_robotics_chinese_learning_guide.html` 至 `day5_deep_case_synthesis_framework_chinese_learning_guide.html`：Pack EoL 任务、要求、架构和框架学习链；
+- `week_07_registration/Fuhan_Liao_PEM_Abstract_Full_Thomas_Review.pdf`：2026-09-18 当前摘要、RQ、scope 和 work packages；
+- `week_07_registration/Fuhan_Liao_Erfassungsbogen_Masterarbeit_Thomas_Review.pdf`：2026-09-18 当前题目、任务说明和 18 周工作计划；
 - `docs/research_direction_guardrails.md`：项目方向、案例状态与证据纪律；
 - `docs/pem_thesis_requirements.md`：注册 abstract、写作、引用、图表、提交与答辩要求；
 - `docs/collaboration_and_pacing.md`：六个月节奏、周计划与协作方式；
