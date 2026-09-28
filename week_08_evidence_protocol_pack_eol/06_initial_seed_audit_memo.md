@@ -157,7 +157,18 @@ transport
 
 详见`10_same_task_equipment_baseline_learning_note.md`。
 
-## 8. 下一批具体工作
+## 8. R1 线束/柔性件证据断面收口（C030–C033，2026-09-23）
+
+接触层机制核查（S024→C026、S031→C027–C029）之外，本轮另核查了 Navas-Reascos 2022 的两篇 gold-OA 姐妹文献——综述 `S033`（*Robotics* 11(3):65）与同主作者的案例研究 `S034`（*Robotics* 11(6):131），四条 claim 合成 R1（线束/柔性件）在现有 cobot 文献里的一个完整断面：
+
+- `C031`（任务地图）：cobot 化任务集中在 spot-taping、cable routing、wire insertion、cable-tie、taping；连接器 mating 仅在任务清单被提及、无独立研究；
+- `C030`（经济/吞吐缺口）：该综述纳入的 11 篇文献无一篇给出成本-效益或节拍时间分析；这只限定该综述覆盖的线束协作机器人研究，不能推出整个领域或 Pack EoL 的普遍空白；
+- `C032`（具体机制 + 硬限制）：UR5 + OnRobot RG2 + Cognex 相机视觉定位孔位做扎带放置，经 Modbus 适配不同线束而无需重编程；但夹爪未开发、放置正确性未验证，且人负责放线束本体（作者明确为避开 cobot 处理柔性材料的困难）；
+- `C033`（唯一量化维度）：工效学被量化（RULA 7→4、JSI 12→4.5），反衬成本/节拍量化的缺席。
+
+合成判断：R1 的「对象状态」闭环现在同时具备 closest-work 地图、具体机制，也拿到了「柔性线束本体的机器人处理被案例研究明确回避」的证据——这正面支撑 robot 卡第 1 行把柔性件本体处理列为真实瓶颈，而非预设能力。四条全部 `RETAIN_CONDITIONAL`（跨行业类比 + 原型/仿真级证据，不迁移数值）。R5 电气判据与 R3 安全时序仍待 Stream B/C（见下一节），journal 级检索已确认无独立命中。
+
+## 9. 下一批具体工作
 
 1. 直接使用`08_pack_eol_task_requirements_learning_guide.md`继续学习任务循环和工程机理；`07`的证据判断改为可选自测；
 2. 按`09_framework_v1_input_requirements.md`继续定向查找制造端 Pack EoL 安全、连接确认、系统集成和更详细的automatic-adaptation设计；

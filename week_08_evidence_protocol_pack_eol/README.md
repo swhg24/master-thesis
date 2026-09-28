@@ -1,23 +1,20 @@
 # Week 08：正式证据协议与 Pack EoL 证据审计启动
 
 > 建立日期：2026-09-20  
-> 当前阶段：注册方案设计完成 → 正式研究执行开始  
+> 当前阶段：注册方案设计完成 → 正式研究执行开始；最近复核 2026-09-28
 > 对应注册工作包：WP1 — Scope definition and evidence base  
 > 前置基线：`AGENTS.md`、`docs/thesis_registration_consensus_2026-08-20.md`、`docs/research_direction_guardrails.md`、2026-09-18 registration materials
 
-## 0. 当前进度
+## 0. 当前进度（2026-09-28）
 
-- 研究基线同步：`COMPLETE — 2026-09-20`；
-- Evidence Protocol v1.0与执行模板：`ESTABLISHED — 2026-09-20`；
-- Day 1 evidence-reasoning学习材料：`AVAILABLE AS OPTIONAL SELF-CHECK — 07_day1_evidence_reasoning_learning_guide.md`；
-- Pack EoL任务与R1–R6工程学习主线：`COMPLETE — 08_pack_eol_task_requirements_learning_guide.md`；
-- Framework v1.0需求输入：`PARTIALLY READY — 09_framework_v1_input_requirements.md`；
-- Same-task Pack EoL设备基线：`STARTED — 10_same_task_equipment_baseline_learning_note.md; Marposs与thyssenkrupp官方配置已核对`；
-- 初始screening：`STARTED — 20 records`；
-- Pack EoL claim audit：`STARTED — 25 unique claims / 31 claim–source links; six academic core sources and two same-task official equipment baselines checked; second-round R1–R6 engineering-claim audit complete`；
-- 核心数据库正式检索：`STARTED — OpenAlex title searches and four field-search pilots complete; broad field strings proved too noisy; Scopus/WoS/IEEE formal runs still pending`；
-- Framework v1.0：`INPUT PREPARATION IN PROGRESS — R1–R6已改写为可审计问题，目标参数与正式decision rules仍待补齐`；
-- Candidate A gate：`NOT OPEN`。
+- 研究基线与 Evidence Protocol v1.0：已固定；题目、RQ 和 Pack EoL 深案例角色不重开。
+- Screening log：34 条记录；其中 26 条 title/abstract include、4 条 maybe、4 条 exclude。22 条标为跨行业任务类比，直接 Pack EoL 企业披露 1 条、同任务设备基线 2 条。
+- Claim audit：33 个独立 claim、39 条 claim–source links；逐行状态为 10 条 `RETAIN_DIRECT`、15 条 `RETAIN_CONDITIONAL`、6 条 `DOWNGRADE_ASSUMPTION`、5 条 `REMOVE_UNSUPPORTED`、3 条 `PENDING_FULLTEXT`。这些数量是审计进度，不代表结论强度。
+- 检索：OpenAlex 定向检索和补充 web discovery 已记录；学生提供 Scopus 一组 68 条、IEEE Xplore 三组 9/25/3 条导出，属于已执行的部分检索，尚未逐组完成可复现检索日志及去重筛选。Web of Science 正式结果未收到。细节见 `14_public_source_checkpoint_2026-09-28.md`；Discovery 零新增不能解释为文献不存在。
+- 公开原始资料近邻：宁德时代 `CN117718986B` 披露机械臂操作 Pack 测试插头；`CN109856554A` 披露带浮动及检测的专用自动对插机构；ROKAE 与 Repower 官方资料提供另外的配置/工位功能例。专利是方案披露，企业数据是企业说法；不能推出现场同口径性能比较。证据与边界见 `14_public_source_checkpoint_2026-09-28.md`。
+- 框架：`09_framework_v1_input_requirements.md` 提供字段；`11_framework_v1_baseline_cards.md` 是同任务三配置基线草稿；`13_framework_v1_decision_table_draft.md` 已把 Gate、证据状态和 Pack EoL 试填写成可检查规则。新近邻纠正了“专机内部机制全未知、机器人仅有跨行业机制”的笼统表述，但尚无正式 Framework v1.0 案例结果或架构优胜判断。
+- 下一关口：核对三种配置在插合确认、测试许可、异常与断开闭环中的责任和信号；补正式检索记录与 closest-work 引文追踪。目标工位参数仍未知，Candidate A 的 `F0–F3` 准入尚未启动。
+- 行政注册、签字、正式开始日期和截止日期仍需独立核对，不由研究材料推定。
 
 ## 1. 本周唯一核心问题
 
