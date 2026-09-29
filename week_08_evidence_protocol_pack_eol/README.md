@@ -1,11 +1,11 @@
 # Week 08：正式证据协议与 Pack EoL 证据审计启动
 
 > 建立日期：2026-09-20  
-> 当前阶段：注册方案设计完成 → 正式研究执行开始；最近复核 2026-09-28
+> 当前阶段：注册方案设计完成 → 正式研究执行开始；最近复核 2026-09-29
 > 对应注册工作包：WP1 — Scope definition and evidence base  
 > 前置基线：`AGENTS.md`、`docs/thesis_registration_consensus_2026-08-20.md`、`docs/research_direction_guardrails.md`、2026-09-18 registration materials
 
-## 0. 当前进度（2026-09-28）
+## 0. 当前进度（2026-09-29）
 
 - 研究基线与 Evidence Protocol v1.0：已固定；题目、RQ 和 Pack EoL 深案例角色不重开。
 - Screening log：34 条记录；其中 26 条 title/abstract include、4 条 maybe、4 条 exclude。22 条标为跨行业任务类比，直接 Pack EoL 企业披露 1 条、同任务设备基线 2 条。
@@ -13,7 +13,8 @@
 - 检索：OpenAlex 定向检索和补充 web discovery 已记录；学生提供 Scopus 一组 68 条、IEEE Xplore 三组 9/25/3 条导出，属于已执行的部分检索，尚未逐组完成可复现检索日志及去重筛选。Web of Science 正式结果未收到。细节见 `14_public_source_checkpoint_2026-09-28.md`；Discovery 零新增不能解释为文献不存在。
 - 公开原始资料近邻：宁德时代 `CN117718986B` 披露机械臂操作 Pack 测试插头；`CN109856554A` 披露带浮动及检测的专用自动对插机构；ROKAE 与 Repower 官方资料提供另外的配置/工位功能例。专利是方案披露，企业数据是企业说法；不能推出现场同口径性能比较。证据与边界见 `14_public_source_checkpoint_2026-09-28.md`。
 - 框架：`09_framework_v1_input_requirements.md` 提供字段；`11_framework_v1_baseline_cards.md` 是同任务三配置基线草稿；`13_framework_v1_decision_table_draft.md` 已把 Gate、证据状态和 Pack EoL 试填写成可检查规则。新近邻纠正了“专机内部机制全未知、机器人仅有跨行业机制”的笼统表述，但尚无正式 Framework v1.0 案例结果或架构优胜判断。
-- 下一关口：核对三种配置在插合确认、测试许可、异常与断开闭环中的责任和信号；补正式检索记录与 closest-work 引文追踪。目标工位参数仍未知，Candidate A 的 `F0–F3` 准入尚未启动。
+- Candidate A 的公开资料 `F0–F3` 初筛已启动：ABB Baden 的**模组**电芯入壳任务通过案例存在与机器人相关性检查；放置验收、责任细节及同条件比较仍 OPEN，尚未完整准入或验证 Framework v1.0。上汽 E7 的 **Pack** 上料披露保留为另一语境，不能拼接 ABB 任务路径。详见 `15_candidate_a_public_evidence_checkpoint_2026-09-29.md`。
+- 下一关口：继续核对 Pack EoL 三种配置在插合确认、测试许可、异常与断开闭环中的责任和信号；补正式检索记录与 closest-work 引文追踪。Candidate A 只推进相同任务边界下的放置判据和替代配置证据，不开始完整架构比较。
 - 行政注册、签字、正式开始日期和截止日期仍需独立核对，不由研究材料推定。
 
 ## 1. 本周唯一核心问题
