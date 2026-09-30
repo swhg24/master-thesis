@@ -1,11 +1,11 @@
 # Week 08：正式证据协议与 Pack EoL 证据审计启动
 
 > 建立日期：2026-09-20  
-> 当前阶段：注册方案设计完成 → 正式研究执行开始；最近复核 2026-09-29
+> 当前阶段：注册方案设计完成 → 正式研究执行开始；最近复核 2026-09-30
 > 对应注册工作包：WP1 — Scope definition and evidence base  
 > 前置基线：`AGENTS.md`、`docs/thesis_registration_consensus_2026-08-20.md`、`docs/research_direction_guardrails.md`、2026-09-18 registration materials
 
-## 0. 当前进度（2026-09-29）
+## 0. 当前进度（2026-09-30）
 
 - 研究基线与 Evidence Protocol v1.0：已固定；题目、RQ 和 Pack EoL 深案例角色不重开。
 - Screening log：34 条记录；其中 26 条 title/abstract include、4 条 maybe、4 条 exclude。22 条标为跨行业任务类比，直接 Pack EoL 企业披露 1 条、同任务设备基线 2 条。
@@ -14,7 +14,9 @@
 - 公开原始资料近邻：宁德时代 `CN117718986B` 披露机械臂操作 Pack 测试插头；`CN109856554A` 披露带浮动及检测的专用自动对插机构；ROKAE 与 Repower 官方资料提供另外的配置/工位功能例。专利是方案披露，企业数据是企业说法；不能推出现场同口径性能比较。证据与边界见 `14_public_source_checkpoint_2026-09-28.md`。
 - 框架：`09_framework_v1_input_requirements.md` 提供字段；`11_framework_v1_baseline_cards.md` 是同任务三配置基线草稿；`13_framework_v1_decision_table_draft.md` 已把 Gate、证据状态和 Pack EoL 试填写成可检查规则。新近邻纠正了“专机内部机制全未知、机器人仅有跨行业机制”的笼统表述，但尚无正式 Framework v1.0 案例结果或架构优胜判断。
 - Candidate A 的公开资料 `F0–F3` 初筛已启动：ABB Baden 的**模组**电芯入壳任务通过案例存在与机器人相关性检查；放置验收、责任细节及同条件比较仍 OPEN，尚未完整准入或验证 Framework v1.0。上汽 E7 的 **Pack** 上料披露保留为另一语境，不能拼接 ABB 任务路径。详见 `15_candidate_a_public_evidence_checkpoint_2026-09-29.md`。
-- 下一关口：继续核对 Pack EoL 三种配置在插合确认、测试许可、异常与断开闭环中的责任和信号；补正式检索记录与 closest-work 引文追踪。Candidate A 只推进相同任务边界下的放置判据和替代配置证据，不开始完整架构比较。
+- 2026-09-30 追加了 [16 功能责任审核](16_function_responsibility_audit_pilot_2026-09-30.md)、[17 完成与放行责任](17_completion_acceptance_authority_research_2026-09-30.md)、[18 同配置许可链](18_pack_eol_same_configuration_release_chain_audit_2026-09-30.md)、[19 选型条件反例](19_selection_relevance_counterexample_pilot_2026-09-30.md)与 [20 目标 UNKNOWN 定向检索](20_pack_eol_target_unknown_search_and_variant_boundary_2026-09-30.md)。这些均为 working notes，不是 Framework v1.0 或论文 Results；`Closure Allocation` 不作为新理论。
+- Pack EoL：公开专利与设备案例支持不同插接、换型和测试系统机制；小墨目标工位从插接完成到高压/测试许可的同配置条件链、目标参数与同条件性能比较仍 `UNKNOWN`。Candidate A：ABB 模组入壳任务可作相邻案例试填，但放置完成、失败恢复和同条件比较仍 `UNKNOWN`。
+- 下一关口：用 Pack EoL 和 Candidate A 的少量功能，检验现有责任映射与四 Gate 能否生成可追溯的**条件性**机器人适用性判断；同时补齐正式检索记录与 closest-work 引文核对。不为补缺口拼接不同专利或制造性能数据，也不启动架构排名。
 - 行政注册、签字、正式开始日期和截止日期仍需独立核对，不由研究材料推定。
 
 ## 1. 本周唯一核心问题
